@@ -1,0 +1,11 @@
+prefix=/home/cemgurhan/rust/PHillita/FLoBC/backend/target/release/build/exonum_libsodium-sys-e7604e56e5ec3b3a/out/installed
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libsodium
+Version: 1.0.17
+Description: A modern and easy-to-use crypto library
+
+Libs: -L${libdir} -lsodium
+Cflags: -I${includedir}
