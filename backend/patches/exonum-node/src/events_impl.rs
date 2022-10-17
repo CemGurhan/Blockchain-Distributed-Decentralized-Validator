@@ -31,11 +31,12 @@ impl EventHandler for NodeHandler {
                 EventOutcome::Ok
             }
             Event::Transaction(tx) => {
-                println!("HELLO FROM handle_event() in events_impl.rs");
+                println!("HELLO FROM handle_event() in events_impl.rs TRANSACTION EVENT OCCURED");
                 self.handle_incoming_tx(tx);
                 EventOutcome::Ok
             }
             Event::Internal(internal) => {
+                // println!("HELLO FROM handle_event() in events_impl.rs INTERNAL EVENT OCCURED");
                 self.handle_internal_event(internal);
                 EventOutcome::Ok
             }

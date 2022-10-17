@@ -27,13 +27,14 @@ use crate::{
 impl NodeHandler {
     /// Redirects message to the corresponding `handle_...` function.
     pub(crate) fn handle_message(&mut self, msg: Message) {
+        println!("HELLO FROM handle_message() in exonum-node/src/basic.rs");
         match msg {
             Message::Consensus(msg) => self.handle_consensus(msg),
             Message::Requests(ref msg) => self.handle_request(msg),
             Message::Service(Service::Connect(msg)) => self.handle_connect(msg),
             Message::Service(Service::Status(msg)) => self.handle_status(&msg),
             Message::Service(Service::AnyTx(msg)) => {
-                println!("HELLO FROM handle_message() in exonum-node/src/basic.rs");
+                
                 if let Err(e) = self.handle_tx(msg.clone()) {
                     
                     log::warn!(

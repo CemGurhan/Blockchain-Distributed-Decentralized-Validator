@@ -19,7 +19,7 @@ use exonum_ML::MachineLearningService;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     exonum::helpers::init_logger()?;
-
+    println!("HELLO running from main.rs()");
     NodeBuilder::new()
         // Starts cryptocurrency instance with the default identifiers
         // immediately after genesis block creation.

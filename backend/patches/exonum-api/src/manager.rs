@@ -365,6 +365,8 @@ impl ApiManager {
             server_builder = server_builder.disable_signals();
         }
 
+        println!("HELLO running from exonum-api/src/manager.rs line 368 server start");
+
         Ok(ServerHandle {
             inner: server_builder.run(),
             #[cfg(windows)]

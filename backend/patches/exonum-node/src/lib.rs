@@ -1497,6 +1497,7 @@ impl Reactor {
 
     #[allow(clippy::mut_mut)] // occurs in the `select!` macro
     async fn run(self, handshake_params: HandshakeParams) -> anyhow::Result<()> {
+        println!("HELLO running from exonum-node/src/lib.rs line 1500");
         let internal_task = self.internal_part.run().fuse();
         futures::pin_mut!(internal_task);
         let network_task = self.network_part.run(handshake_params).fuse();

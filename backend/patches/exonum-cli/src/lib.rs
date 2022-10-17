@@ -297,6 +297,7 @@ impl NodeBuilder {
         // Store temporary directory until the node is done.
         let _temp_dir = self.temp_dir.take();
         if let Some(node) = self.execute_command()? {
+            println!("HELLO running from exonum-cli src/lib.rs line 300 run()");
             node.run().await
         } else {
             Ok(())
