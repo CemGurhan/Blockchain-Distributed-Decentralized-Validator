@@ -80,12 +80,14 @@ impl NodeHandler {
 
     /// Handles `TransactionsRequest` message. For details see the message documentation.
     pub(crate) fn handle_request_txs(&mut self, msg: &Verified<TransactionsRequest>) {
+        println!("HELLO FROM handle_request_txs() exonum_node/src requests.rs line 83");
         trace!("HANDLE TRANSACTIONS REQUEST");
         self.send_transactions_by_hash(msg.author(), &msg.payload().txs);
     }
 
     /// Handles `PoolTransactionsRequest` message. For details see the message documentation.
     pub(crate) fn handle_request_pool_txs(&mut self, msg: &Verified<PoolTransactionsRequest>) {
+        println!("HELLO FROM handle_request_pool_txs() exonum_node/src requests.rs line 89");
         trace!("HANDLE POOL TRANSACTIONS REQUEST");
         let snapshot = self.blockchain.snapshot();
         let schema = Schema::new(&snapshot);

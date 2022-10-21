@@ -190,6 +190,8 @@ impl SharedConnectionPool {
             return None;
         }
 
+        println!("Creating connection with peer_key: {} exonume_node/src/events network.rs line 193",peer_key);
+
         let (receiver_rx, connection_id) = guard.add(peer_key, address.clone());
         Some(Connection {
             socket,
@@ -472,7 +474,7 @@ impl NetworkHandler {
         let (sink, stream) = connection.socket.split();
         let key = connection.key;
         let connection_id = connection.id;
-
+        
         // Processing of incoming messages.
         let incoming = async move {
             let res = (&mut network_tx)
@@ -488,7 +490,6 @@ impl NetworkHandler {
             res
         };
         futures::pin_mut!(incoming);
-
         // Processing of outgoing messages.
         let outgoing = connection.receiver_rx.map(Ok).forward(sink);
 
@@ -556,6 +557,7 @@ impl NetworkHandler {
             // println!("REQUEST HANDLED FROM handle_requests() exonume_node/src/events/network.rs line 555");
             match request {
                 NetworkRequest::SendMessage(key, message) => {
+                    // println!("REQUEST HANDLED FROM handle_requests() exonume_node/src/events/network.rs line 558");
                     let mut this = self.clone();
                     tokio::spawn(async move {
                         this.handle_send_message(key, message).await.log_error();

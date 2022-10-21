@@ -1026,6 +1026,7 @@ impl NodeHandler {
 
         match self.handle_tx(msg.clone()) {
             Ok(()) => {
+                println!("SENDING__ OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43");
                 self.broadcast(msg);
                 println!("SENT OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43");
             }

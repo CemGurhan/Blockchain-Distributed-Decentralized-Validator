@@ -776,7 +776,7 @@ impl NodeHandler {
 
     /// Sends the given message to a peer by its public key.
     fn send_to_peer<T: Into<SignedMessage>>(&mut self, public_key: PublicKey, message: T) {
-        // println!("HELLO FROM send_to_peer() exonum_node/src/lib.rs line 779 sending message to peer");
+        // println!("SENDING TO NODE WITH KEY {} HELLO FROM send_to_peer() exonum_node/src/lib.rs line 779 sending message to peer",public_key);
         let message = message.into();
         let request = NetworkRequest::SendMessage(public_key, message);
         self.channel.network_requests.send(request);
@@ -784,6 +784,7 @@ impl NodeHandler {
 
     /// Broadcasts given message to all peers.
     fn broadcast<M: Into<SignedMessage>>(&mut self, message: M) {
+        // println!("SENDING__ OUTCOME OUT FROM broadcast() exonum-node/src/lib.rs");
         let peers: Vec<PublicKey> = self
             .state
             .peers()
@@ -798,7 +799,9 @@ impl NodeHandler {
             .collect();
         let message = message.into();
         for address in peers {
+            
             self.send_to_peer(address, message.clone());
+            
         }
     }
 
