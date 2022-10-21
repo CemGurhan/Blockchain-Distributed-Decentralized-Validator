@@ -109,6 +109,7 @@ impl Finalize {
     }
 
     fn get_consensus_key(config: &NodePublicConfig) -> anyhow::Result<PublicKey> {
+        println!("GETTING CONSENSUS KEY exonum-cli/src/command finalize.rs line 112");
         Ok(config
             .validator_keys
             .ok_or_else(|| format_err!("Expected validator keys in public config: {:#?}", config))?

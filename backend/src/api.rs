@@ -123,6 +123,7 @@ impl PublicApi {
         state: ServiceApiState,
         query: ModelQuery,
     ) -> api::Result<Model>{
+        println!("HELLO FROM get_model() api.rs");
         let model_schema = SchemaImpl::new(state.service_data());
         let versionHash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
         let model = model_schema.public.models.get(&versionHash).unwrap();

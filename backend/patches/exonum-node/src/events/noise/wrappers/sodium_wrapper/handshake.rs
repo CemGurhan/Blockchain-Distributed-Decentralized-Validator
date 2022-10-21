@@ -162,6 +162,7 @@ where
     }
 
     async fn send(mut self, stream: &mut S) -> anyhow::Result<HandshakeData> {
+        println!("HELLO FROM send() exonume-node/src/events/noise/wrappers/sodium_wrapper handshake.rs");
         self.write_handshake_msg(stream, &[]).await?;
         let message = self.read_handshake_msg(stream).await?;
         self.write_handshake_msg(stream, &self.connect.to_bytes())

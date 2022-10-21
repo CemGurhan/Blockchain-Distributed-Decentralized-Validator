@@ -1,0 +1,19 @@
+address = "127.0.0.1:7091"
+
+[consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[general]
+supervisor_mode = "simple"
+validators_count = 2
+
+[validator_keys]
+consensus_key = "cbf9548f0d4acb6e1b38da33ce8afc5dc35844a4793a415c3f31bcc8510eeef6"
+service_key = "7fd634720dad72471969a826ebfbffdbb4847effca4a041e8de83dc8dba4135c"

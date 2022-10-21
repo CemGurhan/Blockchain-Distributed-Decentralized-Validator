@@ -705,6 +705,7 @@ impl NodeHandler {
 
     /// Performs node initialization, so it starts consensus process from the first round.
     pub fn initialize(&mut self) {
+        println!("HELLO FROM initialize() exonum-node/src/lib.rs line 708");
         let listen_address = self.system_state.listen_address();
         info!("Start listening address={}", listen_address);
 
@@ -775,6 +776,7 @@ impl NodeHandler {
 
     /// Sends the given message to a peer by its public key.
     fn send_to_peer<T: Into<SignedMessage>>(&mut self, public_key: PublicKey, message: T) {
+        // println!("HELLO FROM send_to_peer() exonum_node/src/lib.rs line 779 sending message to peer");
         let message = message.into();
         let request = NetworkRequest::SendMessage(public_key, message);
         self.channel.network_requests.send(request);
@@ -1502,7 +1504,7 @@ impl Reactor {
         futures::pin_mut!(internal_task);
         let network_task = self.network_part.run(handshake_params).fuse();
         futures::pin_mut!(network_task);
-        let handler_task = self.handler_part.run().fuse();
+        let handler_task = self.handler_part.run().fuse(); // run this
         futures::pin_mut!(handler_task);
         let mut api_task = self.api_part.fuse();
 

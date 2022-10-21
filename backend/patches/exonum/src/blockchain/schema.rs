@@ -253,6 +253,7 @@ impl<T: Access> Schema<T> {
 
     /// Returns the block for the given height with the proof of its inclusion.
     pub fn block_and_precommits(&self, height: Height) -> Option<BlockProof> {
+        println!("HELLO FROM block_and_precommits exonum/src/blockchain schema.rs line 256");
         let block_hash = self.block_hash_by_height(height)?;
         let block = self.blocks().get(&block_hash).unwrap();
         let precommits = self.precommits(&block_hash).iter().collect();

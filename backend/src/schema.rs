@@ -135,6 +135,7 @@ where
     // Register a trainer's identity
     pub fn register_trainer(&mut self, trainer_addr: &Address) {
         // Insert new score only if trainer wasn't registered
+        println!("REGISTERING TRAINER register_trainer schemar.rs line 138");
         if self.trainers_scores.contains(trainer_addr) == false {
             if DEBUG {
                 println!("Registering {:?}...", trainer_addr);
@@ -221,6 +222,8 @@ where
             println!("schema.rs/update_model no model!");
             return;
         }
+
+        println!("UPDATING MODEL update_model() schema.rs");
 
         let mut latest_model: Model;
         let model_values = self.public.models.values();

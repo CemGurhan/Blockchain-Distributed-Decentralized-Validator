@@ -160,6 +160,7 @@ impl SharedConnectionPool {
     }
 
     async fn send_message(&self, peer_key: &PublicKey, message: SignedMessage) {
+        // println!("SENDING MESSAGE send_message() 2 exonume_node/src/events network.rs line 163");
         let maybe_peer_info = {
             // Ensure that we don't hold the lock across the `await` point.
             let peers = &self.inner.read().unwrap().peers;
@@ -552,6 +553,7 @@ impl NetworkHandler {
 
     pub async fn handle_requests(self, mut receiver: mpsc::Receiver<NetworkRequest>) {
         while let Some(request) = receiver.next().await {
+            // println!("REQUEST HANDLED FROM handle_requests() exonume_node/src/events/network.rs line 555");
             match request {
                 NetworkRequest::SendMessage(key, message) => {
                     let mut this = self.clone();
@@ -582,6 +584,7 @@ impl NetworkHandler {
         message: SignedMessage,
     ) -> anyhow::Result<()> {
         if self.pool.read().contains(&address) {
+            // println!("SENT MESSAGE FROM POOL handle_send_message network.rs line 586");
             self.pool.send_message(&address, message).await;
             Ok(())
         } else if self.can_create_connections() {
@@ -632,7 +635,7 @@ impl NetworkHandler {
 impl NetworkPart {
     pub async fn run(self, handshake_params: HandshakeParams) {
         let our_key = handshake_params.connect.author();
-
+        println!("RUNNING NETWORK exonum_node/src/events network.rs line 637");
         let handler = NetworkHandler::new(
             self.listen_address,
             SharedConnectionPool::new(our_key),

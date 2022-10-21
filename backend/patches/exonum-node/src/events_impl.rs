@@ -27,22 +27,27 @@ impl EventHandler for NodeHandler {
     fn handle_event(&mut self, event: Event) -> EventOutcome {
         match event {
             Event::Network(network) => {
+                // println!("HELLO FROM handle_event() in events_impl.rs NETWROK EVENT OCCURED");
                 self.handle_network_event(network);
                 EventOutcome::Ok
             }
             Event::Transaction(tx) => {
                 println!("HELLO FROM handle_event() in events_impl.rs TRANSACTION EVENT OCCURED");
                 self.handle_incoming_tx(tx);
+                println!("FINISHED EVENT MATCH handle_event() events_impl.rs line 37");
                 EventOutcome::Ok
             }
             Event::Internal(internal) => {
                 // println!("HELLO FROM handle_event() in events_impl.rs INTERNAL EVENT OCCURED");
                 self.handle_internal_event(internal);
+                // println!("HELLO FROM handle_event() in events_impl.rs INTERNAL EVENT OCCURED");
                 EventOutcome::Ok
             }
-
+            
             Event::Api(api) => self.handle_api_event(api),
         }
+
+        
     }
 }
 
@@ -51,7 +56,10 @@ impl NodeHandler {
         match event.0 {
             InternalEventInner::Timeout(timeout) => self.handle_timeout(timeout),
             InternalEventInner::JumpToRound(height, round) => self.handle_new_round(height, round),
-            InternalEventInner::MessageVerified(msg) => self.handle_message(*msg),
+            InternalEventInner::MessageVerified(msg) => {
+                // println!("HELLO FROM handle_internal_event running handle_message line 60");
+                self.handle_message(*msg);
+            }
         }
     }
 
@@ -61,14 +69,17 @@ impl NodeHandler {
             NetworkEvent::PeerDisconnected(peer) => self.handle_disconnected(peer),
             NetworkEvent::UnableConnectToPeer(peer) => self.handle_unable_to_connect(peer),
             NetworkEvent::MessageReceived(raw) => {
+                // println!("MESSAGE RECIEVED handle_network_event line 69 events_impl.rs");
                 self.execute_later(InternalRequest::VerifyMessage(raw))
             }
         }
     }
 
     fn handle_api_event(&mut self, event: ExternalMessage) -> EventOutcome {
+        println!("LOG FROM handle_api_event event_impl.rs line 73 !!!! o");
         match event {
             ExternalMessage::PeerAdd(info) => {
+                println!("LOG FROM handle_api_event event_impl.rs line 73 !!!! adding PEER!!???");
                 info!("Send Connect message to {}", info);
                 self.state.add_peer_to_connect_list(info.clone());
                 self.connect(info.public_key);

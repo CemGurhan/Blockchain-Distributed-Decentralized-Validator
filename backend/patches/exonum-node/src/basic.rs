@@ -27,13 +27,15 @@ use crate::{
 impl NodeHandler {
     /// Redirects message to the corresponding `handle_...` function.
     pub(crate) fn handle_message(&mut self, msg: Message) {
-        println!("HELLO FROM handle_message() in exonum-node/src/basic.rs");
+        // println!("HELLO FROM handle_message() in exonum-node/src/basic.rs");
         match msg {
             Message::Consensus(msg) => self.handle_consensus(msg),
             Message::Requests(ref msg) => self.handle_request(msg),
             Message::Service(Service::Connect(msg)) => self.handle_connect(msg),
             Message::Service(Service::Status(msg)) => self.handle_status(&msg),
             Message::Service(Service::AnyTx(msg)) => {
+
+                println!("HELLO FROM handle_message() basic.rs exonum_node line 38");
                 
                 if let Err(e) = self.handle_tx(msg.clone()) {
                     
@@ -62,6 +64,7 @@ impl NodeHandler {
         address: &ConnectedPeerAddr,
         connect: Verified<Connect>,
     ) {
+        // println!("HELLO FROM handle_connected in exonum_node basic.rs line 60");
         info!("Received Connect message from peer: {:?}", address);
         // TODO: use `ConnectInfo` instead of connect-messages. (ECR-1452)
         self.state.add_connection(connect.author(), address.clone());
@@ -106,12 +109,14 @@ impl NodeHandler {
         // TODO: drop connection if checks have failed. (ECR-1837)
         let address = message.payload().host.clone();
         if address == self.state.our_connect_message().payload().host {
+            println!("Recieved Connection Message 1 in handle_connect exonum_node basics.rs");
             trace!("Received Connect with same address as our external_address.");
             return;
         }
 
         let public_key = message.author();
         if public_key == self.state.our_connect_message().author() {
+            println!("Recieved Connection with same pub key as ours Message 2 in handle_connect exonum_node basics.rs");
             trace!("Received Connect with same pub_key as ours.");
             return;
         }

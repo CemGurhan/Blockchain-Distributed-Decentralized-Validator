@@ -231,6 +231,7 @@ impl ApiManager {
         server_finished_tx: mpsc::Sender<io::Result<()>>,
     ) -> io::Result<()> {
         log::trace!("Servers start requested.");
+        println!("STARTING ALL SERVERS IN start_servers() line 229 manager.rs exonum-api src");
 
         let disable_signals = self.config.disable_signals;
         let start_servers = self.config.servers.iter().map(|(&access, server_config)| {
@@ -366,7 +367,7 @@ impl ApiManager {
         }
 
         println!("HELLO running from exonum-api/src/manager.rs line 368 server start");
-
+        println!("{}",listen_address);
         Ok(ServerHandle {
             inner: server_builder.run(),
             #[cfg(windows)]

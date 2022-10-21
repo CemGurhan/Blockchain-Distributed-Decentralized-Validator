@@ -69,6 +69,7 @@ impl<T: Send + 'static> SyncSender<T> {
     // Outside tests, `send()` is always called from an async context.
     #[cfg(not(test))]
     pub fn send(&mut self, message: T) {
+        // println!("SEND MESSAGE FROM send() exonum-node/src/events mod.rs line 72");
         let mut sender = self.0.clone();
         tokio::spawn(async move {
             sender.send(message).await.log_error();
@@ -87,10 +88,12 @@ impl InternalEvent {
     }
 
     pub fn message_verified(message: Message) -> Self {
+        // println!("HELLO FROM message_verified() exonum_node/src/events mod.rs line 90");
         Self(InternalEventInner::MessageVerified(Box::new(message)))
     }
 
     pub fn is_message_verified(&self) -> bool {
+        println!("HELLO FROM is_message_verified() exonum_node/src/events mod.rs line 94");
         match self.0 {
             InternalEventInner::MessageVerified(_) => true,
             _ => false,

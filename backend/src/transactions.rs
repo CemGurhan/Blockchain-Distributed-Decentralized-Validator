@@ -69,6 +69,8 @@ impl MachineLearningInterface<ExecutionContext<'_>> for MachineLearningService {
         let (from, tx_hash) = extract_info(&context)?;
         let mut schema = SchemaImpl::new(context.service_data());
 
+        println!("HELLO FROM transactions.rs share_updates() PT 1!!!");
+
         schema.register_trainer(&from);
         schema.cache_update(&from, &arg.gradients);
 

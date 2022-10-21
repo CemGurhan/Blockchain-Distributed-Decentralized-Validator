@@ -246,6 +246,7 @@ impl ConsensusConfig {
         &self,
         predicate: impl Fn(&ValidatorKeys) -> bool,
     ) -> Option<ValidatorId> {
+        // println!("FINDING VALIDATOR exonum/src/blockchain config.rs line 249");
         self.validator_keys
             .iter()
             .position(predicate)

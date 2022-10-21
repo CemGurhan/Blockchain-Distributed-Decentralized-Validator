@@ -46,6 +46,8 @@ impl<T: Send + 'static> ApiSender<T> {
     ///
     /// The failure means that the node is being shut down.
     pub async fn send_message(&mut self, message: T) -> Result<(), SendError> {
+        println!("SENDING MESSAGE FROM send_message() exonum/src/blockchain api_sender.rs line 49");
+        // println!("{}",AnyTx::call_info);
         self.0.send(message).await.map_err(|_| SendError(()))
     }
 
@@ -71,8 +73,12 @@ impl ApiSender {
         &self,
         tx: Verified<AnyTx>,
     ) -> impl Future<Output = Result<(), SendError>> {
+        println!("SENDING OUT MESSAGE !!! broadcast_transaction() exonum/src/blockchain api_sender.rs line 74");
         let mut this = self.clone();
+        println!("{:?}",&tx.into_raw());
         async move { this.send_message(tx).await }
+        
+        
     }
 
     /// Sends a transaction over the channel synchronously. If this sender is connected to a node,
@@ -85,6 +91,7 @@ impl ApiSender {
     ///
     /// The failure means that the node is being shut down.
     pub fn broadcast_transaction_blocking(&self, tx: Verified<AnyTx>) -> Result<(), SendError> {
+        println!("SENDING OUT MESSAGE !!! broadcast_transaction_blocking() exonum/src/blockchain api_sender.rs line 89");
         self.send_message_blocking(tx)
     }
 }

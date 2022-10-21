@@ -936,12 +936,14 @@ impl NodeHandler {
                 // Transaction is OK, store it to the cache or persistent pool.
                 print!("{}\n", verdict.green().bold());
                 if self.state.persist_txs_immediately() {
+                    println!("PERSISTING TRANSACTION TO POOL consensus.rs line 939");
                     let fork = self.blockchain.fork();
                     Schema::new(&fork).add_transaction_into_pool(msg);
                     self.blockchain
                         .merge(fork.into_patch())
                         .expect("Cannot add transaction to persistent pool");
                 } else {
+                    println!("CACHING TRANSACTION TO POOL consensus.rs line 946");
                     self.state.tx_cache_mut().insert(hash, msg);
                 }
                 outcome = Ok(());
@@ -958,7 +960,6 @@ impl NodeHandler {
         if self.state.is_leader() && self.state.round() != Round::zero() {
             self.maybe_add_propose_timeout();
         }
-
         // We can collect the transactions in three possible scenarios:
         // 1. We're participating in the consensus and should vote for the block.
         // 2. We're lagging behind and processing committed blocks to achieve the current height.
@@ -987,6 +988,7 @@ impl NodeHandler {
             self.remove_request(&RequestData::BlockTransactions);
             self.handle_full_block();
         }
+        println!("VALIDATING DONE line 961 consesus.rs PT 2!!!");
         outcome
     }
 
@@ -1023,7 +1025,10 @@ impl NodeHandler {
         println!("HELLO FROM handle_incoming_tx() in consensus.rs");
 
         match self.handle_tx(msg.clone()) {
-            Ok(()) => self.broadcast(msg),
+            Ok(()) => {
+                self.broadcast(msg);
+                println!("SENT OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43");
+            }
             Err(e) => log::warn!(
                 "Failed to process transaction {:?} received via `ApiSender`: {}",
                 msg.payload(),

@@ -89,6 +89,7 @@ impl Precommit {
         block_hash: Hash,
         time: DateTime<Utc>,
     ) -> Self {
+        // println!("NEW PRECOMMIT MADE new() exonum/src/messages types.rs line 92");
         Self {
             validator,
             epoch,

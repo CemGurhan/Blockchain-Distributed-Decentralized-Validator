@@ -90,6 +90,7 @@ impl AdvancedPeers {
     pub fn send_message(&self, state: &State) -> Option<(PublicKey, RequestData)> {
         // If there are any peers with known greater blockchain height, sent a request
         // to one of them.
+        println!("SENDING MESSAGE from send_message() 2 exonum-node/src state.rs line 93");
         let block_height = state.blockchain_height();
         for peer in &self.peers_with_greater_height {
             if state.peers().contains_key(peer) {

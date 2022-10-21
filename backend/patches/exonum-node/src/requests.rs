@@ -97,6 +97,7 @@ impl NodeHandler {
     }
 
     fn send_transactions_by_hash(&mut self, author: PublicKey, hashes: &[Hash]) {
+        println!("HELLO FROM send_transactions_by_hash() exonum_node/src requests.rs line 100");
         let snapshot = self.blockchain.snapshot();
         let mut txs = Vec::new();
         let mut txs_size = 0;

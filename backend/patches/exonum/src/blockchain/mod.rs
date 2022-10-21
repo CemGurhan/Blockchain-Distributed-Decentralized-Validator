@@ -94,6 +94,7 @@ impl TransactionCache for () {
 /// Cache backed up by a B-tree map.
 impl TransactionCache for BTreeMap<Hash, Verified<AnyTx>> {
     fn get_transaction(&self, hash: Hash) -> Option<Verified<AnyTx>> {
+        println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 97");
         self.get(&hash).cloned()
     }
 
@@ -143,6 +144,7 @@ where
     T: RawAccess,
 {
     fn get_transaction(&self, hash: Hash) -> Option<Verified<AnyTx>> {
+        println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 147");
         self.cache
             .get_transaction(hash)
             .or_else(|| self.transactions.get(&hash))
@@ -747,6 +749,7 @@ impl BlockchainMut {
         // ^-- mutable reference taken for future compatibility.
         transactions: impl IntoIterator<Item = Verified<AnyTx>>,
     ) {
+        println!("ADDED TRANSACTION TO POOL exonum/src/blockchain mod.rs line 750");
         Self::add_transactions_into_db_pool(self.inner.db.as_ref(), transactions);
     }
 
