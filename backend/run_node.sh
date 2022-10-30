@@ -3,6 +3,8 @@ start_peer_port=7091
 start_public_port=9000
 
 cd example
+iB | 52.00 KiB/s
+
 
 echo "Hello from run_node.sh"
 i="$(($1))"
