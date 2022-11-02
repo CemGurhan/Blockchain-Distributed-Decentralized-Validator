@@ -9,6 +9,7 @@
 
 })(this, function($protobuf) {
     "use strict";
+    
 
     // Common aliases
     var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
