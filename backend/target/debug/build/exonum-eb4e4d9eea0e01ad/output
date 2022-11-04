@@ -1,4 +1,0 @@
-cargo:protos=/Users/cemgurhan/PHillita/FLoBC-validator/backend/patches/exonum/src/proto/schema
-cargo:common_protos=/Users/cemgurhan/.cargo/registry/src/github.com-1ecc6299db9ec823/exonum-proto-1.0.0/src/proto
-cargo:crypto_protos=/Users/cemgurhan/.cargo/registry/src/github.com-1ecc6299db9ec823/exonum-crypto-1.0.0/src/proto/schema
-cargo:merkledb_protos=/Users/cemgurhan/.cargo/registry/src/github.com-1ecc6299db9ec823/exonum-merkledb-1.0.0/src/proto

@@ -128,25 +128,45 @@ do
     sleep 10
 done
 
-if [ $endS -ne 0 ]
+if [ $endS -ne 0 ] # target version is endS
 then
     currentT=0
-    if [ $willTerminate -ne 1 ]
+    if [ $willTerminate -ne 1 ] # No input to spawn script at -r flag
     then
         currentT=-1
     else
-        tmp=$(tty)
-        if [[ "$tmp" == *"pts"* ]] 
+        tmp=$(tty) # tty = current terminal connected to standard input
+        if [[ "$tmp" == *"pts"* ]]  
         then
             currentT=${tmp##*/}
         else
-            tmp=${str:L-3}
+            tmp=${str:L-3} 
             currentT=$((tmp+0))
         fi
     fi
     openTab $command_start "$command_start ./scripts/track_plot/track.sh $endS $currentT $path2"
     # $command_start ./scripts/track_plot/track.sh $endS $currentT
 fi
+
+# Short for pseudoterminal, PTY is a pair of virtual devices that provide a bidirectional communication. 
+# One end of the channel is called the master or ptm, and the other is the slave or pts. The pts provides 
+# the pseudoterminal that acts exactly like a classic terminal and sends input data to the ptm. 
+# Output data is sent back from the ptm to the pts.
+# TTY ports are direct connections to the computer such as a keyboard/mouse or a serial connection to the device.
+# PTS connections are SSH connections or telnet connections. 
+# https://www.computerhope.com/jargon/p/pty.htm
+# https://www.golinuxcloud.com/difference-between-pty-vs-tty-vs-pts-linux/#:~:text=In%20layman%27s%20terms%20the%20primary,SSH%20connections%20or%20telnet%20connections.
+
+# if [[ "$tmp" == *"pts"* ]] tests whether the content of $tmp contains pts
+# https://superuser.com/questions/1582334/bash-what-means-quotes-inside-asterisk-str
+
+# currentT=${tmp##*/} attempts to remove every part of the contents of tmp up to and includng the /. Its a substring removal.
+# https://stackoverflow.com/questions/2059794/what-is-the-meaning-of-the-0-syntax-with-variable-braces-and-hash-chara
+
+# 
+
+
+
 
 # sleep 10
 # if [ $endS -ne 0 ]
