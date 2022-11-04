@@ -1,0 +1,19 @@
+address = "127.0.0.1:7092"
+
+[consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[general]
+supervisor_mode = "simple"
+validators_count = 2
+
+[validator_keys]
+consensus_key = "99d46f225d9b1cf9273da38e121356d04dfa38923d23dd246edda03e05e2d87e"
+service_key = "f36b637c37a781a3a3d5f618e7664a3a03c094683b2438c8fad7b85c4edef4b7"
