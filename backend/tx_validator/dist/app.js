@@ -40,14 +40,15 @@ function validation() {
 
 (0, _utils.fetchLatestModel)().then(function (base_model) {
   (0, _utils.fetchMinScore)().then(function (min_score) {
+    // console.log("TRYNA READ!")
     var fs = require("fs");
-    var text = fs.readFileSync("../../example/" + process.argv[3], { encoding: "utf8" });
+    var text = fs.readFileSync("../../" + process.argv[3], { encoding: "utf8" });
     text = text.replace("[", "");
     text = text.replace("]", "");
     text = text.split(",");
     text = text.map(Number);
     // delete a file
-    fs.unlink("../../example/" + process.argv[3], function (err) {
+    fs.unlink("../../" + process.argv[3], function (err) {
       if (err) {
         throw err;
       }

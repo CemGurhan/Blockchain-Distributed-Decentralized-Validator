@@ -467,7 +467,7 @@ impl SchemaUtils {
 
         let tempfile_name: String = format!("{}.txt", tempfile_name);
 
-        let tempfile_path: String = format!("../tx_validator/dist/{}", tempfile_name);
+        let tempfile_path: String = format!("./tx_validator/dist/{}", tempfile_name);
 
         {
             fs::write(&tempfile_path, weights_str).expect("Unable to write file");
@@ -478,7 +478,7 @@ impl SchemaUtils {
             .arg("evaluation_wrapper.py")
             .arg(tempfile_name)
             .arg((*model_name).clone())
-            .current_dir("../tx_validator/src")
+            .current_dir("./tx_validator/src")
             .output()
             .expect("failed to execute process");
 

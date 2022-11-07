@@ -606,8 +606,8 @@ impl NodeHandler {
                 _ => 0
             };
             SCORING_FLAG = AtomicU16::new(sf);
-            
-            let size_filename: String = format!("../tx_validator/src/models/{}/metadata", model_name);
+            println!("{}",model_name);
+            let size_filename: String = format!("./tx_validator/src/models/{}/metadata", model_name);
             let file = File::open(&size_filename).unwrap();
             let reader = BufReader::new(file);
             let model_size: String = reader.lines().next().unwrap().unwrap();

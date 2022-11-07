@@ -57,6 +57,8 @@ node_list=($(seq 1 $node_count))
 
 node_list=("${node_list[@]/%//pub.toml}")
 
+echo "NODE LIST: ${node_list[@]}"
+
 echo "Finalizing nodes.."
 for i in $(seq 0 $((node_count - 1))); do
     public_port=$((start_public_port + i))

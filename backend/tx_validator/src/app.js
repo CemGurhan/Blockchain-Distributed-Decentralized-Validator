@@ -25,14 +25,15 @@ fetchLatestModel()
   .then((base_model) => {
     fetchMinScore()
       .then((min_score) => {
+        // console.log("TRYNA READ!")
         var fs = require("fs");
-        var text = fs.readFileSync("../../example/"+process.argv[3], {encoding:"utf8"});
+        var text = fs.readFileSync("../../"+process.argv[3], {encoding:"utf8"});
         text = text.replace("[", "")
         text = text.replace("]", "")
         text = text.split(",")
         text = text.map(Number);
         // delete a file
-        fs.unlink("../../example/"+process.argv[3], (err) => {
+        fs.unlink("../../"+process.argv[3], (err) => {
           if (err) {
               throw err;
           }

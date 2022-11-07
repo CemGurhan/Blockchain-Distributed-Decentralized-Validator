@@ -8,6 +8,7 @@ exports.fetchMinScore = fetchMinScore;
 var http = require('http');
 
 function fetchPortNumber() {
+    // console.log(`PROCESS ARGV: ${process.argv[4]}`)
     return 9000 + parseInt(process.argv[4].trim());
 }
 
@@ -35,10 +36,12 @@ function HTTPGet(endpointURL) {
 
 var latest_model_index_fmt = function latest_model_index_fmt() {
     var port_number = fetchPortNumber();
+    // console.log(`PORT THAT WAS BREAKING THINS: ${port_number}`)
     return 'http://127.0.0.1:' + port_number + '/api/services/ml_service/v1/models/latestmodel';
 };
 var get_model_by_index_fmt = function get_model_by_index_fmt() {
     var port_number = fetchPortNumber();
+    // console.log(`SENDING OUT REQUEST TO GET LATEST MODEL INDEX AT PORT NUMBER ${port_number}`)
     return 'http://127.0.0.1:' + port_number + '/api/services/ml_service/v1/models/getmodel';
 };
 
@@ -80,10 +83,13 @@ function fetchLatestModel() {
         .then(function (latestIndex) {
             if ([0, -1].includes(latestIndex)) {
                 //new model 
+                // console.log(`TRYING TO FETCHLATESTMODEL WITH INDEX CORRECT !${latestIndex}`)
                 // let zerosArr = new Array(WEIGHTS_LENGTH).fill(0);
                 // resolve(zerosArr);
+
                 resolve(0);
             } else {
+                // console.log(`TRYING TO FETCHLATESTMODEL WITH INDEX ${latestIndex}`)
                 getModelByIndex(latestIndex) //fetch latest model weights
                 .then(function (latestModelWeights) {
                     resolve(latestModelWeights);

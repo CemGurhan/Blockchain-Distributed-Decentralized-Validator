@@ -2,8 +2,8 @@
 build:
 	@bash build_finalize.sh -n 2 -b -c -j
 
-.PHONY:runv1
-runv1:
+.PHONY:run
+run:
 	@bash run_node.sh  0 BAP 1 1 MNIST28X28
 
 .PHONY:runv2

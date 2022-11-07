@@ -909,7 +909,7 @@ impl NodeHandler {
                 .arg(gradients_filename)
                 .arg(val_id.to_string())
                 .arg(self.model_name.clone())
-                .current_dir("../tx_validator/dist")
+                .current_dir("./tx_validator/dist")
                 .output()
                 .expect("failed to execute process");
 
