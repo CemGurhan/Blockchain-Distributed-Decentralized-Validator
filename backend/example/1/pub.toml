@@ -1,0 +1,19 @@
+address = "http://1b3f-94-174-127-26.eu.ngrok.io"
+
+[consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[general]
+supervisor_mode = "simple"
+validators_count = 2
+
+[validator_keys]
+consensus_key = "168bf94164a50baa78d9cf06b01e1a3aa617f7abdd5f92e44df9e962d24c91de"
+service_key = "8ae1f9e4baba0c84cdcc2f4ead7a93bfc0155cff4c88586a2243123e37ae830f"
