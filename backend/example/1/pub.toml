@@ -1,4 +1,4 @@
-address = "http://1b3f-94-174-127-26.eu.ngrok.io"
+address = "localhost:6331"
 
 [consensus]
 first_round_timeout = 3000
@@ -15,5 +15,5 @@ supervisor_mode = "simple"
 validators_count = 2
 
 [validator_keys]
-consensus_key = "168bf94164a50baa78d9cf06b01e1a3aa617f7abdd5f92e44df9e962d24c91de"
-service_key = "8ae1f9e4baba0c84cdcc2f4ead7a93bfc0155cff4c88586a2243123e37ae830f"
+consensus_key = "68d903167f260b5692e6b1029ac9d914e882d27f2825293f3aa55ae6bc3faf66"
+service_key = "922be1665bf1fc9aa12d9436df98d01d16540eab28c467bb3159fe5c56f950cb"

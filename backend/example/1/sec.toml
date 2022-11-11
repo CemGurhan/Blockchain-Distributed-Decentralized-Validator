@@ -1,6 +1,6 @@
-consensus_public_key = "168bf94164a50baa78d9cf06b01e1a3aa617f7abdd5f92e44df9e962d24c91de"
-external_address = "http://1b3f-94-174-127-26.eu.ngrok.io"
-listen_address = "0.0.0.0:6333"
+consensus_public_key = "68d903167f260b5692e6b1029ac9d914e882d27f2825293f3aa55ae6bc3faf66"
+external_address = "localhost:6331"
+listen_address = "0.0.0.0:6331"
 master_key_path = "master.key.toml"
 
 [api]

@@ -28,12 +28,12 @@ function HTTPGet(endpointURL, options = ''){
 const latest_model_index_fmt = () => {
     let port_number = fetchPortNumber();
     // console.log(`PORT THAT WAS BREAKING THINS: ${port_number}`)
-    return `http://127.0.0.1:${port_number}/api/services/ml_service/v1/models/latestmodel`
+    return `http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel`
 }
 const get_model_by_index_fmt = () => {
     let port_number = fetchPortNumber();
     // console.log(`SENDING OUT REQUEST TO GET LATEST MODEL INDEX AT PORT NUMBER ${port_number}`)
-    return `http://127.0.0.1:${port_number}/api/services/ml_service/v1/models/getmodel`
+    return `http://127.0.0.1:9000/api/services/ml_service/v1/models/getmodel`
 }
 
 function getLatestModelIndex(){
