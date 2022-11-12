@@ -1,6 +1,6 @@
-consensus_public_key = "5241aecb842012ce66e772f0a5b212bdc55406c0fb966a5fcf915bf68776b947"
-external_address = "94.174.127.26:6331"
-listen_address = "0.0.0.0:6331"
+consensus_public_key = "eb4a72fab3003b23a605e3a0477c9811271f833dda1b0a8ab9153333ca57ad47"
+external_address = "94.174.127.26:6332"
+listen_address = "0.0.0.0:6332"
 master_key_path = "master.key.toml"
 
 [api]

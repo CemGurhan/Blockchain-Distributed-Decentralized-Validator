@@ -1,7 +1,7 @@
 [private_config]
-consensus_public_key = "5241aecb842012ce66e772f0a5b212bdc55406c0fb966a5fcf915bf68776b947"
-external_address = "94.174.127.26:6331"
-listen_address = "0.0.0.0:6331"
+consensus_public_key = "eb4a72fab3003b23a605e3a0477c9811271f833dda1b0a8ab9153333ca57ad47"
+external_address = "94.174.127.26:6332"
+listen_address = "0.0.0.0:6332"
 master_key_path = "master.key.toml"
 
 [private_config.api]
@@ -13,8 +13,8 @@ state_update_timeout = 10000
 max_retries = 20
 retry_timeout = 500
 [[private_config.connect_list.peers]]
-address = "86.190.119.237:6331"
-public_key = "cedd949f245ed6d337fd5aee30dc693e8c32e599d00dfe9a6bdc00daa100c96b"
+address = "86.190.119.237:6332"
+public_key = "61789977e39ceb9b7395f0cdf66e1d26e5c2e78540469d1433fb39702ee00492"
 
 [private_config.database]
 compression_type = "none"
@@ -46,12 +46,12 @@ status_timeout = 5000
 txs_block_limit = 1000
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "5241aecb842012ce66e772f0a5b212bdc55406c0fb966a5fcf915bf68776b947"
-service_key = "859f765d58a7a45fbc3d287773a8d3353d113a3e7d55446195336ad26f7601d3"
+consensus_key = "61789977e39ceb9b7395f0cdf66e1d26e5c2e78540469d1433fb39702ee00492"
+service_key = "c5a6e31ef2eedd2cce287dedded9590eeda7256a1158c35f9770032520cd2b04"
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "cedd949f245ed6d337fd5aee30dc693e8c32e599d00dfe9a6bdc00daa100c96b"
-service_key = "32d486b5a86b3d2cc47a65b827f927b9d1d29d0da2db2df878316ffba405d9a4"
+consensus_key = "eb4a72fab3003b23a605e3a0477c9811271f833dda1b0a8ab9153333ca57ad47"
+service_key = "ddbb04b53a9626c66dfc16822c55930dfcb4bda010c3987b3125c516b6e8e84a"
 
 [public_config.general]
 supervisor_mode = "simple"
