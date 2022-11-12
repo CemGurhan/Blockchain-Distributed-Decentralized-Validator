@@ -15,7 +15,7 @@ example/common.toml \
 
 exonum-ML generate-config \
   example/common.toml example/1 \
-  --peer-address ${validator_host:-"127.0.0.1"}:6331 -n
+  --peer-address ${validator_host:-"0.0.0.0"}:6331 -n
 
 cd example
 
@@ -34,17 +34,17 @@ sleep 2
 
 echo "All peer hosts are: '${peer_hosts[@]}'"
 
+
 if [[ $number_of_validators != 1 ]]
 then
     for i in "${!peer_hosts[@]}"; do
         pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
         pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":6335/getPubKey)"
 
-            if [[ pub_key_response_header -eq 000  ]]
-            then
-                echo "failed to call"
-                continue
-            fi
+            while [[ pub_key_response_header -eq 000  ]]
+            do
+                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
+            done
 
         echo "Ok"
 
