@@ -15,7 +15,7 @@ example/common.toml \
 
 exonum-ML generate-config \
   example/common.toml example/1 \
-  --peer-address ${validator_host:-"0.0.0.0"}:6331 -n
+  --peer-address ${validator_host:-"0.0.0.0"}:6332 -n
 
 cd example
 

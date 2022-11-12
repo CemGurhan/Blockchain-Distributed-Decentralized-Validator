@@ -1,0 +1,58 @@
+[private_config]
+consensus_public_key = "5241aecb842012ce66e772f0a5b212bdc55406c0fb966a5fcf915bf68776b947"
+external_address = "94.174.127.26:6331"
+listen_address = "0.0.0.0:6331"
+master_key_path = "master.key.toml"
+
+[private_config.api]
+private_api_address = "0.0.0.0:9001"
+public_api_address = "0.0.0.0:9000"
+state_update_timeout = 10000
+
+[private_config.api.server_restart]
+max_retries = 20
+retry_timeout = 500
+[[private_config.connect_list.peers]]
+address = "86.190.119.237:6331"
+public_key = "cedd949f245ed6d337fd5aee30dc693e8c32e599d00dfe9a6bdc00daa100c96b"
+
+[private_config.database]
+compression_type = "none"
+create_if_missing = true
+[private_config.mempool.events_pool_capacity]
+api_requests_capacity = 1024
+internal_events_capacity = 128
+network_events_capacity = 512
+network_requests_capacity = 512
+
+[private_config.mempool.flush_pool_strategy]
+timeout = 20
+type = "timeout"
+
+[private_config.network]
+max_incoming_connections = 128
+max_outgoing_connections = 128
+tcp_connect_max_retries = 10
+tcp_connect_retry_timeout = 15000
+tcp_nodelay = true
+[public_config.consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "5241aecb842012ce66e772f0a5b212bdc55406c0fb966a5fcf915bf68776b947"
+service_key = "859f765d58a7a45fbc3d287773a8d3353d113a3e7d55446195336ad26f7601d3"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "cedd949f245ed6d337fd5aee30dc693e8c32e599d00dfe9a6bdc00daa100c96b"
+service_key = "32d486b5a86b3d2cc47a65b827f927b9d1d29d0da2db2df878316ffba405d9a4"
+
+[public_config.general]
+supervisor_mode = "simple"
+validators_count = 2
