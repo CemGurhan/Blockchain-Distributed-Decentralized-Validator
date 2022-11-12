@@ -44,6 +44,7 @@ then
             while [[ pub_key_response_header -eq 000  ]]
             do
                 pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
+                pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":6335/getPubKey)"
             done
 
         echo "Ok"

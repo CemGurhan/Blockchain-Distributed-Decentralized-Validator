@@ -15,5 +15,5 @@ supervisor_mode = "simple"
 validators_count = 2
 
 [validator_keys]
-consensus_key = "eb4a72fab3003b23a605e3a0477c9811271f833dda1b0a8ab9153333ca57ad47"
-service_key = "ddbb04b53a9626c66dfc16822c55930dfcb4bda010c3987b3125c516b6e8e84a"
+consensus_key = "4cba4640228b65d851c0fc13f62c2d5e1bf336af6fd0a1450255b35c0656dbd2"
+service_key = "12a3d4a4bbcf6ad0a7b09df87f629b99de4b69f44f004ad1ba05ad7dc77d3b2c"

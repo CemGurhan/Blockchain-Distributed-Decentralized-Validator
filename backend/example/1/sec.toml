@@ -1,4 +1,4 @@
-consensus_public_key = "eb4a72fab3003b23a605e3a0477c9811271f833dda1b0a8ab9153333ca57ad47"
+consensus_public_key = "4cba4640228b65d851c0fc13f62c2d5e1bf336af6fd0a1450255b35c0656dbd2"
 external_address = "94.174.127.26:6332"
 listen_address = "0.0.0.0:6332"
 master_key_path = "master.key.toml"
