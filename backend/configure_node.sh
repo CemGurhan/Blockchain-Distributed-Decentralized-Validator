@@ -55,22 +55,29 @@ then
     done
 fi
 
+cd ..
+
+node_list=($(seq 1 $number_of_validators))
+
+node_list=("${node_list[@]/%//pub.toml}")
 
 
+exonum-ML finalize \
+  --public-api-address 0.0.0.0:9000 \
+  --private-api-address 0.0.0.0:9001 \
+  1/sec.toml 1/node.toml \
+  --public-configs "${node_list[@]}"
 
+echo "${node_list[@]}"
 
+cd ..
+cargo install --path .
+cd ./tx_validator
+npm install && babel src -d dist
+cd ..
+bash run_node.sh  0 BAP 1 1 MNIST28X28 
 
-
-# exonum-ML finalize \
-#   --public-api-address 0.0.0.0:9000 \
-#   --private-api-address 0.0.0.0:9001 \
-#   example/1/sec.toml example/1/node.toml \
-#   --public-configs example/1/pub.toml example/2/pub.toml
-
-# cargo install --path .
-# cd ./tx_validator
-# npm install && babel src -d dist
-# cd ..
+#TODO add local test version
 
 
 
