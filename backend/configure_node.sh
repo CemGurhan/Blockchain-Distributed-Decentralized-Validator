@@ -30,15 +30,32 @@ cd ..
 
 source ./scripts/utils/newTab.sh
 openTab sh "sh $PWD/run_reciever_daemon.sh $PWD"
+sleep 2
 
-echo "The whole list of values is '${peer_hosts[@]}'"
+echo "All peer hosts are: '${peer_hosts[@]}'"
 
 if [[ $number_of_validators != 1 ]]
 then
-    for val in "${peer_hosts[@]}"; do
-        echo "HI"
+    for i in "${!peer_hosts[@]}"; do
+        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
+        pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":6335/getPubKey)"
+
+            if [[ pub_key_response_header -eq 000  ]]
+            then
+                echo "failed to call"
+                continue
+            fi
+
+        echo "Ok"
+
+        cd example
+        cd $((i+2))
+        echo "$pub_key_response" >> pub.toml
+
     done
 fi
+
+
 
 
 
