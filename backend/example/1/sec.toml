@@ -1,5 +1,5 @@
-consensus_public_key = "68d903167f260b5692e6b1029ac9d914e882d27f2825293f3aa55ae6bc3faf66"
-external_address = "localhost:6331"
+consensus_public_key = "a1c37d934ee426485ae9135b66faeb38ecdbdadb949f99d1ab198f24e4e37a50"
+external_address = "127.0.0.1:6331"
 listen_address = "0.0.0.0:6331"
 master_key_path = "master.key.toml"
 

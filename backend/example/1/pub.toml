@@ -1,4 +1,4 @@
-address = "localhost:6331"
+address = "127.0.0.1:6331"
 
 [consensus]
 first_round_timeout = 3000
@@ -12,8 +12,8 @@ txs_block_limit = 1000
 
 [general]
 supervisor_mode = "simple"
-validators_count = 2
+validators_count = 1
 
 [validator_keys]
-consensus_key = "68d903167f260b5692e6b1029ac9d914e882d27f2825293f3aa55ae6bc3faf66"
-service_key = "922be1665bf1fc9aa12d9436df98d01d16540eab28c467bb3159fe5c56f950cb"
+consensus_key = "a1c37d934ee426485ae9135b66faeb38ecdbdadb949f99d1ab198f24e4e37a50"
+service_key = "2b3bfd182343580c2c57049cbd2e211b9c2f2db710ef08212c7c4a2fe011949a"

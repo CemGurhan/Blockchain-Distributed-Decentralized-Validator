@@ -1,10 +1,6 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use std::fs;
 
-// fn getFileBytes() -> Result<Vec<u8>> {
-//     String::from_utf8_lossy(&fs::read("address.txt")?).parse()?;
-// }
-
 #[get("/getPubKey")]
 async fn ping() -> HttpResponse {
     let data = fs::read("../../example/1/pub.toml").expect("Unable to read file");

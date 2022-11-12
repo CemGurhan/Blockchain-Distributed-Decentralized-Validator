@@ -1,10 +1,11 @@
 rm -rf example
 mkdir example
 
-while getopts "n:h:" arg; do
+while getopts "n:h:p:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     h) validator_host="$OPTARG" ;;
+    p) peer_hosts+=("$OPTARG") ;;
     esac
 done
 
@@ -24,6 +25,23 @@ for i in $(seq 0 $((${number_of_validators:-1} - 1))); do
     touch pub.toml
     cd ..
 done
+
+cd ..
+
+source ./scripts/utils/newTab.sh
+openTab sh "sh $PWD/run_reciever_daemon.sh $PWD"
+
+echo "The whole list of values is '${peer_hosts[@]}'"
+
+if [[ $number_of_validators != 1 ]]
+then
+    for val in "${peer_hosts[@]}"; do
+        echo "HI"
+    done
+fi
+
+
+
 
 
 # exonum-ML finalize \
