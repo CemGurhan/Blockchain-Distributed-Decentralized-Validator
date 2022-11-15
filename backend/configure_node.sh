@@ -1,6 +1,10 @@
 rm -rf example
 mkdir example
 
+number_of_validators=1
+validator_host="0.0.0.0"
+
+
 while getopts "n:h:p:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
@@ -11,15 +15,15 @@ done
 
 exonum-ML generate-template \
 example/common.toml \
---validators-count ${number_of_validators:-1}
+--validators-count $number_of_validators
 
 exonum-ML generate-config \
   example/common.toml example/1 \
-  --peer-address ${validator_host:-"0.0.0.0"}:6332 -n
+  --peer-address $validator_host:6332 -n
 
 cd example
 
-for i in $(seq 0 $((${number_of_validators:-1} - 1))); do 
+for i in $(seq 0 $(($number_of_validators - 1))); do 
     mkdir $((i+1))
     cd $((i+1))
     touch pub.toml
@@ -54,9 +58,10 @@ then
         echo "$pub_key_response" >> pub.toml
 
     done
+    cd ..
+else
+    cd example
 fi
-
-cd ..
 
 node_list=($(seq 1 $number_of_validators))
 
@@ -78,7 +83,6 @@ npm install && babel src -d dist
 cd ..
 bash run_node.sh  0 BAP 1 1 MNIST28X28 
 
-#TODO add local test version
 
 
 
