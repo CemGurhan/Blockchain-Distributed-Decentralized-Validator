@@ -3,6 +3,10 @@ mkdir example
 
 number_of_validators=1
 validator_host="0.0.0.0"
+sync="BAP"
+scoring_flag=1
+modelName="MNIST28X28"
+
 
 
 while getopts "n:h:p:" arg; do
@@ -10,6 +14,9 @@ while getopts "n:h:p:" arg; do
     n) number_of_validators=$(($OPTARG)) ;;
     h) validator_host="$OPTARG" ;;
     p) peer_hosts+=("$OPTARG") ;;
+    s) sync=    "$OPTARG" ;;
+    s) scoring_flag= $(($OPTARG)) ;;
+    m) modelName= "$OPTARG" ;;
     esac
 done
 
@@ -81,7 +88,7 @@ cargo install --path .
 cd ./tx_validator
 npm install && babel src -d dist
 cd ..
-bash run_node.sh  0 BAP 1 1 MNIST28X28 
+bash run_node.sh  0 $sync $scoring_flag 1 $modelName 
 
 
 
