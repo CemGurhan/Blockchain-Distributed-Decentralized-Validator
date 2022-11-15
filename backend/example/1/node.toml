@@ -1,20 +1,20 @@
 [private_config]
-consensus_public_key = "4d4fdfd5eb3fe63e790d00bb0ac2026e2fa200b5ddb5103bfc2f74de872d85fc"
+consensus_public_key = "9775b5c05187b59270ca29ba73b15460bb814c3160b52a9f7608f8ff573957a2"
 external_address = "127.0.0.1:7091"
 listen_address = "0.0.0.0:7091"
 master_key_path = "master.key.toml"
 
 [private_config.api]
-private_api_address = "0.0.0.0:9002"
+private_api_address = "0.0.0.0:9001"
 public_api_address = "0.0.0.0:9000"
 state_update_timeout = 10000
 
 [private_config.api.server_restart]
 max_retries = 20
 retry_timeout = 500
-[[private_config.connect_list.peers]]
-address = "127.0.0.1:7092"
-public_key = "e91fee16f19be4b698c5ebe3c60c389fe278113dca7a0aa67ddfe167ab6fa212"
+
+[private_config.connect_list]
+peers = []
 
 [private_config.database]
 compression_type = "none"
@@ -46,13 +46,9 @@ status_timeout = 5000
 txs_block_limit = 1000
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "4d4fdfd5eb3fe63e790d00bb0ac2026e2fa200b5ddb5103bfc2f74de872d85fc"
-service_key = "38fa00daa77b31e7e91d820fd89e779f362b951d4b89383cff4ea74e286b4107"
-
-[[public_config.consensus.validator_keys]]
-consensus_key = "e91fee16f19be4b698c5ebe3c60c389fe278113dca7a0aa67ddfe167ab6fa212"
-service_key = "8ed6c286799877df0add75520198ef3208f810009cb72fc2d6e0c4881a901a0b"
+consensus_key = "9775b5c05187b59270ca29ba73b15460bb814c3160b52a9f7608f8ff573957a2"
+service_key = "32416ca180878ee9966d1ab26eca68b1b7052a7aa7df550335cce094d867dbf2"
 
 [public_config.general]
 supervisor_mode = "simple"
-validators_count = 2
+validators_count = 1
