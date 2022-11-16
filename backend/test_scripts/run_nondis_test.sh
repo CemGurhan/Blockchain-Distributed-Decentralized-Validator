@@ -10,7 +10,7 @@ while getopts "n:p:s:" arg; do
     p) path=    "$OPTARG" ;;
     s) sync=    "$OPTARG" ;;
     d) duration= "$OPTARG" ;;
-    s) scoring_flag= $(($OPTARG)) ;;
+    f) scoring_flag= $(($OPTARG)) ;;
     m) modelName= "$OPTARG" ;;
     esac
 done
