@@ -1,0 +1,66 @@
+[private_config]
+consensus_public_key = "6dd4d97afb0150f28bc4955e501be2d6c1c3131ce50ee7d5253acd025686c955"
+external_address = "127.0.0.1:7093"
+listen_address = "0.0.0.0:7093"
+master_key_path = "master.key.toml"
+
+[private_config.api]
+private_api_address = "0.0.0.0:9005"
+public_api_address = "0.0.0.0:9002"
+state_update_timeout = 10000
+
+[private_config.api.server_restart]
+max_retries = 20
+retry_timeout = 500
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7091"
+public_key = "5c2d0bb85e9fe9c2d6dea22ff6ba0f54fd5f210422b8a38e8d72296febf1ee0a"
+
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7092"
+public_key = "76accc39a92ca45644b3ed80b86b1689841a8033eff81fa22f8b5c2c37a9d849"
+
+[private_config.database]
+compression_type = "none"
+create_if_missing = true
+[private_config.mempool.events_pool_capacity]
+api_requests_capacity = 1024
+internal_events_capacity = 128
+network_events_capacity = 512
+network_requests_capacity = 512
+
+[private_config.mempool.flush_pool_strategy]
+timeout = 20
+type = "timeout"
+
+[private_config.network]
+max_incoming_connections = 128
+max_outgoing_connections = 128
+tcp_connect_max_retries = 10
+tcp_connect_retry_timeout = 15000
+tcp_nodelay = true
+[public_config.consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "5c2d0bb85e9fe9c2d6dea22ff6ba0f54fd5f210422b8a38e8d72296febf1ee0a"
+service_key = "434716dd386652283d8ac0c27e5d7afbb02719e1268cbe489cdc505a945df7b5"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "6dd4d97afb0150f28bc4955e501be2d6c1c3131ce50ee7d5253acd025686c955"
+service_key = "5122785b77ae72875b37497aead3f9d3c9be89e7dd9c5f9a9416b7d91e8fc127"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "76accc39a92ca45644b3ed80b86b1689841a8033eff81fa22f8b5c2c37a9d849"
+service_key = "97a3418de694ab6c192d1a800b2eb430198837135bc621f0028db4846bce7036"
+
+[public_config.general]
+supervisor_mode = "simple"
+validators_count = 3
