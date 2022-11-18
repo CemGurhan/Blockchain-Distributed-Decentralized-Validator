@@ -20,8 +20,8 @@ PWD=$8
 #     source ./scripts/utils/newTab.sh
 #     openTab $command_start "$command_start ./scripts/spawn/syncer_run.sh $path"
 # fi
-source $PWD/scripts/utils/newTab.sh
-cd $PWD
+# source $PWD/scripts/utils/newTab.sh
+# cd $PWD
 echo "Hello from validator_run.sh! We are now running run_node.sh"
 echo "model_name: $model_name,i: $i, sync: $sync, nodes: $nodes, scoring_flag: $scoring_flag"
 $command_start "$PWD/test_scripts/run_test_node.sh" $i $sync $nodes $scoring_flag $model_name $PWD

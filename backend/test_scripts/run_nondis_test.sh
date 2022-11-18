@@ -18,7 +18,10 @@ done
 
 bash ./build_finalize.sh -n $number_of_validators -b -c -j
 
-for i in $(seq 0 $((${number_of_validators:-1} - 1))); do 
+source ./scripts/utils/newTab.sh
+openTab eval "echo 'Welcome to the DataNET local tester. You are running $number_of_validators validators for local testing'"
+
+for i in $(seq 0 $(($number_of_validators - 1))); do 
     source ./scripts/utils/newTab.sh
     openTab sh "sh $PWD/test_scripts/validator_test_run.sh sh $i $number_of_validators $sync $duration $scoring_flag $modelName $PWD"
 done
