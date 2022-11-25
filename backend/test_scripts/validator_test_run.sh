@@ -1,11 +1,9 @@
-command_start=$1
-i=$2
-nodes=$3
-sync=$4
-period=$5
-scoring_flag=$6
-model_name=$7
-PWD=$8
+i=$1
+nodes=$2
+sync=$3
+period=$4
+scoring_flag=$5
+model_name=$6
 # if [[ $path != "./" ]]
 # then 
 #     mkdir $path
@@ -22,6 +20,6 @@ PWD=$8
 # fi
 # source $PWD/scripts/utils/newTab.sh
 # cd $PWD
-echo "Hello from validator_run.sh! We are now running run_node.sh"
-echo "model_name: $model_name,i: $i, sync: $sync, nodes: $nodes, scoring_flag: $scoring_flag"
-$command_start "$PWD/test_scripts/run_test_node.sh" $i $sync $nodes $scoring_flag $model_name $PWD
+# echo "Hello from validator_run.sh! We are now running run_node.sh"
+# echo "model_name: $model_name,i: $i, sync: $sync, nodes: $nodes, scoring_flag: $scoring_flag"
+sh "test_scripts/run_test_node.sh" $i $sync $nodes $scoring_flag $model_name 

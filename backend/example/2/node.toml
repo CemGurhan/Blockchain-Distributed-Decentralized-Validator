@@ -1,11 +1,11 @@
 [private_config]
-consensus_public_key = "7c68f6597dd34faeb37dcd1870386a5de4dbf8012cf5e69932298c5a35759537"
+consensus_public_key = "8b2366d0352d82cf6f764d20d934ab839c4d5b7ff839b9ed07b1ae8ce47712aa"
 external_address = "127.0.0.1:7092"
 listen_address = "0.0.0.0:7092"
 master_key_path = "master.key.toml"
 
 [private_config.api]
-private_api_address = "0.0.0.0:9003"
+private_api_address = "0.0.0.0:9004"
 public_api_address = "0.0.0.0:9001"
 state_update_timeout = 10000
 
@@ -14,7 +14,11 @@ max_retries = 20
 retry_timeout = 500
 [[private_config.connect_list.peers]]
 address = "127.0.0.1:7091"
-public_key = "dbb5e6378b572e999709edb4ddde54209681bffc10548f76b7debf7abd9c8658"
+public_key = "5a77d0421efefa232fd5e4afa95be1a253f690b48d718583df7eed8b1ceeb014"
+
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7093"
+public_key = "9b5af74daee90ced86e04e5b75cc088bc5e47a9fcd65ac276bb9f0fff5bd5f63"
 
 [private_config.database]
 compression_type = "none"
@@ -46,13 +50,17 @@ status_timeout = 5000
 txs_block_limit = 1000
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "7c68f6597dd34faeb37dcd1870386a5de4dbf8012cf5e69932298c5a35759537"
-service_key = "61fbc79c6692eb05fd9597042062f86985632047205362fa559bba2efcfb1649"
+consensus_key = "5a77d0421efefa232fd5e4afa95be1a253f690b48d718583df7eed8b1ceeb014"
+service_key = "6f650c66e05427d76686ffdaf0f2399efbf639715c8c5b61b44a7e0ca04a7342"
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "dbb5e6378b572e999709edb4ddde54209681bffc10548f76b7debf7abd9c8658"
-service_key = "f261dcc28738a5428cbe313c86ccfd6813ab389ded78aa0b5a9b126d28095ebe"
+consensus_key = "8b2366d0352d82cf6f764d20d934ab839c4d5b7ff839b9ed07b1ae8ce47712aa"
+service_key = "224dc2300f0186a2fc3e7168e8a6fb63b8c51702e30062f1e6968310d65fb629"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "9b5af74daee90ced86e04e5b75cc088bc5e47a9fcd65ac276bb9f0fff5bd5f63"
+service_key = "755b49a66eab5dac8032b8e7589de12d7af783643ddf0a4462d422b31ce01d8e"
 
 [public_config.general]
 supervisor_mode = "simple"
-validators_count = 2
+validators_count = 3

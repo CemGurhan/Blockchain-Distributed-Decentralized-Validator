@@ -215,6 +215,10 @@ where
         self.deadline_status.set(status);
     }
 
+    // pub fn get_lightClient_score(&mut self) {
+
+    // }
+
     // modified
     pub fn update_model(&mut self) {
         // If there are no pending transactions, no new model should be created
