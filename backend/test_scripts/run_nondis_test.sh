@@ -47,3 +47,5 @@ bash ./build_finalize.sh -n $number_of_validators -b -c -j
 for i in $(seq 0 $(($number_of_validators - 1))); do 
     ttab -w sh test_scripts/validator_test_run.sh $i $number_of_validators $sync $duration $scoring_flag $modelName 
 done
+
+# TODO add wait period for validators to have been spun up before running lightclients 
