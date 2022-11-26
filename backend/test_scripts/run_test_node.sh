@@ -19,7 +19,6 @@ start_public_port=9000
 cd example
 # iB | 52.00 KiB/s
 
-
 echo "Hello from run_node.sh"
 i="$(($1))"
 sync_policy=$2
@@ -36,8 +35,6 @@ private_port=$((public_port + node_count))
 echo "new node with ports: $public_port (public), hello from run_node.sh - we're running exonum-ML now"
 exonum-ML run --node-config $((i + 1))/node.toml --db-path $((i + 1))/db --public-api-address 0.0.0.0:${public_port} --master-key-pass pass \
 --sync-policy $sync_policy --scoring-flag $scoring_flag --model-name $model_name
-
-
 
 if [ $endS -ne 0 ] # target version is endS
 then

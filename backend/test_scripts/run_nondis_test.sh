@@ -1,6 +1,6 @@
 sync="BAP"
 duration=60
-scoring_flag=1
+scoring_flag=1 
 modelName="MNIST28X28"
 number_of_validators=1
 
@@ -15,10 +15,8 @@ while getopts "n:p:s:" arg; do
     esac
 done
 
-
 bash ./build_finalize.sh -n $number_of_validators -b -c -j
 
 for i in $(seq 0 $(($number_of_validators - 1))); do 
     ttab -w sh test_scripts/validator_test_run.sh $i $number_of_validators $sync $duration $scoring_flag $modelName 
 done
-
