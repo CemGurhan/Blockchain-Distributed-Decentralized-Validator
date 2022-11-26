@@ -17,7 +17,7 @@ async fn post_data(path: web::Path<String>, req: HttpRequest, body: Bytes) -> Ht
 
 #[get("/dataFilledConfirm")]
 async fn data_filled_confirm() -> HttpResponse {
-    for i in 1..11 {
+    for i in 0..10 {
         let data_file = format!("../../test_data/data{}.csv",i);
         let data = fs::read(data_file).expect("Unable to read file");
         if data.is_empty() {
