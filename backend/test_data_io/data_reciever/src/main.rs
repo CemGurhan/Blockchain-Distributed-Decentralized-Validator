@@ -9,6 +9,7 @@ async fn post_data(path: web::Path<String>, req: HttpRequest, body: Bytes) -> Ht
     println!("received data from lightclient {}", lightclient_number + 1);
     let data_file = format!("../../test_data/data{}.csv", lightclient_number);
     let string_body = String::from_utf8(body.to_vec());
+    println!("BODY: {:#?}", string_body);
     fs::write(data_file, string_body.unwrap().as_str()).expect("Unable to write file");
 
     let http_response_message = format!("succesfully saved data file for lightclient {}", lightclient_number + 1);
