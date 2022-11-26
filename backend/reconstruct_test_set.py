@@ -22,7 +22,7 @@ print(f"Files in test data directory: {files}")
 all_data = []
 
 for file in files:
-    with open(f"../test_data/{file}", 'r') as f:
+    with open(f"./test_data/{file}", 'r') as f:
         data = list(f.readlines())
         first_line, data = data[0], data[1:]
 

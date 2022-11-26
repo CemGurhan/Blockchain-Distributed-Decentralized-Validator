@@ -30,7 +30,8 @@ then
     cargo build --release
     ttab -w cargo run --release
     cd ../..
-    # python test_scripts/reconstruct_test_set.py
+    # curl the reciever to check if all ten LC data has been input , then continue. DO the same in LC
+    python reconstruct_test_set.py
 fi
 
 
