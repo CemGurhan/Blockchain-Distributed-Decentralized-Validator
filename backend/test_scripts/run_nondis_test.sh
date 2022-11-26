@@ -31,6 +31,11 @@ then
     ttab -w cargo run --release
     cd ../..
     # curl the reciever to check if all ten LC data has been input , then continue. DO the same in LC
+    data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:8000/dataFilledConfirm)"
+    while [[ data_fill_check_header -eq 500 ]]
+    do
+        data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:8000/dataFilledConfirm)"
+    done
     python reconstruct_test_set.py
 fi
 
