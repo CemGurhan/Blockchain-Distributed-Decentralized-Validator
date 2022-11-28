@@ -39,6 +39,8 @@ then
         data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:8000/dataFilledConfirm)"
     done
     python reconstruct_test_set.py
+    rm -f tx_validator/src/models/MNIST28X28/data.csv
+    mv test_data.csv tx_validator/src/models/MNIST28X28/data.csv
 fi
 
 

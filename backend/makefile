@@ -1,13 +1,7 @@
-.PHONY:build
-build:
-	@bash build_finalize.sh -n 2 -b -c -j
+four:
+	sh test_scripts/run_nondis_test.sh -n 4 -t 1   
+.PHONY:four
 
-.PHONY:runv1
-runv1:
-	@bash run_node.sh  0 BAP 1 1 MNIST28X28
 
-.PHONY:runv2
-runv2:
-	@bash run_node.sh  1 BAP 1 1 MNIST28X28
 
 	
