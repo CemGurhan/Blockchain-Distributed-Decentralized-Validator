@@ -15,7 +15,6 @@ from tensorflow.keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2
 def read_input(data_dir):
     #if len(sys.argv) < 2:
     #    raise Exception('No dataset path found')
-
     df = pd.read_csv(data_dir)
     # df = pd.read_csv("resized_test.csv")
     if len(df) == 0:

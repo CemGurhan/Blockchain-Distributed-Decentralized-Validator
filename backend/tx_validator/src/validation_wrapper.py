@@ -57,7 +57,6 @@ else:
 min_score = float(sys.argv[5])
 # evaluate_model = base_model + gradients
 score = model_mod.compute_validation_score(evaluate_model, data_dir)
-
 is_valid = score >= min_score
 
 send_valid(is_valid)
