@@ -897,14 +897,16 @@ impl NodeHandler {
                 .create(true)
                 .open(&gradients_filename)
                 .unwrap();
-
+            let file_open_end = SystemTime::now();
+            let file_write_start = SystemTime::now();
             if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
                 eprintln!("Couldn't write to file: {}", e);
             }
+            let file_write_end = SystemTime::now();
             // let gradients_filename: String = format!("v{}_gradients_{}.txt", val_id, aut);
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
-            let file_open_end = SystemTime::now();
-            let training_py_start = SystemTime::now();
+            
+            let validating_py_start = SystemTime::now();
             let output = Command::new("node")
                 .arg("app.js")
                 .arg(self.sync_policy.clone())
@@ -918,7 +920,7 @@ impl NodeHandler {
             if DEBUG {
                 println!("Output {:?}", output);
             }
-            let training_py_end = SystemTime::now();
+            let validating_py_end = SystemTime::now();
             let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
             results.pop(); // pop EOL char
             let delim_pos = results.find(':').unwrap();
@@ -937,11 +939,13 @@ impl NodeHandler {
             let validation_end = SystemTime::now();
             let validation_duration = validation_end.duration_since(validation_start).unwrap();
             let file_open_duration = file_open_end.duration_since(file_open_start).unwrap();
-            let py_training_duration = training_py_end.duration_since(training_py_start).unwrap();
-            println!("VALIDATION TOOK {} SECONDS. FILE OPEN TOOK {} SECONDS. PY TRAINING TOOK {} SECONDS. ", 
+            let file_write_duration = file_write_end.duration_since(file_write_start).unwrap();
+            let py_validation_duration = validating_py_end.duration_since(validating_py_start).unwrap();
+            println!("VALIDATION TOOK {} SECONDS. FILE OPEN TOOK {} SECONDS. FILE WRITE TOOK {} SECONDS. PY VALIDATING TOOK {} SECONDS.", 
             validation_duration.as_secs(), 
             file_open_duration.as_secs(),
-            py_training_duration.as_secs());
+            file_write_duration.as_secs(),
+            py_validation_duration.as_secs());
 
             print!("{}: ", "(from consensus.rs) Validation verdict".white().bold().underline());
             if verdict == "VALID" {
