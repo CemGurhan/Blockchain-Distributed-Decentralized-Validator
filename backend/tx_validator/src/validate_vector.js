@@ -14,6 +14,10 @@ function run_python(newModel_flag, validation_path, base_model, gradients, min_s
 
         const { PythonShell } = require('python-shell');
 
+        // console.log(process.argv[5])
+            // validation_path:${validation_path}. 
+            //         min score: ${min_score}`)
+
         const options = {
             mode: 'text',
             scriptPath: '../src/',

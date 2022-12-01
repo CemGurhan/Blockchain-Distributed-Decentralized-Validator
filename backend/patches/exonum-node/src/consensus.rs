@@ -50,6 +50,8 @@ use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::sync::atomic::Ordering;
 
+use std::io::BufReader;
+
 /// Shortcut to get verified messages from bytes.
 fn into_verified<T: TryFrom<SignedMessage>>(raw: &[Vec<u8>]) -> anyhow::Result<Vec<Verified<T>>> {
     let mut items = Vec::with_capacity(raw.len());
@@ -887,9 +889,11 @@ impl NodeHandler {
             unsafe {
                 val_id = VALIDATOR_ID.load(Ordering::SeqCst);
             }
+            println!("CREATING GRADIENTS FILE IN EXAMPLE FOLDER");
             let gradients_filename: String =
                 format!("v{}_gradients_{}.txt", val_id, msg.author().to_hex());
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
+            println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
             let file_open_start = SystemTime::now();
             let mut file = OpenOptions::new()
                 .write(true)
@@ -898,14 +902,68 @@ impl NodeHandler {
                 .open(&gradients_filename)
                 .unwrap();
             let file_open_end = SystemTime::now();
-            let file_write_start = SystemTime::now();
-            if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
-                eprintln!("Couldn't write to file: {}", e);
-            }
-            let file_write_end = SystemTime::now();
-            // let gradients_filename: String = format!("v{}_gradients_{}.txt", val_id, aut);
-            // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
+
+            let mut binary_file = std::fs::File::create("binary");
+
+            let mut f = match binary_file {
+                Ok(file) => file,
+                Err(e) => return Err(HandleTxError::InvalidML),
+                
+            };
+
+            let a = &msg.payload().arguments;
+            let b = &a;
+            let c: &[u8] = &a;
+
+            f.write_all(c);
+
+            // let mut filde = std::fs::File::open("binary");
+            // let mut fill = match filde {
+            //     Ok(file) => file,
+            //     Err(e) => return Err(HandleTxError::InvalidML),
+                
+            // };
+            // // read the same file back into a Vec of bytes
+            // let mut buffer = Vec::<u8>::new();
+            // fill.read_to_end(&mut buffer);
+            // println!("{:?}", buffer);
+
+
+
+            // -----------------------------------------------------------------
+
+            // println!("CURRENT DIRECTORY {:#?}", std::env::current_dir());
             
+            // let output_py = Command::new("python")
+            //     .arg("../tx_validator/scripts/validator.py")
+            //     .arg("1") // new model flag
+            //     .arg("validation_path")
+            //     .arg(msg.payload().arguments)
+            //     .arg("") // base model
+            //     .arg("gradients") // gradients
+            //     .arg("0") // min_score
+            //     .arg("MNIST28X28")
+            //     .output()
+            //     .expect("failed to execute process");
+
+
+
+            // println!("PYTHON OUTPUT: {:#?}", output_py);
+
+
+            // -----------------------------------------------------------------
+
+            println!("WRITING TO GRADIENTS FILE IN EXAMPLE FOLDER");
+            
+            let file_write_start = SystemTime::now();
+
+            // if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
+            //     eprintln!("Couldn't write to file: {}", e);
+            // }
+            
+            let file_write_end = SystemTime::now();
+            println!("WRITTEN TO GRADIENTS FILE IN EXAMPLE FOLDER");
+            println!("VALIDATING MODELS START");
             let validating_py_start = SystemTime::now();
             let output = Command::new("node")
                 .arg("app.js")
@@ -917,10 +975,14 @@ impl NodeHandler {
                 .output()
                 .expect("failed to execute process");
 
+            // -----------------------------------------------------------------
+            
+
             if DEBUG {
                 println!("Output {:?}", output);
             }
             let validating_py_end = SystemTime::now();
+            println!("VALIDATING MODELS END");
             let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
             results.pop(); // pop EOL char
             let delim_pos = results.find(':').unwrap();
