@@ -26,18 +26,22 @@ fetchLatestModel()
     fetchMinScore()
       .then((min_score) => {
         var fs = require("fs");
-        var text = fs.readFileSync("../../example/"+process.argv[3], {encoding:"utf8"});
-        text = text.replace("[", "")
-        text = text.replace("]", "")
-        text = text.split(",")
-        text = text.map(Number);
+        // var text = fs.readFileSync("../../example/"+process.argv[3], {encoding:"utf8"});
+        // text = text.replace("[", "")
+        // text = text.replace("]", "")
+        // text = text.split(",")
+        // text = text.map(Number);
+        
+        
+        var text = fs.readFileSync("../../example/"+process.argv[3]);
+        let transaction = proto.TxShareUpdates.decode(text);
         // delete a file
         fs.unlink("../../example/"+process.argv[3], (err) => {
           if (err) {
               throw err;
           }
         });
-        let transaction = proto.TxShareUpdates.decode(text);
+        // let transaction = proto.TxShareUpdates.decode(text);
         // console.log("First element = ",transaction.gradients[0])
         // console.log("Last element = ",transaction.gradients[transaction.gradients.length-1])
         let val_id = process.argv[4];

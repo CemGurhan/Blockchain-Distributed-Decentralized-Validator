@@ -891,7 +891,7 @@ impl NodeHandler {
             }
             println!("CREATING GRADIENTS FILE IN EXAMPLE FOLDER");
             let gradients_filename: String =
-                format!("v{}_gradients_{}.txt", val_id, msg.author().to_hex());
+                format!("v{}_gradients_{}", val_id, msg.author().to_hex());
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
             println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
             let file_open_start = SystemTime::now();
@@ -903,7 +903,7 @@ impl NodeHandler {
                 .unwrap();
             let file_open_end = SystemTime::now();
 
-            let mut binary_file = std::fs::File::create("binary");
+            let mut binary_file = std::fs::File::create(&gradients_filename);
 
             let mut f = match binary_file {
                 Ok(file) => file,
@@ -911,7 +911,7 @@ impl NodeHandler {
                 
             };
 
-            let a = &msg.payload().arguments;
+            let mut a = &msg.payload().arguments;
             let b = &a;
             let c: &[u8] = &a;
 
@@ -933,12 +933,15 @@ impl NodeHandler {
             // -----------------------------------------------------------------
 
             // println!("CURRENT DIRECTORY {:#?}", std::env::current_dir());
+
+
+            
             
             // let output_py = Command::new("python")
             //     .arg("../tx_validator/scripts/validator.py")
             //     .arg("1") // new model flag
             //     .arg("validation_path")
-            //     .arg(msg.payload().arguments)
+            //     .envs(book_reviews)
             //     .arg("") // base model
             //     .arg("gradients") // gradients
             //     .arg("0") // min_score

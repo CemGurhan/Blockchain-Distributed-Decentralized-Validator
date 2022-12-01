@@ -41,18 +41,22 @@ function validation() {
 (0, _utils.fetchLatestModel)().then(function (base_model) {
   (0, _utils.fetchMinScore)().then(function (min_score) {
     var fs = require("fs");
-    var text = fs.readFileSync("../../example/" + process.argv[3], { encoding: "utf8" });
-    text = text.replace("[", "");
-    text = text.replace("]", "");
-    text = text.split(",");
-    text = text.map(Number);
+    // var text = fs.readFileSync("../../example/"+process.argv[3], {encoding:"utf8"});
+    // text = text.replace("[", "")
+    // text = text.replace("]", "")
+    // text = text.split(",")
+    // text = text.map(Number);
+
+
+    var text = fs.readFileSync("../../example/" + process.argv[3]);
+    var transaction = proto.TxShareUpdates.decode(text);
     // delete a file
     fs.unlink("../../example/" + process.argv[3], function (err) {
       if (err) {
         throw err;
       }
     });
-    var transaction = proto.TxShareUpdates.decode(text);
+    // let transaction = proto.TxShareUpdates.decode(text);
     // console.log("First element = ",transaction.gradients[0])
     // console.log("Last element = ",transaction.gradients[transaction.gradients.length-1])
     var val_id = process.argv[4];
