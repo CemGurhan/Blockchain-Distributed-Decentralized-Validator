@@ -33,8 +33,8 @@ fetchLatestModel()
         // text = text.map(Number);
         
         
-        var text = fs.readFileSync("../../example/"+process.argv[3]);
-        let transaction = proto.TxShareUpdates.decode(text);
+        var binary_weights = fs.readFileSync("../../example/"+process.argv[3]);
+        let transaction = proto.TxShareUpdates.decode(binary_weights);
         // delete a file
         fs.unlink("../../example/"+process.argv[3], (err) => {
           if (err) {
