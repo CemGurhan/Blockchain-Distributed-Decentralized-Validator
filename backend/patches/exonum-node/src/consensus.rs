@@ -894,15 +894,16 @@ impl NodeHandler {
                 format!("v{}_gradients_{}", val_id, msg.author().to_hex());
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
             println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
-            let file_open_start = SystemTime::now();
+            
             let mut file = OpenOptions::new()
                 .write(true)
                 .append(true)
                 .create(true)
                 .open(&gradients_filename)
                 .unwrap();
-            let file_open_end = SystemTime::now();
+            
 
+            let file_open_start = SystemTime::now();
             let mut binary_file = std::fs::File::create(&gradients_filename);
 
             let mut f = match binary_file {
@@ -910,12 +911,14 @@ impl NodeHandler {
                 Err(e) => return Err(HandleTxError::InvalidML),
                 
             };
+            let file_open_end = SystemTime::now();
 
+            let file_write_start = SystemTime::now();
             let mut a = &msg.payload().arguments;
             let b = &a;
             let c: &[u8] = &a;
-
             f.write_all(c);
+            let file_write_end = SystemTime::now();
 
             // let mut filde = std::fs::File::open("binary");
             // let mut fill = match filde {
@@ -956,16 +959,14 @@ impl NodeHandler {
 
             // -----------------------------------------------------------------
 
-            println!("WRITING TO GRADIENTS FILE IN EXAMPLE FOLDER");
             
-            let file_write_start = SystemTime::now();
+            
 
             // if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
             //     eprintln!("Couldn't write to file: {}", e);
             // }
             
-            let file_write_end = SystemTime::now();
-            println!("WRITTEN TO GRADIENTS FILE IN EXAMPLE FOLDER");
+            
             println!("VALIDATING MODELS START");
             let validating_py_start = SystemTime::now();
             let output = Command::new("node")

@@ -43,7 +43,7 @@ else
     mkdir example
     cd example
     echo "Generating node configs..."
-    exonum-ML generate-template common.toml --validators-count ${node_count}
+    exonum-ML generate-template common.toml --validators-count ${node_count} --supervisor-mode decentralized
     for i in $(seq 0 $((node_count - 1))); do
         peer_port=$((start_peer_port + i))
         exonum-ML generate-config common.toml $((i + 1)) --peer-address 127.0.0.1:${peer_port} -n
