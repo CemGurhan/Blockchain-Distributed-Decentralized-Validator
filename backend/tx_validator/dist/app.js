@@ -48,8 +48,8 @@ function validation() {
     // text = text.map(Number);
 
 
-    var text = fs.readFileSync("../../example/" + process.argv[3]);
-    var transaction = proto.TxShareUpdates.decode(text);
+    var binary_weights = fs.readFileSync("../../example/" + process.argv[3]);
+    var transaction = proto.TxShareUpdates.decode(binary_weights);
     // delete a file
     fs.unlink("../../example/" + process.argv[3], function (err) {
       if (err) {

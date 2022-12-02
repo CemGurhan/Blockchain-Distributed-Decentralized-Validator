@@ -2,8 +2,8 @@ const fs = require('fs');
 
 export default function store_encoded_vector(gradients, filename){
     return new Promise(function(resolve){
-        let encoded = gradients.join("|"); 
-        fs.writeFileSync(filename, encoded);
+        // let encoded = gradients.join("|"); 
+        fs.writeFileSync(filename, gradients);
         resolve(filename);
     });
 }
