@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -9,8 +9,8 @@ var fs = require('fs');
 
 function store_encoded_vector(gradients, filename) {
     return new Promise(function (resolve) {
-        // let encoded = gradients.join("|"); 
-        fs.writeFileSync(filename, gradients);
+        var encoded = gradients.join("|");
+        fs.writeFileSync(filename, encoded);
         resolve(filename);
     });
 }

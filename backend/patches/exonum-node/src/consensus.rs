@@ -50,7 +50,11 @@ use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::sync::atomic::Ordering;
 
-use std::io::BufReader;
+
+extern crate serde_json;
+use reqwest::blocking::get;
+
+
 
 /// Shortcut to get verified messages from bytes.
 fn into_verified<T: TryFrom<SignedMessage>>(raw: &[Vec<u8>]) -> anyhow::Result<Vec<Verified<T>>> {
@@ -895,12 +899,12 @@ impl NodeHandler {
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
             println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
             
-            let mut file = OpenOptions::new()
-                .write(true)
-                .append(true)
-                .create(true)
-                .open(&gradients_filename)
-                .unwrap();
+            // let mut file = OpenOptions::new()
+            //     .write(true)
+            //     .append(true)
+            //     .create(true)
+            //     .open(&gradients_filename)
+            //     .unwrap();
             
 
             let file_open_start = SystemTime::now();
@@ -913,6 +917,7 @@ impl NodeHandler {
             };
             let file_open_end = SystemTime::now();
 
+
             let file_write_start = SystemTime::now();
             let mut a = &msg.payload().arguments;
             let b = &a;
@@ -920,53 +925,72 @@ impl NodeHandler {
             f.write_all(c);
             let file_write_end = SystemTime::now();
 
-            // let mut filde = std::fs::File::open("binary");
-            // let mut fill = match filde {
-            //     Ok(file) => file,
-            //     Err(e) => return Err(HandleTxError::InvalidML),
-                
-            // };
-            // // read the same file back into a Vec of bytes
-            // let mut buffer = Vec::<u8>::new();
-            // fill.read_to_end(&mut buffer);
-            // println!("{:?}", buffer);
+            // -----------------------------------------------------------------
 
+            let latest_model = fetch_latest_model();
+
+
+            // let latest_model =  fetch_latest_model();
+            
+
+            // let min_score = fetch_min_score();
+        
+            let val_id = 1;
+            let gradients_file = format!("gradients{}",val_id);
+        
+            // let mut file = OpenOptions::new()
+            // .write(true)
+            // .append(true)
+            // .create(true)
+            // .open(gradients_file)
+            // .unwrap();
+        
+            // if let Err(e) = writeln!(file, "{}", latest_model) {
+            //         eprintln!("Couldn't write to file: {}", e);
+            //     }
+            
+            if latest_model == "0" {
+                //  let output_py = Command::new("python")
+                //         .arg("../tx_validator/scripts/validator.py")
+                //         .arg("1") // new model flag
+                //         .arg("validation_path")
+                //         .arg("") // base model
+                //         .arg("gradients") // gradients
+                //         .arg("0") // min_score
+                //         .arg("MNIST28X28")
+                //         .output()
+                //         .expect("failed to execute process");
+            } else {
+                let gradients_file = format!( "base_model{}",val_id);
+                let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .create(true)
+                    .open(gradients_file)
+                    .unwrap();
+
+                    if let Err(e) = writeln!(file, "{}", latest_model) {
+                        eprintln!("Couldn't write to file: {}", e);
+                    }
+        
+        
+        
+                // let output_py = Command::new("python")
+                // .arg("../tx_validator/scripts/validator.py")
+                // .arg("1") // new model flag
+                // .arg("validation_path")
+                // .arg("") // base model
+                // .arg("gradients") // gradients
+                // .arg("0") // min_score
+                // .arg("MNIST28X28")
+                // .output()
+                // .expect("failed to execute process");
+            }
 
 
             // -----------------------------------------------------------------
 
-            // println!("CURRENT DIRECTORY {:#?}", std::env::current_dir());
 
-
-            
-            
-            // let output_py = Command::new("python")
-            //     .arg("../tx_validator/scripts/validator.py")
-            //     .arg("1") // new model flag
-            //     .arg("validation_path")
-            //     .envs(book_reviews)
-            //     .arg("") // base model
-            //     .arg("gradients") // gradients
-            //     .arg("0") // min_score
-            //     .arg("MNIST28X28")
-            //     .output()
-            //     .expect("failed to execute process");
-
-
-
-            // println!("PYTHON OUTPUT: {:#?}", output_py);
-
-
-            // -----------------------------------------------------------------
-
-            
-            
-
-            // if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
-            //     eprintln!("Couldn't write to file: {}", e);
-            // }
-            
-            
             println!("VALIDATING MODELS START");
             let validating_py_start = SystemTime::now();
             let output = Command::new("node")
@@ -978,8 +1002,6 @@ impl NodeHandler {
                 .current_dir("../tx_validator/dist")
                 .output()
                 .expect("failed to execute process");
-
-            // -----------------------------------------------------------------
             
 
             if DEBUG {
@@ -1547,4 +1569,51 @@ impl NodeHandler {
             }
         }
     }
+}
+
+fn fetch_latest_model() -> String {
+    let latest_index = get_latest_model_index();
+    let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
+
+    if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
+        return "0".to_string()
+    } else {
+        let latest_model = get_latest_model_by_index(latest_index_unwrapped);
+        return  latest_model.unwrap().text().unwrap();
+
+    }
+}
+
+fn get_latest_model_index() -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let body = reqwest::blocking::get("http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel");
+
+    Ok(body.unwrap())
+}
+
+async fn fetch_min_score() -> String {
+    let latest_index = get_latest_model_index();
+    let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
+
+    if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
+        return "0".to_string()
+    } else {
+        let model_score = get_model_score(latest_index_unwrapped).await;
+        return  model_score.unwrap().text().unwrap();
+
+    }
+}
+
+fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/getmodel/version={}", index);
+    let client = reqwest::Client::new();
+    let body = reqwest::blocking::get(get_latest_model_by_index_url);
+    Ok(body.unwrap())
+}
+
+async fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+    let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_score?version={}", index);
+    let client = reqwest::Client::new();
+    let body = reqwest::blocking::get(get_model_score_url);
+    Ok(body.unwrap())
 }
