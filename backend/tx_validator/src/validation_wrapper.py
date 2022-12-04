@@ -10,7 +10,7 @@ import tensorflow as tf
 #tf.get_logger().setLevel('ERROR')
 #warnings.filterwarnings('ignore')
 
-MODELS_DIR = '../src/models/'
+MODELS_DIR = '../tx_validator/src/models/'
 
 model_id = sys.argv[6]
 
@@ -21,10 +21,10 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path):
-    gradients = open(gradients_path, "r").readline()
-    split = gradients.split("|")
+    gradients = open(gradients_path, "rb").read()
+    split = gradients.decode('latin-1').split(",")
     split = [float(element) for element in split]
-    return np.array(split)
+    return np.array(gradients)
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'

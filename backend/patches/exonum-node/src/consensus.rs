@@ -25,7 +25,7 @@ use exonum::{
     runtime::ExecutionError,
 };
 use log::{error, info, trace, warn};
-use std::time::SystemTime;
+use std::{time::SystemTime, process::{Output, ExitStatus}};
 use std::{collections::HashSet, convert::TryFrom, fmt, process::Command};
 
 use crate::{
@@ -893,22 +893,20 @@ impl NodeHandler {
             unsafe {
                 val_id = VALIDATOR_ID.load(Ordering::SeqCst);
             }
-            println!("CREATING GRADIENTS FILE IN EXAMPLE FOLDER");
+            // println!("CREATING GRADIENTS FILE IN EXAMPLE FOLDER");
             let gradients_filename: String =
                 format!("v{}_gradients_{}", val_id, msg.author().to_hex());
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
-            println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
-            
-            // let mut file = OpenOptions::new()
-            //     .write(true)
-            //     .append(true)
-            //     .create(true)
-            //     .open(&gradients_filename)
-            //     .unwrap();
-            
+            // println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
 
+            let latest_model = fetch_latest_model();
+            let min_score = fetch_min_score();
+
+            
+            let gradients_file = format!("gradients{}",val_id);
+            
             let file_open_start = SystemTime::now();
-            let mut binary_file = std::fs::File::create(&gradients_filename);
+            let mut binary_file = std::fs::File::create(&gradients_file);
 
             let mut f = match binary_file {
                 Ok(file) => file,
@@ -924,92 +922,84 @@ impl NodeHandler {
             let c: &[u8] = &a;
             f.write_all(c);
             let file_write_end = SystemTime::now();
-
-            // -----------------------------------------------------------------
-
-            let latest_model = fetch_latest_model();
-
-
-            // let latest_model =  fetch_latest_model();
             
+            // let output = Output{ status: todo!(), stdout: todo!(), stderr: todo!() };
+            println!("VALIDATING MODELS START");
 
-            // let min_score = fetch_min_score();
+            let mut results = "511".to_string();
+            let mut status = "115".to_string();
         
-            let val_id = 1;
-            let gradients_file = format!("gradients{}",val_id);
-        
-            // let mut file = OpenOptions::new()
-            // .write(true)
-            // .append(true)
-            // .create(true)
-            // .open(gradients_file)
-            // .unwrap();
-        
-            // if let Err(e) = writeln!(file, "{}", latest_model) {
-            //         eprintln!("Couldn't write to file: {}", e);
-            //     }
-            
+    
             if latest_model == "0" {
-                //  let output_py = Command::new("python")
-                //         .arg("../tx_validator/scripts/validator.py")
-                //         .arg("1") // new model flag
-                //         .arg("validation_path")
-                //         .arg("") // base model
-                //         .arg("gradients") // gradients
-                //         .arg("0") // min_score
-                //         .arg("MNIST28X28")
-                //         .output()
-                //         .expect("failed to execute process");
+                // let gradients_file_path = format!("{}", gradients_file);
+                println!("INSIDE FIRST IF STATEMENT");
+                 let output = Command::new("python")
+                        .arg("../tx_validator/src/validation_wrapper.py")
+                        .arg("1") // new model flag
+                        .arg("gradients_file") // not needed
+                        .arg("") // base model
+                        .arg(&gradients_file) // gradients
+                        .arg(min_score) // min_score
+                        .arg("MNIST28X28")
+                        .output()
+                        .expect("failed to execute process");
+                results = String::from_utf8_lossy(&output.stdout).to_string();
+                status = output.status.to_string();
+                println!("RESULTS: {:#?}", results);
+                println!("STATUS: {:#?}", status);
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
             } else {
-                let gradients_file = format!( "base_model{}",val_id);
+                println!("INSIDE SECOND IF STATEMENT");
+                let base_gradients_file = format!( "base_model{}",val_id);
                 let mut file = OpenOptions::new()
                     .write(true)
                     .append(true)
                     .create(true)
-                    .open(gradients_file)
+                    .open(&base_gradients_file)
                     .unwrap();
 
                     if let Err(e) = writeln!(file, "{}", latest_model) {
                         eprintln!("Couldn't write to file: {}", e);
                     }
         
-        
-        
-                // let output_py = Command::new("python")
-                // .arg("../tx_validator/scripts/validator.py")
-                // .arg("1") // new model flag
-                // .arg("validation_path")
-                // .arg("") // base model
-                // .arg("gradients") // gradients
-                // .arg("0") // min_score
-                // .arg("MNIST28X28")
-                // .output()
-                // .expect("failed to execute process");
+                    let output = Command::new("python")
+                    .arg("../tx_validator/src/validation_wrapper.py")
+                    .arg("0") // new model flag
+                    .arg("gradients_file") // not needed
+                    .arg(&base_gradients_file) // base model
+                    .arg(&gradients_file) // gradients
+                    .arg(min_score) // min_score
+                    .arg("MNIST28X28")
+                    .output()
+                    .expect("failed to execute process");
+
+                    results = String::from_utf8_lossy(&output.stdout).to_string();
             }
 
-
+            println!("VALIDATING MODELS END");
             // -----------------------------------------------------------------
 
 
-            println!("VALIDATING MODELS START");
+            
             let validating_py_start = SystemTime::now();
-            let output = Command::new("node")
-                .arg("app.js")
-                .arg(self.sync_policy.clone())
-                .arg(gradients_filename)
-                .arg(val_id.to_string())
-                .arg(self.model_name.clone())
-                .current_dir("../tx_validator/dist")
-                .output()
-                .expect("failed to execute process");
+            // let output = Command::new("node")
+            //     .arg("app.js")
+            //     .arg(self.sync_policy.clone())
+            //     .arg(gradients_filename)
+            //     .arg(val_id.to_string())
+            //     .arg(self.model_name.clone())
+            //     .current_dir("../tx_validator/dist")
+            //     .output()
+            //     .expect("failed to execute process");
             
 
-            if DEBUG {
-                println!("Output {:?}", output);
-            }
+            // if DEBUG {
+            //     println!("Output {:?}", output);
+            // }
             let validating_py_end = SystemTime::now();
-            println!("VALIDATING MODELS END");
-            let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
+            
+            // let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
+            
             results.pop(); // pop EOL char
             let delim_pos = results.find(':').unwrap();
             let verdict: String = results.chars().take(delim_pos).collect();
@@ -1591,16 +1581,15 @@ fn get_latest_model_index() -> Result<reqwest::blocking::Response, Box<dyn std::
     Ok(body.unwrap())
 }
 
-async fn fetch_min_score() -> String {
+fn fetch_min_score() -> String {
     let latest_index = get_latest_model_index();
     let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
 
     if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
         return "0".to_string()
     } else {
-        let model_score = get_model_score(latest_index_unwrapped).await;
-        return  model_score.unwrap().text().unwrap();
-
+        let model_score = get_model_score(latest_index_unwrapped);
+        return  model_score.unwrap().text().unwrap()
     }
 }
 
@@ -1611,7 +1600,7 @@ fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Respons
     Ok(body.unwrap())
 }
 
-async fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
     let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_score?version={}", index);
     let client = reqwest::Client::new();
     let body = reqwest::blocking::get(get_model_score_url);
