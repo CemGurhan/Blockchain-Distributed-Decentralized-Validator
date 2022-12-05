@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd 
 import os
 import warnings
+# from io import BytesIO
 
 import tensorflow as tf
 
@@ -21,10 +22,13 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path):
-    gradients = open(gradients_path, "rb").read()
-    split = gradients.decode('latin-1').split(",")
-    split = [float(element) for element in split]
-    return np.array(gradients)
+    gradients = open(gradients_path, "rb").readlines()
+    # np.fromfile(BytesIO(gradients), dtype=float, count= -1, sep="")
+    # nparray = np.frombuffer(gradients, dtype="float64", count= len(gradients*2))
+    nparray = np.array(gradients)
+    # split = gradients.decode('latin-1').split(",")
+    # split = [float(element) for element in split]
+    return nparray 
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
