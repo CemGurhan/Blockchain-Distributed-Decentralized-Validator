@@ -1601,7 +1601,7 @@ fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Respons
 }
 
 fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
-    let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_score?version={}", index);
+    let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_min_score?version={}", index);
     let client = reqwest::Client::new();
     let body = reqwest::blocking::get(get_model_score_url);
     Ok(body.unwrap())

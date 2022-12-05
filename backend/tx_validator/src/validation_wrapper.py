@@ -4,8 +4,9 @@ import pandas as pd
 import os
 import warnings
 # from io import BytesIO
-
+from numproto import ndarray_to_proto, proto_to_ndarray
 import tensorflow as tf
+import service_pb2 as tx
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "-1"      # To disable using GPU
 #tf.get_logger().setLevel('ERROR')
@@ -22,13 +23,16 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path):
-    gradients = open(gradients_path, "rb").readlines()
+    gradient = open(gradients_path, "rb").read()
     # np.fromfile(BytesIO(gradients), dtype=float, count= -1, sep="")
     # nparray = np.frombuffer(gradients, dtype="float64", count= len(gradients*2))
-    nparray = np.array(gradients)
+    transaction = tx.TxShareUpdates()
+    transaction.ParseFromString(gradient)
+    # nparray = np.frombuffer(t)
     # split = gradients.decode('latin-1').split(",")
     # split = [float(element) for element in split]
-    return nparray 
+    # print(transaction.gradients)
+    return transaction.gradients
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
