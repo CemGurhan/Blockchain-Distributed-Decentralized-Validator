@@ -87,6 +87,6 @@ def compute_validation_score(flat_model, data_dir):
   data_test, label_test = reshapeData(data_dir)
   model = rebuildModel(flat_model)
   result = evaluateModel(model, data_test, label_test)
-  print(result)
+  # print(result)
   return result
 # %%

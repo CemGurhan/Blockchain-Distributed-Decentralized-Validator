@@ -36,7 +36,7 @@ def parse_gradients(gradients_path):
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
-    print("VERDICT" + verdict + "ENDVERDICT")
+    print("VERDICT=" + verdict + "ENDVERDICT")
 
 def send_score(score):
     print("SCORE" + str(score) + "ENDSCORE")

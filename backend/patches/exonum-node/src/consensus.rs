@@ -997,13 +997,23 @@ impl NodeHandler {
             //     println!("Output {:?}", output);
             // }
             let validating_py_end = SystemTime::now();
-            
+            let verdict1 = results.find("VERDICT=").unwrap_or(0);
+            let verdict2 = results.find("ENDVERDICT").unwrap_or(results.len());
+            let verdict = &results[verdict1..verdict2];
+            println!("VERDICT: {:#?}", &verdict);
             // let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
             
-            results.pop(); // pop EOL char
-            let delim_pos = results.find(':').unwrap();
-            let verdict: String = results.chars().take(delim_pos).collect();
-            let score: String = results.chars().skip(delim_pos + 1).collect();
+            // results.pop(); // pop EOL char
+            // let delim_pos = results.find(':').unwrap();
+            // let verdict: String = results.chars().take(delim_pos).collect();
+            // let score: String = results.chars().skip(delim_pos + 1).collect();
+
+            let score1 = results.find("SCORE").unwrap_or(0);
+            let score2 = results.find("ENDSCORE").unwrap_or(results.len());
+            let score_prefixed = &results[score1..score2];
+            let score = score_prefixed.strip_prefix("SCORE");
+
+            
 
             let scoring_flag: u16;
             unsafe {
@@ -1011,7 +1021,7 @@ impl NodeHandler {
             }
             if scoring_flag == 1 {
                 // Record the score
-                self.write_score_record(msg.author(), &score);
+                self.write_score_record(msg.author(), &score.unwrap().to_string());
             }
 
             let validation_end = SystemTime::now();
@@ -1026,7 +1036,7 @@ impl NodeHandler {
             py_validation_duration.as_secs());
 
             print!("{}: ", "(from consensus.rs) Validation verdict".white().bold().underline());
-            if verdict == "VALID" {
+            if verdict == "VERDICT=valid" {
                 // Transaction is OK, store it to the cache or persistent pool.
                 print!("{}\n", verdict.green().bold());
                 if self.state.persist_txs_immediately() {
