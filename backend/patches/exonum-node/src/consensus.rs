@@ -951,18 +951,16 @@ impl NodeHandler {
             } else {
                 println!("INSIDE SECOND IF STATEMENT");
                 let base_gradients_file = format!( "base_model{}",val_id);
-                let mut file = OpenOptions::new()
-                    .write(true)
-                    .append(true)
-                    .create(true)
-                    .open(&base_gradients_file)
-                    .unwrap();
-
-                    if let Err(e) = writeln!(file, "{}", latest_model) {
-                        eprintln!("Couldn't write to file: {}", e);
-                    }
+                let mut binary_file = std::fs::File::create(&base_gradients_file);
+                let mut f = match binary_file {
+                    Ok(file) => file,
+                    Err(e) => return Err(HandleTxError::InvalidML),
+                    
+                };
+                let latest_model_bytes = latest_model.as_bytes();
+                f.write_all(latest_model_bytes);
         
-                    let output = Command::new("python")
+                let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
                     .arg("0") // new model flag
                     .arg("gradients_file") // not needed
@@ -973,7 +971,10 @@ impl NodeHandler {
                     .output()
                     .expect("failed to execute process");
 
-                    results = String::from_utf8_lossy(&output.stdout).to_string();
+                results = String::from_utf8_lossy(&output.stdout).to_string();
+                println!("RESULTS: {:#?}", results);
+                println!("STATUS: {:#?}", status);
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
             }
 
             println!("VALIDATING MODELS END");
@@ -1013,7 +1014,7 @@ impl NodeHandler {
             let score_prefixed = &results[score1..score2];
             let score = score_prefixed.strip_prefix("SCORE");
 
-            
+            println!("SCORE= {:#?}",score);
 
             let scoring_flag: u16;
             unsafe {
