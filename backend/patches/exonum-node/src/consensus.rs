@@ -905,7 +905,6 @@ impl NodeHandler {
             
             let gradients_file = format!("gradients{}",val_id);
             
-            let file_open_start = SystemTime::now();
             let mut binary_file = std::fs::File::create(&gradients_file);
 
             let mut f = match binary_file {
@@ -913,19 +912,18 @@ impl NodeHandler {
                 Err(e) => return Err(HandleTxError::InvalidML),
                 
             };
-            let file_open_end = SystemTime::now();
 
 
-            let file_write_start = SystemTime::now();
+            let file1_write_start = SystemTime::now();
             let mut a = &msg.payload().arguments;
             let b = &a;
             let c: &[u8] = &a;
             f.write_all(c);
-            let file_write_end = SystemTime::now();
+            let file1_write_end = SystemTime::now();
             
             // let output = Output{ status: todo!(), stdout: todo!(), stderr: todo!() };
             println!("VALIDATING MODELS START");
-
+            let validating_py_start = SystemTime::now();
             let mut results = "511".to_string();
             let mut status = "115".to_string();
         
@@ -957,8 +955,10 @@ impl NodeHandler {
                     Err(e) => return Err(HandleTxError::InvalidML),
                     
                 };
+                // let file2_write_start = SystemTime::now();
                 let latest_model_bytes = latest_model.as_bytes();
                 f.write_all(latest_model_bytes);
+                // let file2_write_end = SystemTime::now();
         
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
@@ -976,13 +976,13 @@ impl NodeHandler {
                 println!("STATUS: {:#?}", status);
                 println!("ERROR: {:#?}", String::from_utf8(output.stderr));
             }
-
+            let validating_py_end = SystemTime::now();
             println!("VALIDATING MODELS END");
             // -----------------------------------------------------------------
 
 
             
-            let validating_py_start = SystemTime::now();
+           
             // let output = Command::new("node")
             //     .arg("app.js")
             //     .arg(self.sync_policy.clone())
@@ -997,7 +997,7 @@ impl NodeHandler {
             // if DEBUG {
             //     println!("Output {:?}", output);
             // }
-            let validating_py_end = SystemTime::now();
+            
             let verdict1 = results.find("VERDICT=").unwrap_or(0);
             let verdict2 = results.find("ENDVERDICT").unwrap_or(results.len());
             let verdict = &results[verdict1..verdict2];
@@ -1027,13 +1027,12 @@ impl NodeHandler {
 
             let validation_end = SystemTime::now();
             let validation_duration = validation_end.duration_since(validation_start).unwrap();
-            let file_open_duration = file_open_end.duration_since(file_open_start).unwrap();
-            let file_write_duration = file_write_end.duration_since(file_write_start).unwrap();
+            let file1_write_duration = file1_write_end.duration_since(file1_write_start).unwrap();
+            // let file2_write_duration = file2_write_end.duration_since(file2_write_start).unwrap();
             let py_validation_duration = validating_py_end.duration_since(validating_py_start).unwrap();
-            println!("VALIDATION TOOK {} SECONDS. FILE OPEN TOOK {} SECONDS. FILE WRITE TOOK {} SECONDS. PY VALIDATING TOOK {} SECONDS.", 
+            println!("VALIDATION TOOK {} SECONDS. FILE WRITE TOOK {} SECONDS. PY VALIDATING TOOK {} SECONDS.", 
             validation_duration.as_secs(), 
-            file_open_duration.as_secs(),
-            file_write_duration.as_secs(),
+            file1_write_duration.as_secs(),
             py_validation_duration.as_secs());
 
             print!("{}: ", "(from consensus.rs) Validation verdict".white().bold().underline());

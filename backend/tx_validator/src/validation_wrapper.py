@@ -7,6 +7,7 @@ import warnings
 from numproto import ndarray_to_proto, proto_to_ndarray
 import tensorflow as tf
 import service_pb2 as tx
+import time as timer
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "-1"      # To disable using GPU
 #tf.get_logger().setLevel('ERROR')
@@ -23,11 +24,17 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path):
+    # fileOpenTimerStart = timer.time()
     gradient = open(gradients_path, "rb").read()
+    # fileOpenTimerEnd = timer.time()
+    # print("TIME TO OPEN FILE PYTHON SCRIPT: ", (fileOpenTimerEnd - fileOpenTimerStart))
     # np.fromfile(BytesIO(gradients), dtype=float, count= -1, sep="")
     # nparray = np.frombuffer(gradients, dtype="float64", count= len(gradients*2))
     transaction = tx.TxShareUpdates()
+    # protobufParseTimerStart = timer.time()
     transaction.ParseFromString(gradient)
+    # protobufParseTimerEnd = timer.time()
+    # print("TIME TO PARSE WEIGHTS FROM STRING PYTHON SCRIPT: ", (protobufParseTimerEnd - protobufParseTimerStart))
     # nparray = np.frombuffer(t)
     # split = gradients.decode('latin-1').split(",")
     # split = [float(element) for element in split]
