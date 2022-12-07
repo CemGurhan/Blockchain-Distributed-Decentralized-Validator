@@ -949,8 +949,8 @@ impl NodeHandler {
             } else {
                 println!("INSIDE SECOND IF STATEMENT");
                 let base_gradients_file = format!( "base_model{}",val_id);
-                let mut binary_file = std::fs::File::create(&base_gradients_file);
-                let mut f = match binary_file {
+                let mut base_binary_file = std::fs::File::create(&base_gradients_file);
+                let mut f = match base_binary_file {
                     Ok(file) => file,
                     Err(e) => return Err(HandleTxError::InvalidML),
                     
@@ -1604,7 +1604,7 @@ fn fetch_min_score() -> String {
 }
 
 fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
-    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/getmodel/version={}", index);
+    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/getmodel?version={}", index);
     let client = reqwest::Client::new();
     let body = reqwest::blocking::get(get_latest_model_by_index_url);
     Ok(body.unwrap())
