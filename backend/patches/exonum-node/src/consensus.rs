@@ -49,7 +49,7 @@ use colored::*;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::sync::atomic::Ordering;
-
+use exonum_proto::{ProtobufConvert, ProtobufBase64};
 
 extern crate serde_json;
 use reqwest::blocking::get;
@@ -950,14 +950,15 @@ impl NodeHandler {
                 println!("INSIDE SECOND IF STATEMENT");
                 let base_gradients_file = format!( "base_model{}",val_id);
                 let mut base_binary_file = std::fs::File::create(&base_gradients_file);
-                let mut f = match base_binary_file {
+                let mut ff = match base_binary_file {
                     Ok(file) => file,
                     Err(e) => return Err(HandleTxError::InvalidML),
                     
                 };
                 // let file2_write_start = SystemTime::now();
-                let latest_model_bytes = latest_model.as_bytes();
-                f.write_all(latest_model_bytes);
+                let latest_model_bytes = latest_model.into_bytes();
+                let c: &[u8] = &latest_model_bytes;
+                ff.write_all(c);
                 // let file2_write_end = SystemTime::now();
         
                 let output = Command::new("python")
