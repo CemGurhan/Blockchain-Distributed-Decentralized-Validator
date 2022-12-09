@@ -957,6 +957,7 @@ impl NodeHandler {
                 };
                 // let file2_write_start = SystemTime::now();
                 let latest_model_bytes = latest_model.into_bytes();
+                let bb = &a;
                 let c: &[u8] = &latest_model_bytes;
                 ff.write_all(c);
                 // let file2_write_end = SystemTime::now();

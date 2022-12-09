@@ -170,6 +170,21 @@ impl PublicApi {
         Ok(latest)
     }
 
+    
+
+    pub async fn latest_model_raw(
+        state: ServiceApiState,
+        query: ModelQuery,
+    ) -> api::Result<Vec<f32>>{
+        println!("HELLO FROM get_model() api.rs");
+        let model_schema = SchemaImpl::new(state.service_data());
+        let versionHash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
+        let model = model_schema.public.models.get(&versionHash).unwrap();
+        let res = Some(model.weights);
+        res.ok_or_else(|| api::Error::not_found().title("No model with that version"))
+        
+    }
+
     /// Returns trainer scores
     pub async fn get_trainers_scores(
         state: ServiceApiState,
@@ -258,6 +273,7 @@ impl PublicApi {
             .endpoint("v1/models/getmodel", Self::get_model)
             .endpoint("v1/models/trainersscores", Self::get_trainers_scores)
             .endpoint("v1/models/latestmodel", Self::latest_model)
+            .endpoint("v1/models/latestmodel_raw", Self::latest_model_raw)
             .endpoint("v1/models/getmodelaccuracy", Self::get_model_accuracy)
             .endpoint("v1/models/get_model_score", Self::get_model_score)
             .endpoint("v1/models/get_model_min_score", Self::get_model__min_score)
