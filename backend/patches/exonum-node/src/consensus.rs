@@ -961,7 +961,6 @@ impl NodeHandler {
                     
                 };
                 let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
-
                 let latest_model_bytes = bincode::serialize(&vec1).unwrap();
                 // let latest_model_bytes = latest_model.into_bytes();
                 let c1: &[u8] = &latest_model_bytes;
