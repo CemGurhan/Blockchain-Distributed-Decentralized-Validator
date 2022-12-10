@@ -25,6 +25,7 @@ use exonum::{
     runtime::ExecutionError,
 };
 use log::{error, info, trace, warn};
+use protobuf::descriptor::ServiceDescriptorProto;
 use std::{time::SystemTime, process::{Output, ExitStatus}};
 use std::{collections::HashSet, convert::TryFrom, fmt, process::Command};
 
@@ -33,13 +34,14 @@ use crate::{
     messages::{
         BlockRequest, BlockResponse, Consensus as ConsensusMessage, PoolTransactionsRequest,
         Prevote, PrevotesRequest, Propose, ProposeRequest, TransactionsRequest,
-        TransactionsResponse,
+        TransactionsResponse, Service,  
     },
     proposer::{ProposeParams, ProposeTemplate},
     schema::NodeSchema,
     state::{IncompleteBlock, ProposeState, RequestData},
     NodeHandler,
 };
+
 
 const DEBUG: bool = true;
 
@@ -899,6 +901,8 @@ impl NodeHandler {
             // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
             // println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
 
+            
+
             let latest_model = fetch_latest_model();
             let min_score = fetch_min_score();
 
@@ -913,11 +917,11 @@ impl NodeHandler {
                 
             };
 
-
             let file1_write_start = SystemTime::now();
             let mut a = &msg.payload().arguments;
             let b = &a;
             let c: &[u8] = &a;
+            // println!("C VALUE: {:#?}", &c);
             f.write_all(c);
             let file1_write_end = SystemTime::now();
             
@@ -939,6 +943,7 @@ impl NodeHandler {
                         .arg(&gradients_file) // gradients
                         .arg(min_score) // min_score
                         .arg("MNIST28X28")
+                        .arg("0")// isRound1 = false
                         .output()
                         .expect("failed to execute process");
                 results = String::from_utf8_lossy(&output.stdout).to_string();
@@ -955,13 +960,14 @@ impl NodeHandler {
                     Err(e) => return Err(HandleTxError::InvalidML),
                     
                 };
-                // let file2_write_start = SystemTime::now();
-                let latest_model_bytes = latest_model.into_bytes();
-                let bb = &a;
-                let c: &[u8] = &latest_model_bytes;
-                ff.write_all(c);
-                // let file2_write_end = SystemTime::now();
-        
+                let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
+
+                let latest_model_bytes = bincode::serialize(&vec1).unwrap();
+                // let latest_model_bytes = latest_model.into_bytes();
+                let c1: &[u8] = &latest_model_bytes;
+                ff.write_all(c1);
+
+
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
                     .arg("0") // new model flag
@@ -970,6 +976,7 @@ impl NodeHandler {
                     .arg(&gradients_file) // gradients
                     .arg(min_score) // min_score
                     .arg("MNIST28X28")
+                    .arg("1") // isRound1 = true
                     .output()
                     .expect("failed to execute process");
 
@@ -1580,6 +1587,7 @@ fn fetch_latest_model() -> String {
     if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
         return "0".to_string()
     } else {
+        println!("FETCHING LATEST MODEL FROM BC");
         let latest_model = get_latest_model_by_index(latest_index_unwrapped);
         return  latest_model.unwrap().text().unwrap();
 
@@ -1606,7 +1614,7 @@ fn fetch_min_score() -> String {
 }
 
 fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
-    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/getmodel?version={}", index);
+    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}", index);
     let client = reqwest::Client::new();
     let body = reqwest::blocking::get(get_latest_model_by_index_url);
     Ok(body.unwrap())
@@ -1618,3 +1626,5 @@ fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn
     let body = reqwest::blocking::get(get_model_score_url);
     Ok(body.unwrap())
 }
+
+

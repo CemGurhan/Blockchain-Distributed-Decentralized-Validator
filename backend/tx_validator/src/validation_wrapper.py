@@ -23,23 +23,20 @@ data_dir = MODELS_DIR + model_id + '/data.csv'
 import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
-def parse_gradients(gradients_path):
-    # fileOpenTimerStart = timer.time()
-    gradient = open(gradients_path, "rb").read()
-    # fileOpenTimerEnd = timer.time()
-    # print("TIME TO OPEN FILE PYTHON SCRIPT: ", (fileOpenTimerEnd - fileOpenTimerStart))
-    # np.fromfile(BytesIO(gradients), dtype=float, count= -1, sep="")
-    # nparray = np.frombuffer(gradients, dtype="float64", count= len(gradients*2))
-    transaction = tx.TxShareUpdates()
-    # protobufParseTimerStart = timer.time()
-    transaction.ParseFromString(gradient)
-    # protobufParseTimerEnd = timer.time()
-    # print("TIME TO PARSE WEIGHTS FROM STRING PYTHON SCRIPT: ", (protobufParseTimerEnd - protobufParseTimerStart))
-    # nparray = np.frombuffer(t)
-    # split = gradients.decode('latin-1').split(",")
-    # split = [float(element) for element in split]
-    # print(transaction.gradients)
-    return transaction.gradients
+def parse_gradients(gradients_path, isRoundOne):
+    if (isRoundOne == "0") :
+        print("IN FIRST IF PYTHON")
+        gradient = open(gradients_path, "rb").read()
+    
+        transaction = tx.TxShareUpdates()
+        transaction.ParseFromString(gradient)
+
+        return transaction.gradients
+    elif (isRoundOne == "1") :
+        return "hi"
+    
+
+
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
@@ -49,7 +46,7 @@ def send_score(score):
     print("SCORE" + str(score) + "ENDSCORE")
 
 #data_validation = pd.read_csv(data_dir)
-gradients = parse_gradients(sys.argv[4])
+gradients = parse_gradients(sys.argv[4], sys.argv[7])
 newModel_flag = str(sys.argv[1])
 if (newModel_flag == "true"):
     newModel_flag = 1
@@ -61,7 +58,7 @@ else:
 if newModel_flag:
     evaluate_model = gradients
 else:
-    base_model = parse_gradients(sys.argv[3])
+    base_model = parse_gradients(sys.argv[3], sys.argv[7])
     evaluate_model = base_model + gradients
 
 # if newModel_flag:

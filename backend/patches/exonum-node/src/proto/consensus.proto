@@ -126,3 +126,5 @@ message ExonumMessage {
     PoolTransactionsRequest pool_transactions_request = 14;
   }
 }
+
+

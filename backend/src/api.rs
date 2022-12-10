@@ -21,10 +21,13 @@ use exonum::{
     runtime::CallerAddress as Address,
 };
 use exonum_merkledb::{proof_map::Raw, ListProof, MapProof, ObjectHash};
+use exonum_proto::ProtobufConvert;
 use exonum_rust_runtime::api::{self, ServiceApiBuilder, ServiceApiState};
+use protobuf::{Message, text_format::lexer::float::ProtobufFloatParseError};
 
 use crate::{schema::{SchemaImpl, SchemaUtils}, model::Model};
 use std::collections::HashMap;
+use crate::{proto, MachineLearningService};
 /// Describes the query parameters for the `get_model` endpoint.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub struct ModelQuery {
@@ -176,11 +179,16 @@ impl PublicApi {
         state: ServiceApiState,
         query: ModelQuery,
     ) -> api::Result<Vec<f32>>{
+
+       
+
         println!("HELLO FROM get_model() api.rs");
         let model_schema = SchemaImpl::new(state.service_data());
         let versionHash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
         let model = model_schema.public.models.get(&versionHash).unwrap();
         let res = Some(model.weights);
+                
+        // p.write_to_vec(res.unwrap());
         res.ok_or_else(|| api::Error::not_found().title("No model with that version"))
         
     }
