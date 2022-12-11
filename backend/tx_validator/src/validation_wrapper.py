@@ -25,23 +25,30 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path, isRoundOne):
-    if (isRoundOne == "0") :
+    if (isRoundOne == "1") :
         print("IN FIRST IF PYTHON")
-        gradient = open(gradients_path, "rb").read()
-        # print("GRADIENTS: ", gradient)
+        # gradient = open(gradients_path, "rb").read()
+        # # print("GRADIENTS: ", gradient)
     
-        transaction = tx.TxShareUpdates()
-        transaction.ParseFromString(gradient)
+        # transaction = tx.TxShareUpdates()
+        # transaction.ParseFromString(gradient)
 
-        return transaction.gradients
-    elif (isRoundOne == "1") :
+        array = np.fromfile(gradients_path, dtype="float32", count=-1)
+
+        return array
+    elif (isRoundOne == "0") :
         # gradient = open(gradients_path, "rb").read()
         # print("BUFFER SIZE: ", len(gradient))
         # array = np.frombuffer(gradient, dtype=np.dtype(np.float32))
 
-        array = np.fromfile(gradients_path, dtype='uint8')
+        array = np.fromfile(gradients_path, dtype="uint8", count=-1)
 
         return array
+
+        # gradients = open(gradients_path, "r").readline()
+        # split = gradients.split(",")
+        # split = [float(element) for element in split]
+        # return np.array(split)
     
 
 
@@ -67,8 +74,10 @@ if newModel_flag:
     evaluate_model = gradients
 else:
     base_model = parse_gradients(sys.argv[3], sys.argv[7])
-    evaluate_model_list = list(base_model) + list(gradients)
-    evaluate_model = np.array(evaluate_model_list)
+    print("BASE", len(base_model))
+    print("NEW",len(gradients))
+    evaluate_model = base_model + gradients
+    # evaluate_model = np.array(evaluate_model_list)
 # if newModel_flag:
 #     np.random.seed(0)
 #     base_model = np.random.uniform(low = -0.09, high = 0.09, size = len(gradients)).tolist()

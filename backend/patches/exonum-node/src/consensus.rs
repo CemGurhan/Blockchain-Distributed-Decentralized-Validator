@@ -943,7 +943,7 @@ impl NodeHandler {
                         .arg(&gradients_file) // gradients
                         .arg(min_score) // min_score
                         .arg("MNIST28X28")
-                        .arg("0")// isRound1 = false
+                        .arg("1")// isRound1 = true
                         .output()
                         .expect("failed to execute process");
                 results = String::from_utf8_lossy(&output.stdout).to_string();
@@ -975,7 +975,7 @@ impl NodeHandler {
                     .arg(&gradients_file) // gradients
                     .arg(min_score) // min_score
                     .arg("MNIST28X28")
-                    .arg("1") // isRound1 = true
+                    .arg("0") // isRound1 = false
                     .output()
                     .expect("failed to execute process");
 
