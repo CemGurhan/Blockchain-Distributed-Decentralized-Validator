@@ -55,6 +55,7 @@ use exonum_proto::{ProtobufConvert, ProtobufBase64};
 
 extern crate serde_json;
 use reqwest::blocking::get;
+use bincode::Options;
 
 
 
@@ -960,11 +961,24 @@ impl NodeHandler {
                     Err(e) => return Err(HandleTxError::InvalidML),
                     
                 };
-                let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
-                let latest_model_bytes = bincode::serialize(&vec1).unwrap();
+                // let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
+                // let serialize_options = bincode::DefaultOptions::new()
+                //                         // .with_fixint_encoding()
+                //                         // .with_big_endian()
+                //                         .with_varint_encoding()
+                //                         .with_little_endian();
+                // let latest_model_bytes = bincode::serialize(&vec1).unwrap();
+
+                // let latest_model_bytes = bincode::serialize(&vec1).unwrap();
                 // let latest_model_bytes = latest_model.into_bytes();
-                let c1: &[u8] = &latest_model_bytes;
-                ff.write_all(c1);
+                // let c1: &[u8] = &latest_model_bytes;
+                // ff.write_all(c1);
+
+                if let Err(e) = writeln!(ff, "{:?}", latest_model) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+
+
 
 
                 let output = Command::new("python")

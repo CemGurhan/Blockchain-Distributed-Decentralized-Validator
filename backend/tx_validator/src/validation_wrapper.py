@@ -35,20 +35,28 @@ def parse_gradients(gradients_path, isRoundOne):
 
         array = np.fromfile(gradients_path, dtype="float32", count=-1)
 
+        # print("ARRAY2", array)
+
         return array
     elif (isRoundOne == "0") :
         # gradient = open(gradients_path, "rb").read()
         # print("BUFFER SIZE: ", len(gradient))
         # array = np.frombuffer(gradient, dtype=np.dtype(np.float32))
 
-        array = np.fromfile(gradients_path, dtype="uint8", count=-1)
+        # array = np.fromfile(gradients_path, dtype="float32", count=-1)
 
-        return array
+        # print("ARRAY", array)
+        
 
-        # gradients = open(gradients_path, "r").readline()
-        # split = gradients.split(",")
-        # split = [float(element) for element in split]
-        # return np.array(split)
+        # return array
+
+        gradientsUnformatted = open(gradients_path, "r", encoding='latin-1').readline()
+        print("GRADIENTS: ", gradientsUnformatted)
+        gradientsPenultimate = gradientsUnformatted.replace("[", "")
+        gradients = gradientsPenultimate.replace("]","")
+        split = gradients.split(",")
+        split = [float(element) for element in split]
+        return np.array(split)
     
 
 
