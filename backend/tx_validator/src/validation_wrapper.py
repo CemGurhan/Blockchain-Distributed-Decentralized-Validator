@@ -87,8 +87,6 @@ if newModel_flag:
     evaluate_model = gradients
 else:
     base_model = parse_gradients(sys.argv[3], sys.argv[7])
-    print("BASE", len(base_model))
-    print("NEW",len(gradients))
     evaluate_model = base_model + gradients
     # evaluate_model = np.array(evaluate_model_list)
 # if newModel_flag:
