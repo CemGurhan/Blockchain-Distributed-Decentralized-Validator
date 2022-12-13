@@ -48,7 +48,6 @@ def parse_gradients(gradients_path, isRoundOne):
 
         # print("ARRAY: ", array)
         
-
         # return array
 
         # gradients = open(gradients_path).read()
