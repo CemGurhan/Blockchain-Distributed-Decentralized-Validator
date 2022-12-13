@@ -25,7 +25,7 @@ import importlib
 model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path, isRoundOne):
-    if (isRoundOne == "1") :
+    if (isRoundOne == "1") : # just make this a variable instad of sys.argv in the argument for parse_gradients
         gradient = open(gradients_path, "rb").read()
         transaction = tx.TxShareUpdates()
         transaction.ParseFromString(gradient)
@@ -61,9 +61,6 @@ def parse_gradients(gradients_path, isRoundOne):
         split = [float(element) for element in latest_model_list]
         return np.array(split)
 
-        
-    
-
 
 
 def send_valid(is_valid):
@@ -74,7 +71,7 @@ def send_score(score):
     print("SCORE" + str(score) + "ENDSCORE")
 
 #data_validation = pd.read_csv(data_dir)
-gradients = parse_gradients(sys.argv[4], sys.argv[7])
+gradients = parse_gradients(sys.argv[4], "1")
 newModel_flag = str(sys.argv[1])
 if (newModel_flag == "true"):
     newModel_flag = 1
@@ -86,7 +83,7 @@ else:
 if newModel_flag:
     evaluate_model = gradients
 else:
-    base_model = parse_gradients(sys.argv[3], sys.argv[7])
+    base_model = parse_gradients(sys.argv[3], "0")
     evaluate_model = base_model + gradients
     # evaluate_model = np.array(evaluate_model_list)
 # if newModel_flag:
