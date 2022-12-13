@@ -955,31 +955,39 @@ impl NodeHandler {
             } else {
                 println!("INSIDE SECOND IF STATEMENT");
                 let base_gradients_file = format!( "base_model{}",val_id);
-                let mut base_binary_file = std::fs::File::create(&base_gradients_file);
-                let mut ff = match base_binary_file {
-                    Ok(file) => file,
-                    Err(e) => return Err(HandleTxError::InvalidML),
+                // let mut base_binary_file = std::fs::File::create(&base_gradients_file);
+                // let mut ff = match base_binary_file {
+                //     Ok(file) => file,
+                //     Err(e) => return Err(HandleTxError::InvalidML),
                     
-                };
+                // };
+                let latest_model_formatted_one = str::replace(&latest_model, "[", "");
+                let latest_model_formatted_two = str::replace(&latest_model_formatted_one, "]", "");
+                let mut split = latest_model_formatted_two.split(",");
+                let vec1: Vec<&str> = split.collect();
+                let mut ff = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .create(true)
+                .open(&base_gradients_file)
+                .unwrap();
                 // let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
-                // let serialize_options = bincode::DefaultOptions::new()
-                //                         // .with_fixint_encoding()
-                //                         // .with_big_endian()
-                //                         .with_varint_encoding()
-                //                         .with_little_endian();
-                // let latest_model_bytes = bincode::serialize(&vec1).unwrap();
+                let serialize_options = bincode::DefaultOptions::new()
+                                        // .with_fixint_encoding()
+                                        // .with_big_endian()
+                                        .with_varint_encoding()
+                                        .with_little_endian();
 
-                // let latest_model_bytes = bincode::serialize(&vec1).unwrap();
-                // let latest_model_bytes = latest_model.into_bytes();
-                // let c1: &[u8] = &latest_model_bytes;
-                // ff.write_all(c1);
+                let latest_model_bytes = serialize_options.serialize(&vec1).unwrap();
+                // // let latest_model_bytes = latest_model.into_bytes();
+                let c1: &[u8] = &latest_model_bytes;
+                ff.write_all(c1);
 
-                if let Err(e) = writeln!(ff, "{:?}", latest_model) {
-                    eprintln!("Couldn't write to file: {}", e);
-                }
+                // if let Err(e) = write!(ff, "{:?}", &vec1) {
+                //     eprintln!("Couldn't write to file: {}", e);
+                // }
 
-
-
+                let latest_index = get_latest_model_index();
 
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
@@ -990,6 +998,7 @@ impl NodeHandler {
                     .arg(min_score) // min_score
                     .arg("MNIST28X28")
                     .arg("0") // isRound1 = false
+                    .arg(latest_index.unwrap().text().unwrap())
                     .output()
                     .expect("failed to execute process");
 

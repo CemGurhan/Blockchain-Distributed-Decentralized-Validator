@@ -8,7 +8,7 @@ from numproto import ndarray_to_proto, proto_to_ndarray
 import tensorflow as tf
 import service_pb2 as tx
 import time as timer
-import pickle
+import requests
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "-1"      # To disable using GPU
 #tf.get_logger().setLevel('ERROR')
@@ -27,36 +27,50 @@ model_mod = importlib.import_module('models.%s.validate'%model_id)
 def parse_gradients(gradients_path, isRoundOne):
     if (isRoundOne == "1") :
         print("IN FIRST IF PYTHON")
-        # gradient = open(gradients_path, "rb").read()
-        # # print("GRADIENTS: ", gradient)
+        gradient = open(gradients_path, "rb").read()
+        # print("GRADIENTS: ", gradient)
     
-        # transaction = tx.TxShareUpdates()
-        # transaction.ParseFromString(gradient)
+        transaction = tx.TxShareUpdates()
+        transaction.ParseFromString(gradient)
+        
 
-        array = np.fromfile(gradients_path, dtype="float32", count=-1)
+        # array = np.fromfile(gradients_path, dtype="float32")
 
         # print("ARRAY2", array)
 
-        return array
+        return transaction.gradients
     elif (isRoundOne == "0") :
         # gradient = open(gradients_path, "rb").read()
         # print("BUFFER SIZE: ", len(gradient))
         # array = np.frombuffer(gradient, dtype=np.dtype(np.float32))
 
-        # array = np.fromfile(gradients_path, dtype="float32", count=-1)
+        # array = np.fromfile(gradients_path)
 
-        # print("ARRAY", array)
+        # print("ARRAY: ", array)
         
 
         # return array
 
-        gradientsUnformatted = open(gradients_path, "r", encoding='latin-1').readline()
-        print("GRADIENTS: ", gradientsUnformatted)
-        gradientsPenultimate = gradientsUnformatted.replace("[", "")
-        gradients = gradientsPenultimate.replace("]","")
-        split = gradients.split(",")
-        split = [float(element) for element in split]
+        # gradients = open(gradients_path).read()
+        # # print("GRADIENTS: ", gradients)
+        # # g = gradients.decode("utf-8")
+        # # gradientsPenultimate = gradientsUnformatted.replace("[", "")
+        # # gradients = gradientsPenultimate.replace("]","")
+        # split = gradients.split(",")
+        # split = [float(element) for element in split]
+        # return np.array(split)
+        formattedURL = "http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}".format(sys.argv[8])
+        response = requests.get(formattedURL)
+
+        latest_model = response.text
+        latest_model_no_prefix = latest_model.replace("[","")
+        latest_model_no_suffix = latest_model_no_prefix.replace("]","")
+
+        latest_model_list = latest_model_no_suffix.split(",")
+        split = [float(element) for element in latest_model_list]
         return np.array(split)
+
+        
     
 
 
