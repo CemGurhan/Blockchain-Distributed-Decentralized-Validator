@@ -919,11 +919,9 @@ impl NodeHandler {
             };
 
             let file1_write_start = SystemTime::now();
-            let mut a = &msg.payload().arguments;
-            let b = &a;
-            let c: &[u8] = &a;
-            // println!("C VALUE: {:#?}", &c);
-            f.write_all(c);
+            let model_weights_serialized = &msg.payload().arguments;
+            let model_weights_serialized_u8: &[u8] = &model_weights_serialized;
+            f.write_all(model_weights_serialized_u8);
             let file1_write_end = SystemTime::now();
             
             // let output = Output{ status: todo!(), stdout: todo!(), stderr: todo!() };

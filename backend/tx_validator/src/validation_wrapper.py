@@ -26,18 +26,10 @@ model_mod = importlib.import_module('models.%s.validate'%model_id)
 
 def parse_gradients(gradients_path, isRoundOne):
     if (isRoundOne == "1") :
-        print("IN FIRST IF PYTHON")
         gradient = open(gradients_path, "rb").read()
-        # print("GRADIENTS: ", gradient)
-    
         transaction = tx.TxShareUpdates()
         transaction.ParseFromString(gradient)
-        
-
-        # array = np.fromfile(gradients_path, dtype="float32")
-
-        # print("ARRAY2", array)
-
+     
         return transaction.gradients
     elif (isRoundOne == "0") :
         # gradient = open(gradients_path, "rb").read()
