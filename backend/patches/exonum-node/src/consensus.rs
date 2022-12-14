@@ -897,36 +897,31 @@ impl NodeHandler {
                 val_id = VALIDATOR_ID.load(Ordering::SeqCst);
             }
 
-            
             let latest_index = get_latest_model_index();
             let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
             let min_score = fetch_min_score();
             
             let gradients_file = format!("gradients{}",val_id);
-            
-            let mut binary_file = std::fs::File::create(&gradients_file);
-
+            let binary_file = std::fs::File::create(&gradients_file);
             let mut f = match binary_file {
                 Ok(file) => file,
-                Err(e) => return Err(HandleTxError::InvalidML),
+                Err(error) => panic!("Error creating file: {:?}", error),
                 
             };
 
             let file1_write_start = SystemTime::now();
             let model_weights_serialized = &msg.payload().arguments;
             let model_weights_serialized_u8: &[u8] = &model_weights_serialized;
-            f.write_all(model_weights_serialized_u8);
+            let file_write_repsonse = f.write_all(model_weights_serialized_u8);
+            match file_write_repsonse {
+                Ok(file) => file,
+                Err(error) => panic!("Error writing to file: {:?}", error),
+            }
             let file1_write_end = SystemTime::now();
             
             let validating_py_start = SystemTime::now();
-            let mut results = "511".to_string();
-            let mut status = "115".to_string();
-        
-    
-            if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
-                // let gradients_file_path = format!("{}", gradients_file);
-                println!("INSIDE FIRST IF STATEMENT");
-                 let output = Command::new("python")
+            let results = if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
+                let output = Command::new("python")
                         .arg("../tx_validator/src/validation_wrapper.py")
                         .arg("1") // new model flag
                         .arg("gradients_file") // not needed
@@ -937,11 +932,7 @@ impl NodeHandler {
                         .arg("1")// isRound1 = true
                         .output()
                         .expect("failed to execute process");
-                results = String::from_utf8_lossy(&output.stdout).to_string();
-                status = output.status.to_string();
-                println!("RESULTS: {:#?}", results);
-                println!("STATUS: {:#?}", status);
-                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
+                String::from_utf8_lossy(&output.stdout).to_string()
             } else {
                 let base_gradients_file = format!( "base_model{}",val_id);
 
@@ -957,9 +948,8 @@ impl NodeHandler {
                     .arg(latest_index_unwrapped)
                     .output()
                     .expect("failed to execute process");
-
-                results = String::from_utf8_lossy(&output.stdout).to_string();
-            }
+                String::from_utf8_lossy(&output.stdout).to_string()
+            };
             let validating_py_end = SystemTime::now();
             
             
