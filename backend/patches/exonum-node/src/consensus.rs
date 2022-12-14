@@ -889,28 +889,18 @@ impl NodeHandler {
             println!("{}", "---------------------------------------");
             println!(
                 "{}, {}",
-                "Model update received (Hello from backend/patches/exonum-node/src/consesnus.rs)".yellow(),
-                "validating...(Hello from backend/patches/exonum-node/src/consesnus.rs)".italic()
+                "Model update received".yellow(),
+                "validating...".italic()
             );
             let val_id: u16;
             unsafe {
                 val_id = VALIDATOR_ID.load(Ordering::SeqCst);
             }
-            // println!("CREATING GRADIENTS FILE IN EXAMPLE FOLDER");
-            let gradients_filename: String =
-                format!("v{}_gradients_{}", val_id, msg.author().to_hex());
-            // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
-            // println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
 
             
             let latest_index = get_latest_model_index();
             let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
-
-             
-            let latest_model = fetch_latest_model();
             let min_score = fetch_min_score();
-            // let b = std::str::from_utf8(&latest_model.as_bytes()).is_ok();
-            // println!("B {}", b);
             
             let gradients_file = format!("gradients{}",val_id);
             
@@ -928,8 +918,6 @@ impl NodeHandler {
             f.write_all(model_weights_serialized_u8);
             let file1_write_end = SystemTime::now();
             
-            // let output = Output{ status: todo!(), stdout: todo!(), stderr: todo!() };
-            println!("VALIDATING MODELS START");
             let validating_py_start = SystemTime::now();
             let mut results = "511".to_string();
             let mut status = "115".to_string();
@@ -955,39 +943,7 @@ impl NodeHandler {
                 println!("STATUS: {:#?}", status);
                 println!("ERROR: {:#?}", String::from_utf8(output.stderr));
             } else {
-                println!("INSIDE SECOND IF STATEMENT");
                 let base_gradients_file = format!( "base_model{}",val_id);
-                // let mut base_binary_file = std::fs::File::create(&base_gradients_file);
-                // let mut ff = match base_binary_file {
-                //     Ok(file) => file,
-                //     Err(e) => return Err(HandleTxError::InvalidML),
-                    
-                // };
-                // let latest_model_formatted_one = str::replace(&latest_model, "[", "");
-                // let latest_model_formatted_two = str::replace(&latest_model_formatted_one, "]", "");
-                // let mut split = latest_model_formatted_two.split(",");
-                // let vec1: Vec<&str> = split.collect();
-                // let mut ff = OpenOptions::new()
-                // .write(true)
-                // .append(true)
-                // .create(true)
-                // .open(&base_gradients_file)
-                // .unwrap();
-                // let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
-                // let serialize_options = bincode::DefaultOptions::new()
-                //                         // .with_fixint_encoding()
-                //                         // .with_big_endian()
-                //                         .with_varint_encoding()
-                //                         .with_little_endian();
-
-                // let latest_model_bytes = latest_model.to_bytes();
-                // let c1: &[u8] = &latest_model_bytes;
-                // ff.write_all(&latest_model.bytes().unwrap());
-
-                // if let Err(e) = write!(ff, "{:?}", &vec1) {
-                //     eprintln!("Couldn't write to file: {}", e);
-                // }
-
 
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
@@ -1003,31 +959,19 @@ impl NodeHandler {
                     .expect("failed to execute process");
 
                 results = String::from_utf8_lossy(&output.stdout).to_string();
-                println!("RESULTS: {:#?}", results);
-                println!("STATUS: {:#?}", status);
-                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
             }
             let validating_py_end = SystemTime::now();
-            println!("VALIDATING MODELS END");
             
             
             let verdict1 = results.find("VERDICT=").unwrap_or(0);
             let verdict2 = results.find("ENDVERDICT").unwrap_or(results.len());
-            let verdict = &results[verdict1..verdict2];
-            println!("VERDICT: {:#?}", &verdict);
-            // let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
+            let verdict_prefixed = &results[verdict1..verdict2];
+            let verdict = verdict_prefixed.strip_prefix("VERDICT=");
             
-            // results.pop(); // pop EOL char
-            // let delim_pos = results.find(':').unwrap();
-            // let verdict: String = results.chars().take(delim_pos).collect();
-            // let score: String = results.chars().skip(delim_pos + 1).collect();
-
             let score1 = results.find("SCORE").unwrap_or(0);
             let score2 = results.find("ENDSCORE").unwrap_or(results.len());
             let score_prefixed = &results[score1..score2];
             let score = score_prefixed.strip_prefix("SCORE");
-
-            println!("SCORE= {:#?}",score);
 
             let scoring_flag: u16;
             unsafe {
@@ -1041,17 +985,16 @@ impl NodeHandler {
             let validation_end = SystemTime::now();
             let validation_duration = validation_end.duration_since(validation_start).unwrap();
             let file1_write_duration = file1_write_end.duration_since(file1_write_start).unwrap();
-            // let file2_write_duration = file2_write_end.duration_since(file2_write_start).unwrap();
             let py_validation_duration = validating_py_end.duration_since(validating_py_start).unwrap();
             println!("VALIDATION TOOK {} SECONDS. FILE WRITE TOOK {} SECONDS. PY VALIDATING TOOK {} SECONDS.", 
             validation_duration.as_secs(), 
             file1_write_duration.as_secs(),
             py_validation_duration.as_secs());
 
-            print!("{}: ", "(from consensus.rs) Validation verdict".white().bold().underline());
-            if verdict == "VERDICT=valid" {
+            print!("{}: ", "Validation verdict".white().bold().underline());
+            if verdict.unwrap() == "valid" {
                 // Transaction is OK, store it to the cache or persistent pool.
-                print!("{}\n", verdict.green().bold());
+                print!("{}\n", verdict.unwrap().green().bold());
                 if self.state.persist_txs_immediately() {
                     println!("PERSISTING TRANSACTION TO POOL consensus.rs line 939");
                     let fork = self.blockchain.fork();
@@ -1066,7 +1009,7 @@ impl NodeHandler {
                 outcome = Ok(());
             } else {
                 // Invalid / useless Update
-                print!("{}\n", verdict.red().bold());
+                print!("{}\n", verdict.unwrap().red().bold());
                 self.state.invalid_txs_mut().insert(msg.object_hash());
                 outcome = Err(HandleTxError::InvalidML);
             }
