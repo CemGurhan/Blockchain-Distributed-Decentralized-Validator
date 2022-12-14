@@ -1517,20 +1517,7 @@ impl NodeHandler {
     }
 }
 
-fn fetch_latest_model() -> reqwest::blocking::Response {
-    let latest_index = get_latest_model_index();
-    let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
-
-    
-    let latest_model = get_latest_model_by_index(latest_index_unwrapped);
-    return  latest_model.unwrap();
-
-}
-
-
-
 fn get_latest_model_index() -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
-    let client = reqwest::Client::new();
     let body = reqwest::blocking::get("http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel");
 
     Ok(body.unwrap())
@@ -1548,16 +1535,8 @@ fn fetch_min_score() -> String {
     }
 }
 
-fn get_latest_model_by_index(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
-    let get_latest_model_by_index_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}", index);
-    let client = reqwest::Client::new();
-    let body = reqwest::blocking::get(get_latest_model_by_index_url);
-    Ok(body.unwrap())
-}
-
 fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
     let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_min_score?version={}", index);
-    let client = reqwest::Client::new();
     let body = reqwest::blocking::get(get_model_score_url);
     Ok(body.unwrap())
 }
