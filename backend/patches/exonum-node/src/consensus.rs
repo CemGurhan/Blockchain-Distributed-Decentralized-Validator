@@ -903,10 +903,14 @@ impl NodeHandler {
             // println!("CREATED GRADIENTS FILE IN EXAMPLE FOLDER");
 
             
+            let latest_index = get_latest_model_index();
+            let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
 
+             
             let latest_model = fetch_latest_model();
             let min_score = fetch_min_score();
-
+            // let b = std::str::from_utf8(&latest_model.as_bytes()).is_ok();
+            // println!("B {}", b);
             
             let gradients_file = format!("gradients{}",val_id);
             
@@ -931,7 +935,7 @@ impl NodeHandler {
             let mut status = "115".to_string();
         
     
-            if latest_model == "0" {
+            if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
                 // let gradients_file_path = format!("{}", gradients_file);
                 println!("INSIDE FIRST IF STATEMENT");
                  let output = Command::new("python")
@@ -959,33 +963,31 @@ impl NodeHandler {
                 //     Err(e) => return Err(HandleTxError::InvalidML),
                     
                 // };
-                let latest_model_formatted_one = str::replace(&latest_model, "[", "");
-                let latest_model_formatted_two = str::replace(&latest_model_formatted_one, "]", "");
-                let mut split = latest_model_formatted_two.split(",");
-                let vec1: Vec<&str> = split.collect();
-                let mut ff = OpenOptions::new()
-                .write(true)
-                .append(true)
-                .create(true)
-                .open(&base_gradients_file)
-                .unwrap();
+                // let latest_model_formatted_one = str::replace(&latest_model, "[", "");
+                // let latest_model_formatted_two = str::replace(&latest_model_formatted_one, "]", "");
+                // let mut split = latest_model_formatted_two.split(",");
+                // let vec1: Vec<&str> = split.collect();
+                // let mut ff = OpenOptions::new()
+                // .write(true)
+                // .append(true)
+                // .create(true)
+                // .open(&base_gradients_file)
+                // .unwrap();
                 // let vec1: Vec<f32> = ron::from_str(&latest_model).unwrap();
-                let serialize_options = bincode::DefaultOptions::new()
-                                        // .with_fixint_encoding()
-                                        // .with_big_endian()
-                                        .with_varint_encoding()
-                                        .with_little_endian();
+                // let serialize_options = bincode::DefaultOptions::new()
+                //                         // .with_fixint_encoding()
+                //                         // .with_big_endian()
+                //                         .with_varint_encoding()
+                //                         .with_little_endian();
 
-                let latest_model_bytes = serialize_options.serialize(&vec1).unwrap();
-                // // let latest_model_bytes = latest_model.into_bytes();
-                let c1: &[u8] = &latest_model_bytes;
-                ff.write_all(c1);
+                // let latest_model_bytes = latest_model.to_bytes();
+                // let c1: &[u8] = &latest_model_bytes;
+                // ff.write_all(&latest_model.bytes().unwrap());
 
                 // if let Err(e) = write!(ff, "{:?}", &vec1) {
                 //     eprintln!("Couldn't write to file: {}", e);
                 // }
 
-                let latest_index = get_latest_model_index();
 
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
@@ -996,7 +998,7 @@ impl NodeHandler {
                     .arg(min_score) // min_score
                     .arg("MNIST28X28")
                     .arg("0") // isRound1 = false
-                    .arg(latest_index.unwrap().text().unwrap())
+                    .arg(latest_index_unwrapped)
                     .output()
                     .expect("failed to execute process");
 
@@ -1007,25 +1009,7 @@ impl NodeHandler {
             }
             let validating_py_end = SystemTime::now();
             println!("VALIDATING MODELS END");
-            // -----------------------------------------------------------------
-
-
             
-           
-            // let output = Command::new("node")
-            //     .arg("app.js")
-            //     .arg(self.sync_policy.clone())
-            //     .arg(gradients_filename)
-            //     .arg(val_id.to_string())
-            //     .arg(self.model_name.clone())
-            //     .current_dir("../tx_validator/dist")
-            //     .output()
-            //     .expect("failed to execute process");
-            
-
-            // if DEBUG {
-            //     println!("Output {:?}", output);
-            // }
             
             let verdict1 = results.find("VERDICT=").unwrap_or(0);
             let verdict2 = results.find("ENDVERDICT").unwrap_or(results.len());
@@ -1600,19 +1584,17 @@ impl NodeHandler {
     }
 }
 
-fn fetch_latest_model() -> String {
+fn fetch_latest_model() -> reqwest::blocking::Response {
     let latest_index = get_latest_model_index();
     let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
 
-    if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
-        return "0".to_string()
-    } else {
-        println!("FETCHING LATEST MODEL FROM BC");
-        let latest_model = get_latest_model_by_index(latest_index_unwrapped);
-        return  latest_model.unwrap().text().unwrap();
+    
+    let latest_model = get_latest_model_by_index(latest_index_unwrapped);
+    return  latest_model.unwrap();
 
-    }
 }
+
+
 
 fn get_latest_model_index() -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();

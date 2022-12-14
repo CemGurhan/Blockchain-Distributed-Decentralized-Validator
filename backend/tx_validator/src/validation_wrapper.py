@@ -32,11 +32,11 @@ def parse_gradients(gradients_path, isRoundOne):
      
         return transaction.gradients
     elif (isRoundOne == "0") :
-        # gradient = open(gradients_path, "rb").read()
+        # gradient = open(gradients_path, "r", encoding="utf-8").read()
         # print("BUFFER SIZE: ", len(gradient))
         # array = np.frombuffer(gradient, dtype=np.dtype(np.float32))
 
-        # array = np.fromfile(gradients_path)
+        # array = np.fromfile(gradients_path, dtype="float32")
 
         # print("ARRAY: ", array)
         
@@ -44,12 +44,13 @@ def parse_gradients(gradients_path, isRoundOne):
 
         # gradients = open(gradients_path).read()
         # # print("GRADIENTS: ", gradients)
-        # # g = gradients.decode("utf-8")
-        # # gradientsPenultimate = gradientsUnformatted.replace("[", "")
-        # # gradients = gradientsPenultimate.replace("]","")
-        # split = gradients.split(",")
+        # g = gradient.decode("utf-8")
+        # gradientsPenultimate = gradient.replace("[","")
+        # gradient = gradientsPenultimate.replace("]","")
+        # split = gradient.split(",")
         # split = [float(element) for element in split]
         # return np.array(split)
+        
         formattedURL = "http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}".format(sys.argv[8])
         response = requests.get(formattedURL)
 
