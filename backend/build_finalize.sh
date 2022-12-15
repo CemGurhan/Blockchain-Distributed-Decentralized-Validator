@@ -27,16 +27,6 @@ if [ "$build" -eq "1" ]; then
     fi
 fi
 
-if [ "$build_js" -eq "1" ]; then
-    cd tx_validator
-    npm install && babel src -d dist
-    ret=$?
-    cd ..
-    if [ "$ret" != "0" ]; then
-        exit 1
-    fi
-fi
-
 if [ -d ./example ]; then
     echo "example dir exists"
 else
