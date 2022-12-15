@@ -1,9 +1,1 @@
-To run with 2 validators and two light clients:
-build backend with: bash build_finalize.sh -n 2 -b -c -j
-run validator 1: bash run_node.sh  0 BAP 1 1 MNIST28X28
-split terminal and run validator 2: bash run_node.sh  1 BAP 1 1 MNIST28X28
-run two different light clients with: npm start -- 9000 models/MNIST28X28/data.csv 0.1 MNIST28X28
-if you put a log in handle_message() in exonum-node/src/basic.rs line 29, you can see the validators constantly talking to each other
-
-To run with test script:
-sh test_scripts/run_nondis_test.sh -n <number_of_validators> -s <sync_scheme> -d <duration> -f <scoring_flag> -m <model_name>
+Repo for Non-Distributed Centralized (NDC) IID/Non-IID training tests. To run a test with four validators in a Non-IID scenario, execute command `make four` in the backend folder. To run a test with four validators in an IID scenario, execute command `make n-four` in the backend folder. You will also have to run the relevant command in the lightclient application locally for the training rounds to begin. 
