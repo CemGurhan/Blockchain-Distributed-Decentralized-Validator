@@ -66,6 +66,7 @@ is_valid = score >= minScoreFloat
 send_valid(is_valid)
 send_score(score)
 
+
 '''
 
 # TODO: Validation using data_validation and gradients vector
