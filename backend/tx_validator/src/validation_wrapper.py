@@ -5,32 +5,38 @@ import requests
 
 MODELS_DIR = '../tx_validator/src/models/'
 
-model_id = sys.argv[6]
+newModelFlag = str(sys.argv[1])
+gradientsArrayFilePath = sys.argv[2]
+minScoreString = sys.argv[3]
+modelName = sys.argv[4]
+modelIndex = sys.argv[5]
 
-data_dir = MODELS_DIR + model_id + '/data.csv'
+data_dir = MODELS_DIR + modelName + '/data.csv'
 
 
 import importlib
-model_mod = importlib.import_module('models.%s.validate'%model_id)
+model_mod = importlib.import_module('models.%s.validate'%modelName)
 
-def parse_gradients(gradients_path, isRoundOne):
-    if (isRoundOne == "1") : 
-        gradient = open(gradients_path, "rb").read()
-        transaction = tx.TxShareUpdates()
-        transaction.ParseFromString(gradient)
+def parse_gradients_round_one(gradientsArrayFilePath):
+    gradient = open(gradientsArrayFilePath, "rb").read()
+    transaction = tx.TxShareUpdates()
+    transaction.ParseFromString(gradient)
      
-        return transaction.gradients
-    elif (isRoundOne == "0") :
-        formattedURL = "http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}".format(sys.argv[8])
-        response = requests.get(formattedURL)
+    return transaction.gradients
+    
 
-        latest_model = response.text
-        latest_model_no_prefix = latest_model.replace("[","")
-        latest_model_no_suffix = latest_model_no_prefix.replace("]","")
+def parse_gradients_round_two_onwards():
+    formattedURL = "http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}".format(modelIndex)
+    response = requests.get(formattedURL)
 
-        latest_model_list = latest_model_no_suffix.split(",")
-        split = [float(element) for element in latest_model_list]
-        return np.array(split)
+    latest_model = response.text
+    latest_model_no_prefix = latest_model.replace("[","")
+    latest_model_no_suffix = latest_model_no_prefix.replace("]","")
+
+    latest_model_list = latest_model_no_suffix.split(",")
+    split = [float(element) for element in latest_model_list]
+    return np.array(split)
+
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
@@ -39,24 +45,23 @@ def send_valid(is_valid):
 def send_score(score):
     print("SCORE" + str(score) + "ENDSCORE")
 
-gradients = parse_gradients(sys.argv[4], "1")
-newModel_flag = str(sys.argv[1])
-if (newModel_flag == "true"):
-    newModel_flag = 1
-elif (newModel_flag == "false"):
-    newModel_flag = 0
+gradients = parse_gradients_round_one(gradientsArrayFilePath)
+if (newModelFlag == "true"):
+    newModelFlag = 1
+elif (newModelFlag == "false"):
+    newModelFlag = 0
 else:
-    newModel_flag = int(newModel_flag)
+    newModelFlag = int(newModelFlag)
 
-if newModel_flag:
+if newModelFlag:
     evaluate_model = gradients
 else:
-    base_model = parse_gradients(sys.argv[3], "0")
+    base_model = parse_gradients_round_two_onwards()
     evaluate_model = base_model + gradients
    
-min_score = float(sys.argv[5])
+minScoreFloat = float(minScoreString)
 score = model_mod.compute_validation_score(evaluate_model, data_dir)
-is_valid = score >= min_score
+is_valid = score >= minScoreFloat
 
 send_valid(is_valid)
 send_score(score)

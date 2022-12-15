@@ -56,8 +56,8 @@ def createModel():
     return model
 
 # %%
-def evaluateModel(model, data_test, label_test):
-  results = model.evaluate(data_test, label_test, verbose=2)
+def evaluateModel(model, data_test, label_test, batch_size):
+  results = model.evaluate(data_test, label_test, verbose=2, batch_size=batch_size)
   # Return accuracy
   return results[1]
 
@@ -83,10 +83,10 @@ def rebuildModel(flat_model):
 ################################
 # Validation score
 ################################
-def compute_validation_score(flat_model, data_dir):
+def compute_validation_score(flat_model, data_dir, batch_size=50):
   data_test, label_test = reshapeData(data_dir)
   model = rebuildModel(flat_model)
-  result = evaluateModel(model, data_test, label_test)
+  result = evaluateModel(model, data_test, label_test, batch_size=batch_size)
   # print(result)
   return result
 # %%

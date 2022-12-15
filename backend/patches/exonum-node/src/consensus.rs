@@ -924,30 +924,25 @@ impl NodeHandler {
                 let output = Command::new("python")
                         .arg("../tx_validator/src/validation_wrapper.py")
                         .arg("1") // new model flag
-                        .arg("gradients_file") // not needed
-                        .arg("") // base model
                         .arg(&gradients_file) // gradients
                         .arg(min_score) // min_score
                         .arg("MNIST28X28")
-                        .arg("1")// isRound1 = true
+                        .arg(latest_index_unwrapped)
                         .output()
                         .expect("failed to execute process");
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
                 String::from_utf8_lossy(&output.stdout).to_string()
             } else {
-                let base_gradients_file = format!( "base_model{}",val_id);
-
                 let output = Command::new("python")
                     .arg("../tx_validator/src/validation_wrapper.py")
                     .arg("0") // new model flag
-                    .arg("gradients_file") // not needed
-                    .arg(&base_gradients_file) // base model
                     .arg(&gradients_file) // gradients
                     .arg(min_score) // min_score
                     .arg("MNIST28X28")
-                    .arg("0") // isRound1 = false
                     .arg(latest_index_unwrapped)
                     .output()
                     .expect("failed to execute process");
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
                 String::from_utf8_lossy(&output.stdout).to_string()
             };
             let validating_py_end = SystemTime::now();
