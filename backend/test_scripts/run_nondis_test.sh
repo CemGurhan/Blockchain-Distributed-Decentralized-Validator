@@ -17,6 +17,11 @@ while getopts "n:p:s:d:f:m:t:" arg; do
     esac
 done
 
+if [[ $sync != "BAP" ]]
+then
+    ttab -w sh test_scripts/syncer_run.sh $duration
+fi
+
 if [[ isMainTest -ne 0 ]]
 then
     rm -rf test_data
