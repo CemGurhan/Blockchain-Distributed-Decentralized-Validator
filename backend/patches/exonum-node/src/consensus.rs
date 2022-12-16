@@ -911,7 +911,7 @@ impl NodeHandler {
 
             let file1_write_start = SystemTime::now();
             let model_weights_serialized = &msg.payload().arguments;
-            let model_weights_serialized_u8: &[u8] = &model_weights_serialized;
+            let model_weights_serialized_u8: &[u8] = model_weights_serialized;
             let file_write_repsonse = f.write_all(model_weights_serialized_u8);
             match file_write_repsonse {
                 Ok(file) => file,

@@ -19,14 +19,15 @@ use exonum::{
         access::{Access, FromAccess, RawAccessMut},
         Entry, Group, MapIndex, ProofListIndex, RawProofMapIndex,
     },
-    runtime::CallerAddress as Address,
+    runtime::CallerAddress as Address, helpers::pb_optional_hash::to_pb,
 };
 use exonum_derive::{FromAccess, RequireArtifact};
+use exonum_proto::ProtobufConvert;
 use hex::FromHex;
 
 // modified
 use crate::{
-    model::Model, INIT_WEIGHT, LAMBDA, MAJORITY_RATIO, MAX_RETRAIN, MAX_SCORE_DECAY,
+    model::Model, INIT_WEIGHT, LAMBDA, MAJORITY_RATIO, MAX_RETRAIN, MAX_SCORE_DECAY, proto,
 };
 #[path = "model.rs"]
 use itertools::Itertools;
@@ -461,7 +462,7 @@ impl SchemaUtils {
 
     /// Computes model score
     pub fn evaluate_model(model_weights: &Vec<f32>) -> f32 {
-        let ids: Vec<f32> = model_weights.clone();
+        let ids: Vec<f32> = model_weights.to_vec();
         let weights_str = ids.iter().join("|");
 
         let tempfile_name: String = rand::thread_rng()

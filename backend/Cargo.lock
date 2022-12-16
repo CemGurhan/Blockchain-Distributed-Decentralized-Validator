@@ -1085,6 +1085,7 @@ dependencies = [
  "anyhow",
  "assert_matches",
  "backtrace",
+ "bincode",
  "colored",
  "exonum",
  "exonum-build",
