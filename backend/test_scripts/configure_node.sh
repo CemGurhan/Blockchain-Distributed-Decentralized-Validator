@@ -6,12 +6,17 @@ validator_host="0.0.0.0"
 sync="BAP"
 scoring_flag=1
 modelName="MNIST28X28"
+validator_port=6332
+validator_reciever_port=6335
 
-while getopts "n:h:p:s:f:m:" arg; do
+while getopts "n:h:v:r:p:e:s:f:m:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     h) validator_host="$OPTARG" ;;
+    v) validator_port=$(($OPTARG)) ;;
+    r) validator_reciever_port=$(($OPTARG)) ;;
     p) peer_hosts+=("$OPTARG") ;;
+    e) peer_reciever_ports+=("$OPTARG") ;;
     s) sync=    "$OPTARG" ;;
     f) scoring_flag= $(($OPTARG)) ;;
     m) modelName= "$OPTARG" ;;
@@ -23,13 +28,20 @@ then
     ttab sh test_scripts/syncer_run.sh $duration
 fi
 
+if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
+then
+    for i in $(seq 0 $(($peer_hosts - 1))); do
+        peer_reciever_port[$i]=6335
+    done
+fi
+
 exonum-ML generate-template \
 example/common.toml \
 --validators-count $number_of_validators
 
 exonum-ML generate-config \
   example/common.toml example/1 \
-  --peer-address $validator_host:6332 -n
+  --peer-address $validator_host:$validator_port -n
 
 cd example
 
@@ -51,13 +63,13 @@ echo "All peer hosts are: '${peer_hosts[@]}'"
 if [[ $number_of_validators != 1 ]]
 then
     for i in "${!peer_hosts[@]}"; do
-        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
-        pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":6335/getPubKey)"
+        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
+        pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
 
             while [[ pub_key_response_header -eq 000  ]]
             do
-                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":6335/getPubKey)"
-                pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":6335/getPubKey)"
+                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
+                pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
             done
 
         echo "Ok"
