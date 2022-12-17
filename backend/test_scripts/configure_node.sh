@@ -7,18 +7,21 @@ sync="BAP"
 scoring_flag=1
 modelName="MNIST28X28"
 
-
-
-while getopts "n:h:p:" arg; do
+while getopts "n:h:p:s:f:m:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     h) validator_host="$OPTARG" ;;
     p) peer_hosts+=("$OPTARG") ;;
     s) sync=    "$OPTARG" ;;
-    s) scoring_flag= $(($OPTARG)) ;;
+    f) scoring_flag= $(($OPTARG)) ;;
     m) modelName= "$OPTARG" ;;
     esac
 done
+
+if [[ $sync != "BAP" ]]
+then
+    ttab sh test_scripts/syncer_run.sh $duration
+fi
 
 exonum-ML generate-template \
 example/common.toml \
@@ -39,8 +42,7 @@ done
 
 cd ..
 
-source ./scripts/utils/newTab.sh
-openTab sh "sh $PWD/run_reciever_daemon.sh $PWD"
+ttab sh run_reciever_daemon.sh
 sleep 2
 
 echo "All peer hosts are: '${peer_hosts[@]}'"
