@@ -8,14 +8,16 @@ scoring_flag=1
 modelName="MNIST28X28"
 validator_peer_port=6332
 validator_reciever_port=6335
-validator_port=9000
+validator_public_port=9000
+validator_private_port=9001
 
-while getopts "n:h:v:o:r:p:e:s:f:m:" arg; do
+while getopts "n:h:v:o:t:r:p:e:s:f:m:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     h) validator_host="$OPTARG" ;;
     v) validator_peer_port=$(($OPTARG)) ;;
-    o) validator_port=$(($OPTARG)) ;;
+    o) validator_public_port=$(($OPTARG)) ;;
+    t) validator_private_port=$(($OPTARG)) ;;
     r) validator_reciever_port=$(($OPTARG)) ;;
     p) peer_hosts+=("$OPTARG") ;;
     e) peer_reciever_ports+=("$OPTARG") ;;
@@ -92,8 +94,8 @@ node_list=("${node_list[@]/%//pub.toml}")
 
 
 exonum-ML finalize \
-  --public-api-address 0.0.0.0:9000 \
-  --private-api-address 0.0.0.0:9001 \
+  --public-api-address 0.0.0.0:$validator_public_port \
+  --private-api-address 0.0.0.0:$validator_private_port \
   1/sec.toml 1/node.toml \
   --public-configs "${node_list[@]}"
 
@@ -104,7 +106,7 @@ cargo install --path .
 cd ./tx_validator
 npm install && babel src -d dist
 cd ..
-ttab -w sh test_scripts/run_node.sh  0 $sync $scoring_flag 1 $modelName $validator_port
+ttab -w sh test_scripts/run_node.sh  0 $sync $scoring_flag 1 $modelName $validator_public_port
 
 
 
