@@ -30,10 +30,14 @@ fi
 
 if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
 then
-    for i in $(seq 0 $(($peer_hosts - 1))); do
+    echo "INSIDE THIS IF STATE<MENT"
+    for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
         peer_reciever_port[$i]=6335
     done
 fi
+
+echo "PEER PORTS LENGTH ARE: ${#peer_reciever_ports[@]}" 
+echo "PEER HOSTS LENGTH ARE: ${#peer_hosts[@]}" 
 
 exonum-ML generate-template \
 example/common.toml \
@@ -66,7 +70,7 @@ then
         pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
         pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
 
-            while [[ pub_key_response_header -eq 000  ]]
+            while [[ pub_key_response_header -eq 000  ]] # set to -ne 200 
             do
                 pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
                 pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"

@@ -1,0 +1,19 @@
+address = "0.0.0.0:6332"
+
+[consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[general]
+supervisor_mode = "simple"
+validators_count = 2
+
+[validator_keys]
+consensus_key = "f3977a4713355f67bb87b0aa220870549bbfebb9138175182ec55186fab64d2b"
+service_key = "132466105db0e361f574045819b3bcb78e642d29933c00cc3e8c516bc0b9a209"

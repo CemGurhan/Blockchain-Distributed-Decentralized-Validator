@@ -1,4 +1,4 @@
-address = "127.0.0.1:6332"
+address = "0.0.0.0:6332"
 
 [consensus]
 first_round_timeout = 3000
@@ -15,5 +15,5 @@ supervisor_mode = "simple"
 validators_count = 2
 
 [validator_keys]
-consensus_key = "bbbe243e3b8b91435e3352050e7dfafe446c817f62723e89b16baacd551aaa23"
-service_key = "fad55565459322ab2a279c2f40e27697eac22c2ea5d1381365bf27d386b282ae"
+consensus_key = "f3977a4713355f67bb87b0aa220870549bbfebb9138175182ec55186fab64d2b"
+service_key = "132466105db0e361f574045819b3bcb78e642d29933c00cc3e8c516bc0b9a209"
