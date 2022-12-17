@@ -1,0 +1,74 @@
+[private_config]
+consensus_public_key = "9c5f9c7fc26408ce9b9a51d92a790343799837298ad1bf681c4c24ae85d40628"
+external_address = "127.0.0.1:7092"
+listen_address = "0.0.0.0:7092"
+master_key_path = "master.key.toml"
+
+[private_config.api]
+private_api_address = "0.0.0.0:9005"
+public_api_address = "0.0.0.0:9001"
+state_update_timeout = 10000
+
+[private_config.api.server_restart]
+max_retries = 20
+retry_timeout = 500
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7091"
+public_key = "2ea1a1b1c7ec703f136b1cce4264b15ad581a61e42ade1d09e825ce33b499b44"
+
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7094"
+public_key = "a38784c8ab8bfeec726b593a81b0ac0b5a52287b2f50b844fc056a76f21cf6f2"
+
+[[private_config.connect_list.peers]]
+address = "127.0.0.1:7093"
+public_key = "b58a76f218efafb6aa542c25479f42c0e49e425ad073d3b80ec021acd41bea37"
+
+[private_config.database]
+compression_type = "none"
+create_if_missing = true
+[private_config.mempool.events_pool_capacity]
+api_requests_capacity = 1024
+internal_events_capacity = 128
+network_events_capacity = 512
+network_requests_capacity = 512
+
+[private_config.mempool.flush_pool_strategy]
+timeout = 20
+type = "timeout"
+
+[private_config.network]
+max_incoming_connections = 128
+max_outgoing_connections = 128
+tcp_connect_max_retries = 10
+tcp_connect_retry_timeout = 15000
+tcp_nodelay = true
+[public_config.consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "2ea1a1b1c7ec703f136b1cce4264b15ad581a61e42ade1d09e825ce33b499b44"
+service_key = "126b613491ea3010a02687552ec9fae86562355cd77b2d58a362c9f882023cb1"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "9c5f9c7fc26408ce9b9a51d92a790343799837298ad1bf681c4c24ae85d40628"
+service_key = "cbba727a0d0930eb6ac18a8590147007d199bab5f9962a14cf1a5b10e5650401"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "a38784c8ab8bfeec726b593a81b0ac0b5a52287b2f50b844fc056a76f21cf6f2"
+service_key = "cffe72de47684ce04f20e15989fb3b6b0e786505dfe9e979a009445050ad54f3"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "b58a76f218efafb6aa542c25479f42c0e49e425ad073d3b80ec021acd41bea37"
+service_key = "7b9babc6e11d16b33df0ca6925562c592265197cc9dd3c82395118ceedb01c21"
+
+[public_config.general]
+supervisor_mode = "simple"
+validators_count = 4
