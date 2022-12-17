@@ -25,7 +25,7 @@ done
 
 if [[ $sync != "BAP" ]]
 then
-    ttab sh test_scripts/syncer_run.sh $duration
+    ttab -w sh test_scripts/syncer_run.sh $duration
 fi
 
 if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
