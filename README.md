@@ -2,7 +2,7 @@
 
 Makefile targets explained:
 
- * To run a test with four validators in a Non-IID scenario, execute command `make four` in the backend folder. 
+ * To run a test with four validators in a Non-IID scenario, execute command `make four` in the backend folder. You will also have to run the relevant command in the lightclient application locally for the training rounds to begin.
  
  * To run a test with four validators in an IID scenario, execute command `make n-four` in the backend folder. You will also have to run the relevant command in the lightclient application locally for the training rounds to begin. 
 
