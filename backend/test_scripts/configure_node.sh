@@ -31,7 +31,7 @@ fi
 if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
 then
     for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
-        peer_reciever_port[$i]=6335
+        peer_reciever_ports[$i]=6335
     done
 fi
 
@@ -54,7 +54,7 @@ done
 
 cd ..
 
-ttab -w sh test_scripts/run_reciever_daemon.sh
+ttab -w sh test_scripts/run_reciever_daemon.sh $validator_reciever_port
 sleep 2
 
 echo "All peer hosts are: '${peer_hosts[@]}'"
@@ -63,13 +63,13 @@ echo "All peer hosts are: '${peer_hosts[@]}'"
 if [[ $number_of_validators != 1 ]]
 then
     for i in "${!peer_hosts[@]}"; do # set to for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
-        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
-        pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
+        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_ports[$i]}"/getPubKey)"
+        pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_ports[$i]}"/getPubKey)"
 
             while [[ pub_key_response_header -eq 000  ]] # set to -ne 200 
             do
-                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
-                pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_port[$i]}"/getPubKey)"
+                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_hosts[$i]}":"${peer_reciever_ports[$i]}"/getPubKey)"
+                pub_key_response="$(curl --connect-timeout 5 "${peer_hosts[$i]}":"${peer_reciever_ports[$i]}"/getPubKey)"
             done
 
         echo "Ok"
