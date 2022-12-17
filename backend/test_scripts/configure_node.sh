@@ -102,7 +102,7 @@ cargo install --path .
 cd ./tx_validator
 npm install && babel src -d dist
 cd ..
-bash run_node.sh  0 $sync $scoring_flag 1 $modelName 
+sh test_scripts/run_node.sh  0 $sync $scoring_flag 1 $modelName 
 
 
 
