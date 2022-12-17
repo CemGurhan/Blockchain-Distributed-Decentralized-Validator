@@ -42,7 +42,7 @@ done
 
 cd ..
 
-ttab sh run_reciever_daemon.sh
+ttab sh test_scripts/run_reciever_daemon.sh
 sleep 2
 
 echo "All peer hosts are: '${peer_hosts[@]}'"
