@@ -2,6 +2,7 @@ number_of_validators=$1
 rm -rf example
 mkdir example
 rm -rf target
+rm -rf pub_key_io/reciever/target
 cd ..
 
 echo "now creating $(($number_of_validators-1)) more backend folder(s) for local testing"

@@ -31,7 +31,7 @@ sh test_scripts/validator_copy.sh <number_of_validators on the network>
 
 To run validators over a network run the following command on one machine:
 
-## Example workflow testing locally with 2 validators on the network
+## Example workflow testing locally with 2 validators (Non-Distributed De-Centralized test - NDD)
 
 For ease of local testing, run the following script to copy the backend folder into the relevant number of validators:
 
@@ -56,3 +56,35 @@ sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6333 -r 6335 -p 0.0.0.0 -e 
 
 This will run a reciever service for this validator on port `6335`. It will also specify the validators peer address to be `0.0.0.0:6333`. 
 The validator will now be looking out for public keys at the address `0.0.0.0:6336`.
+
+## Example workflow testing locally with 4 validators (Non-Distributed De-Centralized test - NDD)
+
+Using the same concepts as the previous example, to run 4 vaidators for local testing, first begin by copying the backend folder with the following command: 
+
+```
+sh test_scripts/validator_copy.sh 4
+```
+
+Next, inside the `backend` folder, execute the following command:
+
+```
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6332 -r 6336 -p 0.0.0.0 0.0.0.0 0.0.0.0 -e 6337 6338 6339
+```
+
+Inside the `backend1` folder execute:
+
+```
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6333 -r 6337 -p 0.0.0.0 0.0.0.0 0.0.0.0 -e 6336 6338 6339
+```
+
+Inside the `backend2` folder execute:
+
+```
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6334 -r 6338 -p 0.0.0.0 0.0.0.0 0.0.0.0 -e 6336 6337 6339
+```
+
+Inside the `backend3` folder execute:
+
+```
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6335 -r 6339 -p 0.0.0.0 0.0.0.0 0.0.0.0 -e 6336 6337 6338
+```
