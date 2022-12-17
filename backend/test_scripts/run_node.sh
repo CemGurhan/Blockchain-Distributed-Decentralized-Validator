@@ -1,8 +1,7 @@
 # path2=""
 # command_start="sh "
 node_count=$3
-start_peer_port=7091
-start_public_port=9000
+start_public_port=$6
 
 # cd example
 # GITHUB TEST LINE

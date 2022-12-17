@@ -13,6 +13,7 @@ The following flags may also be supplied:
 -n <number_of_validators_on_network (defaults to 1)> 
 -h <your_host (defaults to "0.0.0.0")> 
 -v <your_peer_port (defaults to 6332)> 
+-o <validator_port (port the validator runs on - defaults to 9000)>
 -r <your_pubkey_reciever_port (defaults to 6335)> 
 -p <peer_hosts> 
 -e <peer_reciever_ports> 
@@ -42,7 +43,7 @@ sh test_scripts/validator_copy.sh 2
 To then run validators locally for testing, cd into the `backend` folder and run the following command:
 
 ```
-sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6332 -r 6336 -p 0.0.0.0 -e 6335 
+sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6332 -o 9000 -r 6336 -p 0.0.0.0 -e 6335 
 ```
 
 This will run a reciever service for this validator on port `6336`, as we have supplied this port value using the flag `r`. It will also specify the validators peer address to be `0.0.0.0:6332`, as we have set the validators peer port to be `6332` using the `v` flag, and set the validators host address to be `0.0.0.0` using the `h` flag. 
@@ -51,7 +52,7 @@ The validator will now be looking out for public keys at the address `0.0.0.0:63
 Now cd into the `backend1` folder and run the command:
 
 ```
-sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6333 -r 6335 -p 0.0.0.0 -e 6336
+sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6333 -o 9002 -r 6335 -p 0.0.0.0 -e 6336
 ```
 
 This will run a reciever service for this validator on port `6335`. It will also specify the validators peer address to be `0.0.0.0:6333`. 
