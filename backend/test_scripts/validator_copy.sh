@@ -5,9 +5,9 @@ rm -rf target
 rm -rf pub_key_io/reciever/target
 cd ..
 
-echo "now creating $(($number_of_validators-1)) more backend folder(s) for local testing"
+echo "now creating $(($number_of_validators-1)) more validator(s) for local testing"
 for ((i=1;i<$number_of_validators;i++)); do 
     cp -r backend backend$i
 done
-echo "finished creating backend folders, local testing ready"
+echo "$number_of_validators validators now ready for local testing"
 
