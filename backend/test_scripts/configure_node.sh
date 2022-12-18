@@ -19,9 +19,7 @@ while getopts "n:h:v:o:t:r:p:e:a:s:f:m:" arg; do
     o) validator_public_port=$(($OPTARG)) ;;
     t) validator_private_port=$(($OPTARG)) ;;
     r) validator_reciever_port=$(($OPTARG)) ;;
-    p) peer_hosts+=("$OPTARG");;
-    e) peer_reciever_ports+=("$OPTARG");;
-    a) peer_addresses+=("$OPTARG");;
+    a) peer_reciever_addresses+=("$OPTARG");;
     s) sync=    "$OPTARG" ;;
     f) scoring_flag= $(($OPTARG)) ;;
     m) modelName= "$OPTARG" ;;
@@ -64,19 +62,19 @@ cd ..
 ttab -w sh test_scripts/run_reciever_daemon.sh $validator_reciever_port
 sleep 2
 
-echo "All peer addresses are: '${peer_addresses[@]}'"
+echo "All peer addresses are: '${peer_reciever_addresses[@]}'"
 
 
 if [[ $number_of_validators != 1 ]]
 then
-    for i in $(seq 0 $((${#peer_addresses[@]} - 1))); do # set to for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
-        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_addresses[$i]}"/getPubKey)"
-        pub_key_response="$(curl --connect-timeout 5 "${peer_addresses[$i]}"/getPubKey)"
+    for i in $(seq 0 $((${#peer_reciever_addresses[@]} - 1))); do # set to for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
+        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_reciever_addresses[$i]}"/getPubKey)"
+        pub_key_response="$(curl --connect-timeout 5 "${peer_reciever_addresses[$i]}"/getPubKey)"
 
             while [[ pub_key_response_header -eq 000  ]] # set to -ne 200 
             do
-                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_addresses[$i]}"/getPubKey)"
-                pub_key_response="$(curl --connect-timeout 5 "${peer_addresses[$i]}"/getPubKey)"
+                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_reciever_addresses[$i]}"/getPubKey)"
+                pub_key_response="$(curl --connect-timeout 5 "${peer_reciever_addresses[$i]}"/getPubKey)"
             done
 
         echo "Ok"
