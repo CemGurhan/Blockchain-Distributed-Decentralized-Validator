@@ -21,11 +21,13 @@ The following flags may also be supplied:
 -m <model_name (defauls to "MNIST28X28")>
 ```
 
-When testing locally, run the following script to copy the backend folder into the relevant number of validators:
+When testing locally, run the following script in the backend folder to produce n number of validators:
 
 ```
-sh test_scripts/validator_copy.sh <number_of_validators on the network>
+sh test_scripts/run_local_test.sh <number_of_validators (number of validators on mock network for local testing)>  
 ```
+
+For a more in-depth look at how the local test scripts work, see [here](#example-workflow-testing-locally-with-2-validators-non-distributed-de-centralized-test---ndd) for a set up example with 2 validators, or [here](#example-workflow-testing-locally-with-4-validators-non-distributed-de-centralized-test---ndd) for a set up example with 4 validators.
 
 ## Example workflow over a network
 
