@@ -1,0 +1,19 @@
+address = "0.0.0.0:6333"
+
+[consensus]
+first_round_timeout = 3000
+max_message_len = 5242880
+max_propose_timeout = 200
+min_propose_timeout = 10
+peers_timeout = 10000
+propose_timeout_threshold = 500
+status_timeout = 5000
+txs_block_limit = 1000
+
+[general]
+supervisor_mode = "simple"
+validators_count = 2
+
+[validator_keys]
+consensus_key = "2b0538f3fdda6d6eefcdf6292cd4a7c721cea1d45246f8b1da49f96eaf137c66"
+service_key = "561b7cf2d44fb3566f786a2deb4e1098cc9e9bbe186adb17369d46d241a147c2"
