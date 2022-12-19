@@ -7,15 +7,13 @@ validator_public_port=9000
 validator_private_port=9001
 validator_reciever_port=$(($validator_peer_port+$number_of_validators))
 peer_reciever_flag=""
-peer_reciever_port=6337
 current_reciever_port=$(($validator_peer_port+$number_of_validators))
 
-
+# create reciever address flag and run configure_node.sh for first validator 
 for i in $(seq 0 $(($number_of_validators - 2))); do
         peer_reciever_flag+="-a 0.0.0.0:"
         validator_reciever_port=$(($validator_reciever_port+$((i+1))))
-        peer_reciever_port=$validator_reciever_port
-        peer_reciever_flag+=$peer_reciever_port
+        peer_reciever_flag+=$validator_reciever_port
         peer_reciever_flag+=" "
         validator_reciever_port=$(($validator_reciever_port-$((i+1))))
 done
@@ -30,8 +28,7 @@ for i in $(seq 1 $(($number_of_validators - 1))); do
     cd backend$i
     peer_reciever_flag=""
     peer_reciever_flag+="-a 0.0.0.0:"
-    peer_reciever_port=$validator_reciever_port
-    peer_reciever_flag+=$peer_reciever_port
+    peer_reciever_flag+=$validator_reciever_port
     peer_reciever_flag+=" "
     validator_reciever_port=$(($validator_reciever_port+1))
     for i in $(seq 0 $(($number_of_validators-2))); do
@@ -41,8 +38,7 @@ for i in $(seq 1 $(($number_of_validators - 1))); do
                 continue
             fi
             peer_reciever_flag+="-a 0.0.0.0:"
-            peer_reciever_port=$validator_reciever_port
-            peer_reciever_flag+=$peer_reciever_port
+            peer_reciever_flag+=$validator_reciever_port
             peer_reciever_flag+=" "
             validator_reciever_port=$(($validator_reciever_port+1))
     done
