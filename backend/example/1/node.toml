@@ -1,5 +1,5 @@
 [private_config]
-consensus_public_key = "1f832c71bda35381755c77bdd9c90d800d1154010b9df5a54608a00b8d4890c0"
+consensus_public_key = "cd5790a6129ed2de81b391b1a6c8098fa5303937a9d30f4266a2c61377dfdbb3"
 external_address = "0.0.0.0:6332"
 listen_address = "0.0.0.0:6332"
 master_key_path = "master.key.toml"
@@ -14,7 +14,15 @@ max_retries = 20
 retry_timeout = 500
 [[private_config.connect_list.peers]]
 address = "0.0.0.0:6333"
-public_key = "b40b0009fb0b376a75420a696d3d2960d864973a9dc8ca940060aaed4e9b4f6c"
+public_key = "460b113424f01ab827f1bc537f8658ea73f9964e0c43eee9f25858e21167c7f7"
+
+[[private_config.connect_list.peers]]
+address = "0.0.0.0:6335"
+public_key = "935adc74134e994f9cc0a80e46e5e0614a71777e6a6e888d92d1059b7028be2b"
+
+[[private_config.connect_list.peers]]
+address = "0.0.0.0:6334"
+public_key = "9cd4c0d88619384c60aeb54ec24c5c1ebc1cb2d5285433f221d9a6c9544fbab7"
 
 [private_config.database]
 compression_type = "none"
@@ -46,13 +54,21 @@ status_timeout = 5000
 txs_block_limit = 1000
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "1f832c71bda35381755c77bdd9c90d800d1154010b9df5a54608a00b8d4890c0"
-service_key = "89fea7b0064db5f230a95581c4e8bc1b6d91925aeea692414484bf38286c9815"
+consensus_key = "460b113424f01ab827f1bc537f8658ea73f9964e0c43eee9f25858e21167c7f7"
+service_key = "6f4e73544fd66a9c42c30eadf8c8fb2279fadb3c0721c900b86bcac3ab30e1f2"
 
 [[public_config.consensus.validator_keys]]
-consensus_key = "b40b0009fb0b376a75420a696d3d2960d864973a9dc8ca940060aaed4e9b4f6c"
-service_key = "65495c031150f0b341427bfb44c72243740758b8701d9343513ed65962ca190a"
+consensus_key = "935adc74134e994f9cc0a80e46e5e0614a71777e6a6e888d92d1059b7028be2b"
+service_key = "47a0eb0b835ac04f4eff8946fadaf501cc5e94ff655573f906eb1a389c26e8c0"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "9cd4c0d88619384c60aeb54ec24c5c1ebc1cb2d5285433f221d9a6c9544fbab7"
+service_key = "2742fb848e8a3d6f6b2e16919cd5ca0832f80052c7c700d94f9124411300e88a"
+
+[[public_config.consensus.validator_keys]]
+consensus_key = "cd5790a6129ed2de81b391b1a6c8098fa5303937a9d30f4266a2c61377dfdbb3"
+service_key = "52aeb9e307da77c164c22ec8d999dfd92a5e2c779570965ed823cf570cedbbc3"
 
 [public_config.general]
 supervisor_mode = "simple"
-validators_count = 2
+validators_count = 4
