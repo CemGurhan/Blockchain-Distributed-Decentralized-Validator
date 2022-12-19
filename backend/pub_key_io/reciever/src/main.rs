@@ -3,6 +3,7 @@ use std::fs;
 
 #[get("/getPubKey")]
 async fn ping() -> HttpResponse {
+    println!("recieved request");
     let data = fs::read("../../example/1/pub.toml").expect("Unable to read file");
     HttpResponse::Ok()
     .body(data)

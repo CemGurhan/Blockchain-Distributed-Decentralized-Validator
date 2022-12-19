@@ -31,7 +31,7 @@ then
     ttab -w sh test_scripts/syncer_run.sh $duration
 fi
 
-# echo "PEER RECIEVR PORTS: ${peer_reciever_ports[@]}"
+# echo "PEER ADDRESSES: ${peer_reciever_addresses[@]}"
 # echo "PEER HOST PORTS: ${peer_hosts[@]}"
 # if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
 # then
@@ -64,10 +64,12 @@ sleep 2
 
 echo "All peer addresses are: '${peer_reciever_addresses[@]}'"
 
+# set pub_key_response_header to be 000 here to get rid of two while loops
+
 
 if [[ $number_of_validators != 1 ]]
 then
-    for i in $(seq 0 $((${#peer_reciever_addresses[@]} - 1))); do # set to for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
+    for i in $(seq 0 $((${#peer_reciever_addresses[@]} - 1))); do 
         pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_reciever_addresses[$i]}"/getPubKey)"
         pub_key_response="$(curl --connect-timeout 5 "${peer_reciever_addresses[$i]}"/getPubKey)"
 
@@ -82,9 +84,8 @@ then
         cd example
         cd $((i+2))
         echo "$pub_key_response" >> pub.toml
-
+        cd ..
     done
-    cd ..
 else
     cd example
 fi

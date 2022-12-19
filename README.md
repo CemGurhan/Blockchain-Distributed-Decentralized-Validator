@@ -69,23 +69,23 @@ sh test_scripts/validator_copy.sh 4
 Next, inside the `backend` folder, execute the following command:
 
 ```
-sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6332 -o 9000 -t 9001 -r 6336 -p 0.0.0.0 -p 0.0.0.0 -p 0.0.0.0 -e 6337 -e 6338 -e 6339
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6332 -o 9000 -t 9001 -r 6336 -a 0.0.0.0:6337 -a 0.0.0.0:6338 -a 0.0.0.0:6339
 ```
 
 Inside the `backend1` folder execute:
 
 ```
-sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6333 -o 9002 -t 9003 -r 6337 -p 0.0.0.0 -p 0.0.0.0 -p 0.0.0.0 -e 6336 -e 6338 -e 6339
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6333 -o 9002 -t 9003 -r 6337 -a 0.0.0.0:6336 -a 0.0.0.0:6338 -a 0.0.0.0:6339
 ```
 
 Inside the `backend2` folder execute:
 
 ```
-sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6334 -o 9004 -t 9005 -r 6338 -p 0.0.0.0 -p 0.0.0.0 -p 0.0.0.0 -e 6336 -e 6337 -e 6339
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6334 -o 9004 -t 9005 -r 6338 -a 0.0.0.0:6336 -a 0.0.0.0:6337 -a 0.0.0.0:6339
 ```
 
 Inside the `backend3` folder execute:
 
 ```
-sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6335 -o 9006 -t 9007 -r 6339 -p 0.0.0.0 -p 0.0.0.0 -p 0.0.0.0 -e 6336 -e 6337 -e 6338
+sh test_scripts/configure_node.sh -n 4 -h 0.0.0.0 -v 6335 -o 9006 -t 9007 -r 6339 -a 0.0.0.0:6336 -a 0.0.0.0:6337 -a 0.0.0.0:6338
 ```
