@@ -12,8 +12,8 @@ txs_block_limit = 1000
 
 [general]
 supervisor_mode = "simple"
-validators_count = 4
+validators_count = 2
 
 [validator_keys]
-consensus_key = "cd5790a6129ed2de81b391b1a6c8098fa5303937a9d30f4266a2c61377dfdbb3"
-service_key = "52aeb9e307da77c164c22ec8d999dfd92a5e2c779570965ed823cf570cedbbc3"
+consensus_key = "4d6eaf86495ac6fe63f9bd2a3377b854804c2ce3d48105522e3ebdffb94f1cd4"
+service_key = "50e534323d485422d04ce1480ee8afeef294acc18b4c9f7be15e66d228faf8ae"
