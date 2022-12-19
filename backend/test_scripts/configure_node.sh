@@ -1,28 +1,26 @@
 rm -rf example
 mkdir example
 
+validator_peer_address="0.0.0.0:6332"
 number_of_validators=1
-validator_host="0.0.0.0"
 sync="BAP"
 scoring_flag=1
 modelName="MNIST28X28"
-validator_peer_port=6332
 validator_reciever_port=6335
 validator_public_port=9000
 validator_private_port=9001
 
-while getopts "n:h:v:o:t:r:p:e:a:s:f:m:" arg; do
+while getopts "n:p:o:t:r:e:a:s:f:m:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
-    h) validator_host="$OPTARG" ;;
-    v) validator_peer_port=$(($OPTARG)) ;;
+    p) validator_peer_address="$OPTARG" ;;
     o) validator_public_port=$(($OPTARG)) ;;
     t) validator_private_port=$(($OPTARG)) ;;
     r) validator_reciever_port=$(($OPTARG)) ;;
     a) peer_reciever_addresses+=("$OPTARG");;
-    s) sync=    "$OPTARG" ;;
-    f) scoring_flag= $(($OPTARG)) ;;
-    m) modelName= "$OPTARG" ;;
+    s) sync="$OPTARG" ;;
+    f) scoring_flag=$(($OPTARG)) ;;
+    m) modelName="$OPTARG" ;;
     esac
 done
 
@@ -46,7 +44,7 @@ example/common.toml \
 
 exonum-ML generate-config \
   example/common.toml example/1 \
-  --peer-address $validator_host:$validator_peer_port -n
+  --peer-address $validator_peer_address -n
 
 cd example
 
