@@ -47,7 +47,7 @@ sh test_scripts/configure_node.sh -n 2 -h 0.0.0.0 -v 6332 -o 9000 -t 9001 -r 633
 ```
 
 This will run a reciever service for this validator on port `6336`, as we have supplied this port value using the flag `r`. It will also specify the validators peer address to be `0.0.0.0:6332`, as we have set the validators peer port to be `6332` using the `v` flag, and set the validators host address to be `0.0.0.0` using the `h` flag. 
-The validator will now be looking out for public keys at the address `0.0.0.0:6335`, as we have set the peer reciever address to be this using the `a` flag.
+The validator will now be looking out for public keys at the address `0.0.0.0:6335`, as we have set the peer reciever address to be this using the `a` flag. The validator will also be running on a public port of `9000`, which was specified by the `o` flag, and will have a private port of `9001`, specified by the `t` flag.
 
 Now cd into the `backend1` folder and run the command:
 
