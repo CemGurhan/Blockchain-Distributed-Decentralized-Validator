@@ -56,8 +56,8 @@ def createModel():
     return model
 
 # %%
-def evaluateModel(model, data_test, label_test):
-  results = model.evaluate(data_test, label_test, verbose=2)
+def evaluateModel(model, data_test, label_test, batch_size):
+  results = model.evaluate(data_test, label_test, verbose=2, batch_size=batch_size)
   # Return accuracy
   return results[1]
 
@@ -67,11 +67,11 @@ def rebuildModel(flat_model):
   new_model = createModel()
   start = 0
   for i in range (0, len(new_model.layers)):
-      bound = np.array(new_model.layers[i].get_weights()).size
+      bound = np.array(new_model.layers[i].get_weights(), dtype=object).size
       weights = []
       for j in range (0, bound):
         size = (new_model.layers[i].get_weights()[j]).size
-        arr = np.array(flat_model[start:start+size])
+        arr = np.array(flat_model[start:start+size], dtype=object)
         arr = arr.reshape(new_model.layers[i].get_weights()[j].shape)
         weights.append(arr)
         start += size
@@ -83,10 +83,10 @@ def rebuildModel(flat_model):
 ################################
 # Validation score
 ################################
-def compute_validation_score(flat_model, data_dir):
+def compute_validation_score(flat_model, data_dir, batch_size=50):
   data_test, label_test = reshapeData(data_dir)
   model = rebuildModel(flat_model)
-  result = evaluateModel(model, data_test, label_test)
-  print(result)
+  result = evaluateModel(model, data_test, label_test, batch_size=batch_size)
+  # print(result)
   return result
 # %%

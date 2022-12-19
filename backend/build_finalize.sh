@@ -27,23 +27,13 @@ if [ "$build" -eq "1" ]; then
     fi
 fi
 
-if [ "$build_js" -eq "1" ]; then
-    cd tx_validator
-    npm install && babel src -d dist
-    ret=$?
-    cd ..
-    if [ "$ret" != "0" ]; then
-        exit 1
-    fi
-fi
-
 if [ -d ./example ]; then
     echo "example dir exists"
 else
     mkdir example
     cd example
     echo "Generating node configs..."
-    exonum-ML generate-template common.toml --validators-count ${node_count}
+    exonum-ML generate-template common.toml --validators-count ${node_count} # exonum-ML generate-template common.toml --validators-count ${node_count} --supervisor-mode decentralized
     for i in $(seq 0 $((node_count - 1))); do
         peer_port=$((start_peer_port + i))
         exonum-ML generate-config common.toml $((i + 1)) --peer-address 127.0.0.1:${peer_port} -n

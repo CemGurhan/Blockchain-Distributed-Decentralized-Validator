@@ -25,7 +25,8 @@ use exonum::{
     runtime::ExecutionError,
 };
 use log::{error, info, trace, warn};
-
+use protobuf::descriptor::ServiceDescriptorProto;
+use std::{time::SystemTime, process::{Output, ExitStatus}};
 use std::{collections::HashSet, convert::TryFrom, fmt, process::Command};
 
 use crate::{
@@ -33,13 +34,14 @@ use crate::{
     messages::{
         BlockRequest, BlockResponse, Consensus as ConsensusMessage, PoolTransactionsRequest,
         Prevote, PrevotesRequest, Propose, ProposeRequest, TransactionsRequest,
-        TransactionsResponse,
+        TransactionsResponse, Service,  
     },
     proposer::{ProposeParams, ProposeTemplate},
     schema::NodeSchema,
     state::{IncompleteBlock, ProposeState, RequestData},
     NodeHandler,
 };
+
 
 const DEBUG: bool = true;
 
@@ -49,6 +51,13 @@ use colored::*;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::sync::atomic::Ordering;
+use exonum_proto::{ProtobufConvert, ProtobufBase64};
+
+extern crate serde_json;
+use reqwest::blocking::get;
+use bincode::Options;
+
+
 
 /// Shortcut to get verified messages from bytes.
 fn into_verified<T: TryFrom<SignedMessage>>(raw: &[Vec<u8>]) -> anyhow::Result<Vec<Verified<T>>> {
@@ -876,51 +885,78 @@ impl NodeHandler {
             outcome = Ok(());
         } else {
             // Updates Validation
+            let validation_start = SystemTime::now();
             println!("{}", "---------------------------------------");
             println!(
                 "{}, {}",
-                "Model update received (Hello from backend/patches/exonum-node/src/consesnus.rs)".yellow(),
-                "validating...(Hello from backend/patches/exonum-node/src/consesnus.rs)".italic()
+                "Model update received".yellow(),
+                "validating...".italic()
             );
             let val_id: u16;
             unsafe {
                 val_id = VALIDATOR_ID.load(Ordering::SeqCst);
             }
-            let gradients_filename: String =
-                format!("v{}_gradients_{}.txt", val_id, msg.author().to_hex());
-            // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
 
-            let mut file = OpenOptions::new()
-                .write(true)
-                .append(true)
-                .create(true)
-                .open(&gradients_filename)
-                .unwrap();
+            let latest_index = get_latest_model_index();
+            let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
+            let min_score = fetch_min_score();
+            
+            let gradients_file = format!("gradients{}",val_id);
+            let binary_file = std::fs::File::create(&gradients_file);
+            let mut f = match binary_file {
+                Ok(file) => file,
+                Err(error) => panic!("Error creating file: {:?}", error),
+                
+            };
 
-            if let Err(e) = writeln!(file, "{:?}", msg.payload().arguments) {
-                eprintln!("Couldn't write to file: {}", e);
+            let file1_write_start = SystemTime::now();
+            let model_weights_serialized = &msg.payload().arguments;
+            let model_weights_serialized_u8: &[u8] = model_weights_serialized;
+            let file_write_repsonse = f.write_all(model_weights_serialized_u8);
+            match file_write_repsonse {
+                Ok(file) => file,
+                Err(error) => panic!("Error writing to file: {:?}", error),
             }
-            // let gradients_filename: String = format!("v{}_gradients_{}.txt", val_id, aut);
-            // let gradients_filename: String = format!("v{}_gradients.txt", val_id);
-
-            let output = Command::new("node")
-                .arg("app.js")
-                .arg(self.sync_policy.clone())
-                .arg(gradients_filename)
-                .arg(val_id.to_string())
-                .arg(self.model_name.clone())
-                .current_dir("./tx_validator/dist")
-                .output()
-                .expect("failed to execute process");
-
-            if DEBUG {
-                println!("Output {:?}", output);
-            }
-            let mut results: String = String::from_utf8_lossy(&output.stdout).to_string();
-            results.pop(); // pop EOL char
-            let delim_pos = results.find(':').unwrap();
-            let verdict: String = results.chars().take(delim_pos).collect();
-            let score: String = results.chars().skip(delim_pos + 1).collect();
+            let file1_write_end = SystemTime::now();
+            
+            let validating_py_start = SystemTime::now();
+            let results = if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
+                let output = Command::new("python")
+                        .arg("../tx_validator/src/validation_wrapper.py")
+                        .arg("1") // new model flag
+                        .arg(&gradients_file) // gradients
+                        .arg(min_score) // min_score
+                        .arg("MNIST28X28")
+                        .arg(latest_index_unwrapped)
+                        .output()
+                        .expect("failed to execute process");
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
+                String::from_utf8_lossy(&output.stdout).to_string()
+            } else {
+                let output = Command::new("python")
+                    .arg("../tx_validator/src/validation_wrapper.py")
+                    .arg("0") // new model flag
+                    .arg(&gradients_file) // gradients
+                    .arg(min_score) // min_score
+                    .arg("MNIST28X28")
+                    .arg(latest_index_unwrapped)
+                    .output()
+                    .expect("failed to execute process");
+                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
+                String::from_utf8_lossy(&output.stdout).to_string()
+            };
+            let validating_py_end = SystemTime::now();
+            
+            
+            let verdict1 = results.find("VERDICT=").unwrap_or(0);
+            let verdict2 = results.find("ENDVERDICT").unwrap_or(results.len());
+            let verdict_prefixed = &results[verdict1..verdict2];
+            let verdict = verdict_prefixed.strip_prefix("VERDICT=");
+            
+            let score1 = results.find("SCORE").unwrap_or(0);
+            let score2 = results.find("ENDSCORE").unwrap_or(results.len());
+            let score_prefixed = &results[score1..score2];
+            let score = score_prefixed.strip_prefix("SCORE");
 
             let scoring_flag: u16;
             unsafe {
@@ -928,13 +964,22 @@ impl NodeHandler {
             }
             if scoring_flag == 1 {
                 // Record the score
-                self.write_score_record(msg.author(), &score);
+                self.write_score_record(msg.author(), &score.unwrap().to_string());
             }
 
-            print!("{}: ", "(from consensus.rs) Validation verdict".white().bold().underline());
-            if verdict == "VALID" {
+            let validation_end = SystemTime::now();
+            let validation_duration = validation_end.duration_since(validation_start).unwrap();
+            let file1_write_duration = file1_write_end.duration_since(file1_write_start).unwrap();
+            let py_validation_duration = validating_py_end.duration_since(validating_py_start).unwrap();
+            println!("VALIDATION TOOK {} SECONDS. FILE WRITE TOOK {} SECONDS. PY VALIDATING TOOK {} SECONDS.", 
+            validation_duration.as_secs(), 
+            file1_write_duration.as_secs(),
+            py_validation_duration.as_secs());
+
+            print!("{}: ", "Validation verdict".white().bold().underline());
+            if verdict.unwrap() == "valid" {
                 // Transaction is OK, store it to the cache or persistent pool.
-                print!("{}\n", verdict.green().bold());
+                print!("{}\n", verdict.unwrap().green().bold());
                 if self.state.persist_txs_immediately() {
                     println!("PERSISTING TRANSACTION TO POOL consensus.rs line 939");
                     let fork = self.blockchain.fork();
@@ -949,7 +994,7 @@ impl NodeHandler {
                 outcome = Ok(());
             } else {
                 // Invalid / useless Update
-                print!("{}\n", verdict.red().bold());
+                print!("{}\n", verdict.unwrap().red().bold());
                 self.state.invalid_txs_mut().insert(msg.object_hash());
                 outcome = Err(HandleTxError::InvalidML);
             }
@@ -1466,3 +1511,29 @@ impl NodeHandler {
         }
     }
 }
+
+fn get_latest_model_index() -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+    let body = reqwest::blocking::get("http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel");
+
+    Ok(body.unwrap())
+}
+
+fn fetch_min_score() -> String {
+    let latest_index = get_latest_model_index();
+    let latest_index_unwrapped = latest_index.unwrap().text().unwrap();
+
+    if latest_index_unwrapped == "0" || latest_index_unwrapped == "-1" {
+        return "0".to_string()
+    } else {
+        let model_score = get_model_score(latest_index_unwrapped);
+        return  model_score.unwrap().text().unwrap()
+    }
+}
+
+fn get_model_score(index: String) -> Result<reqwest::blocking::Response, Box<dyn std::error::Error>> {
+    let get_model_score_url = format!("http://127.0.0.1:9000/api/services/ml_service/v1/models/get_model_min_score?version={}", index);
+    let body = reqwest::blocking::get(get_model_score_url);
+    Ok(body.unwrap())
+}
+
+

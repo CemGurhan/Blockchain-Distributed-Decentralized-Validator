@@ -24,6 +24,7 @@ use crate::{
     NodeHandler, NodeRole,
 };
 
+
 impl NodeHandler {
     /// Redirects message to the corresponding `handle_...` function.
     pub(crate) fn handle_message(&mut self, msg: Message) {

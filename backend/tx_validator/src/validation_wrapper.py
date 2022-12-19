@@ -1,67 +1,71 @@
 import sys
 import numpy as np
-import pandas as pd 
-import os
-import warnings
+import service_pb2 as tx
+import requests
 
-import tensorflow as tf
+MODELS_DIR = '../tx_validator/src/models/'
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"      # To disable using GPU
-#tf.get_logger().setLevel('ERROR')
-#warnings.filterwarnings('ignore')
+newModelFlag = str(sys.argv[1])
+gradientsArrayFilePath = sys.argv[2]
+minScoreString = sys.argv[3]
+modelName = sys.argv[4]
+modelIndex = sys.argv[5]
 
-MODELS_DIR = '../src/models/'
-
-model_id = sys.argv[6]
-
-data_dir = MODELS_DIR + model_id + '/data.csv'
+data_dir = MODELS_DIR + modelName + '/data.csv'
 
 
 import importlib
-model_mod = importlib.import_module('models.%s.validate'%model_id)
+model_mod = importlib.import_module('models.%s.validate'%modelName)
 
-def parse_gradients(gradients_path):
-    gradients = open(gradients_path, "r").readline()
-    split = gradients.split("|")
-    split = [float(element) for element in split]
+def parse_gradients_round_one(gradientsArrayFilePath):
+    gradient = open(gradientsArrayFilePath, "rb").read()
+    transaction = tx.TxShareUpdates()
+    transaction.ParseFromString(gradient)
+     
+    return transaction.gradients
+    
+
+def parse_gradients_round_two_onwards():
+    formattedURL = "http://127.0.0.1:9000/api/services/ml_service/v1/models/latestmodel_raw?version={}".format(modelIndex)
+    response = requests.get(formattedURL)
+
+    latest_model = response.text
+    latest_model_no_prefix = latest_model.replace("[","")
+    latest_model_no_suffix = latest_model_no_prefix.replace("]","")
+
+    latest_model_list = latest_model_no_suffix.split(",")
+    split = [float(element) for element in latest_model_list]
     return np.array(split)
+
 
 def send_valid(is_valid):
     verdict = 'valid' if is_valid else 'invalid'
-    print("VERDICT" + verdict + "ENDVERDICT")
+    print("VERDICT=" + verdict + "ENDVERDICT")
 
 def send_score(score):
     print("SCORE" + str(score) + "ENDSCORE")
 
-#data_validation = pd.read_csv(data_dir)
-gradients = parse_gradients(sys.argv[4])
-newModel_flag = str(sys.argv[1])
-if (newModel_flag == "true"):
-    newModel_flag = 1
-elif (newModel_flag == "false"):
-    newModel_flag = 0
+gradients = parse_gradients_round_one(gradientsArrayFilePath)
+if (newModelFlag == "true"):
+    newModelFlag = 1
+elif (newModelFlag == "false"):
+    newModelFlag = 0
 else:
-    newModel_flag = int(newModel_flag)
+    newModelFlag = int(newModelFlag)
 
-if newModel_flag:
+if newModelFlag:
     evaluate_model = gradients
 else:
-    base_model = parse_gradients(sys.argv[3])
+    base_model = parse_gradients_round_two_onwards()
     evaluate_model = base_model + gradients
-
-# if newModel_flag:
-#     np.random.seed(0)
-#     base_model = np.random.uniform(low = -0.09, high = 0.09, size = len(gradients)).tolist()
-# else: 
-#     base_model = parse_gradients(sys.argv[3])
-min_score = float(sys.argv[5])
-# evaluate_model = base_model + gradients
+   
+minScoreFloat = float(minScoreString)
 score = model_mod.compute_validation_score(evaluate_model, data_dir)
-
-is_valid = score >= min_score
+is_valid = score >= minScoreFloat
 
 send_valid(is_valid)
 send_score(score)
+
 
 '''
 

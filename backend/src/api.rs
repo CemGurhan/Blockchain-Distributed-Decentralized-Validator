@@ -21,10 +21,13 @@ use exonum::{
     runtime::CallerAddress as Address,
 };
 use exonum_merkledb::{proof_map::Raw, ListProof, MapProof, ObjectHash};
+use exonum_proto::ProtobufConvert;
 use exonum_rust_runtime::api::{self, ServiceApiBuilder, ServiceApiState};
+use protobuf::{Message, text_format::lexer::float::ProtobufFloatParseError};
 
 use crate::{schema::{SchemaImpl, SchemaUtils}, model::Model};
 use std::collections::HashMap;
+use crate::{proto, MachineLearningService};
 /// Describes the query parameters for the `get_model` endpoint.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub struct ModelQuery {
@@ -132,6 +135,33 @@ impl PublicApi {
         
     }
 
+    /// Model score getter
+    pub async fn get_model_score(
+        state: ServiceApiState,
+        query: ModelQuery,
+    ) -> api::Result<f32>{
+        println!("HELLO FROM get_model_score() api.rs");
+        let model_schema = SchemaImpl::new(state.service_data());
+        let version_hash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
+        let model = model_schema.public.models.get(&version_hash).unwrap();
+        let res = Some(model.score);
+        res.ok_or_else(|| api::Error::not_found().title("No model with that version"))
+        
+    }
+
+    pub async fn get_model__min_score(
+        state: ServiceApiState,
+        query: ModelQuery,
+    ) -> api::Result<f32>{
+        println!("HELLO FROM get_model_score() api.rs");
+        let model_schema = SchemaImpl::new(state.service_data());
+        let version_hash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
+        let model = model_schema.public.models.get(&version_hash).unwrap();
+        let res = Some(model.min_score);
+        res.ok_or_else(|| api::Error::not_found().title("No model with that version"))
+        
+    }
+
     /// returns -1 in case of the absence of models
     pub async fn latest_model(
         state: ServiceApiState,
@@ -143,6 +173,26 @@ impl PublicApi {
         let latest = versions_num - 1;
         println!("LATEST MODEL INDEX FROM API.RS {}", latest);
         Ok(latest)
+    }
+
+    
+
+    pub async fn latest_model_raw(
+        state: ServiceApiState,
+        query: ModelQuery,
+    ) -> api::Result<Vec<f32>>{
+
+       
+
+        println!("HELLO FROM get_model() api.rs");
+        let model_schema = SchemaImpl::new(state.service_data());
+        let versionHash = Address::from_key(SchemaUtils::pubkey_from_version(query.version));
+        let model = model_schema.public.models.get(&versionHash).unwrap();
+        let res = Some(model.weights);
+                
+        // p.write_to_vec(res.unwrap());
+        res.ok_or_else(|| api::Error::not_found().title("No model with that version"))
+        
     }
 
     /// Returns trainer scores
@@ -233,7 +283,10 @@ impl PublicApi {
             .endpoint("v1/models/getmodel", Self::get_model)
             .endpoint("v1/models/trainersscores", Self::get_trainers_scores)
             .endpoint("v1/models/latestmodel", Self::latest_model)
+            .endpoint("v1/models/latestmodel_raw", Self::latest_model_raw)
             .endpoint("v1/models/getmodelaccuracy", Self::get_model_accuracy)
+            .endpoint("v1/models/get_model_score", Self::get_model_score)
+            .endpoint("v1/models/get_model_min_score", Self::get_model__min_score)
             .endpoint("v1/sync/slack_ratio", Self::get_slack_ratio)
             .endpoint("v1/trainer/retrain_quota", Self::get_retrain_quota)
             .endpoint("v1/trainer/trainer_status", Self::get_trainer_status)
