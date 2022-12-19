@@ -10,4 +10,8 @@ runv2:
 	@bash run_node.sh  1 BAP 1 1 MNIST28X28
 .PHONY:runv2
 
+four:
+	sh test_scripts/run_local_test.sh 4  
+.PHONY:four
+
 	
