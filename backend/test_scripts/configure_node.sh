@@ -88,6 +88,8 @@ else
     cd example
 fi
 
+echo "HERE WE ARE $PWD"
+
 node_list=($(seq 1 $number_of_validators))
 
 node_list=("${node_list[@]/%//pub.toml}")
