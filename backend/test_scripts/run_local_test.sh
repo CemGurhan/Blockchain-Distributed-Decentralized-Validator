@@ -50,7 +50,10 @@ for i in $(seq 1 $(($number_of_validators - 1))); do
     validator_peer_port=$(($validator_peer_port+1))
     validator_public_port=$(($validator_public_port+2))
     validator_private_port=$(($validator_private_port+2))
+    # echo $current_reciever_port
     ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $current_reciever_port $peer_reciever_flag"
+    # reset validator peer port so that calculation of validator_reciever_port can be reset to the correct value
+    validator_peer_port=6332
     validator_reciever_port=$(($validator_peer_port+$number_of_validators))
     current_reciever_port=$(($current_reciever_port+1))
     cd ..
