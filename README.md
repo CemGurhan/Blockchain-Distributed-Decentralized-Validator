@@ -1,10 +1,11 @@
 # Repo for Distributed De-Centralized (DD) IID/Non-IID training tests
 
-** Potential protobuf error when running validator **
-As we require a version of protobuf compatible with the tensorflow version required for use on m1 chips, there may be a potential error for older versions of protobuf. If you see en error similar to the one in this following article, follow the solutions laid out there:
+** **Potential protobuf error when running validator** ** <br>
+As we require a version of protobuf compatible with the tensorflow version required for use on m1 chips, there may be a potential error for older versions of protobuf. If you see en error similar to the one in this following article, follow the solutions laid out there to update your pip protobuf dependency in the python site-packages with the relevant `builder.py` file:
 https://stackoverflow.com/questions/71759248/importerror-cannot-import-name-builder-from-google-protobuf-internal
-Further help if required:
-https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory
+<br>Further help to find python site-packages if required:
+https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory <br>
+** **Potential protobuf error when running validator** **
 
 In order to run a validator, the following prerequisites must be installed on your machine:
 
