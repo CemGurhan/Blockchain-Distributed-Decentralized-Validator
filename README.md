@@ -1,5 +1,11 @@
 # Repo for Distributed De-Centralized (DD) IID/Non-IID training tests
 
+** Potential protobuf error when running validator **
+As we require a version of protobuf compatible with the tensorflow version required for use on m1 chips, there may be a potential error for older versions of protobuf. If you see en error similar to the one in this following article, follow the solutions laid out there:
+https://stackoverflow.com/questions/71759248/importerror-cannot-import-name-builder-from-google-protobuf-internal
+Further help if required:
+https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory
+
 In order to run a validator, the following prerequisites must be installed on your machine:
 
 * [Exonum specific dependecnies](https://exonum.com/doc/version/latest/get-started/install/):
