@@ -53,7 +53,7 @@ For more fine tuned control when running local tests, see [here](#example-workfl
 
 ## **Example workflow over a network with 2 validators**
 
-To run validators over a network, you must expose your machines ports to the internet from your LAN. This can be achieved via simple port forwarding, but it is advised not to go down this route. You can instead use a VPN, such as [Tailscale](https://tailscale.com/). In this example, we have opted to utilize tailscale, and have registered two different machines on their VPN. Hence, host addresses will be taken from the ip addresses assigned to our machines via Tailscale. We also had one machine running on macOS, whilst the other was running on Ubuntu. The only differences in commands here will be the use of `bash` as opposed to `sh` in the Ubuntu machine.
+To run validators over a network, you must expose your machines to the internet. This can be achieved via simple port forwarding, but it is advised not to go down this route for security reasons. You could instead use a VPN, such as [Tailscale](https://tailscale.com/). In this example, we have opted to utilize Tailscale, and have registered two different machines on their VPN. Hence, host addresses will be taken from the ip addresses assigned to our machines via Tailscale. We also had one machine running on macOS, whilst the other was running on Ubuntu.
 
 Once you have two machines running agaisnt a network, and ready for incoming connections, enter this command inside the backend folder of your validator on your macOS machine:
 
