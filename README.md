@@ -1,5 +1,7 @@
 # Repo for Distributed De-Centralized (DD) IID/Non-IID training tests
 
+## **Prerequisites**
+
 In order to run a validator, the following prerequisites must be installed on your machine:
 
 * [Exonum specific dependecnies](https://exonum.com/doc/version/latest/get-started/install/)
@@ -17,8 +19,11 @@ In order to run a validator, the following prerequisites must be installed on yo
 
 You must also populate your validator with test data. If running with mnist data sets, test data must be stored in `backend/tx-validator/src/models/MNIST28X28` or `backend/tx-validator/src/models/MNIST20X20` (depending on your data) as `data.csv`. 
 
+If you are on a linux machine, remember to use `bash` as opposed to `sh` when running the script commands seen in this document.
 
-To run, execute the following script (if you are on a linux machine, remember to use `bash` as opposed to `sh` when running the script commands seen in this document):
+## **Run**
+
+To run, execute the following script:
 
 ```
 sh test_scripts/configure_node.sh 
@@ -46,7 +51,7 @@ sh test_scripts/run_local_test.sh <number_of_validators (number of validators on
 
 For more fine tuned control when running local tests, see [here](#example-workflow-testing-locally-with-2-validators-non-distributed-de-centralized-test---ndd) for a set up example with 2 validators, or [here](#example-workflow-testing-locally-with-4-validators-non-distributed-de-centralized-test---ndd) for a set up example with 4 validators.
 
-## Example workflow over a network with 2 validators
+## **Example workflow over a network with 2 validators**
 
 To run validators over a network, you must expose your machines ports to the internet from your LAN. This can be achieved via simple port forwarding, but it is advised not to go down this route. You can instead use a VPN, such as [Tailscale](https://tailscale.com/). In this example, we have opted to utilize tailscale, and have registered two different machines on their VPN. Hence, host addresses will be taken from the ip addresses assigned to our machines via Tailscale. We also had one machine running on macOS, whilst the other was running on Ubuntu. The only differences in commands here will be the use of `bash` as opposed to `sh` in the Ubuntu machine.
 
@@ -69,7 +74,7 @@ This will run a reciever service for this validator on port `6336`. It will also
 The validator will now be looking out for public keys at the address `100.99.117.84:6335`. The host value of `100.99.117.84` in this address was taken from the ip address tailscale generated for the other macOS machine we wish to run on the network. The validator will also be running on a public port of `9000`, which was specified by the `o` flag, and will have a private port of `9001`, specified by the `t` flag.
 
 
-## Example workflow testing locally with 2 validators (Non-Distributed De-Centralized test - NDD)
+## **Example workflow testing locally with 2 validators (Non-Distributed De-Centralized test - NDD)**
 
 For ease of local testing, run the following script to copy the backend folder into the relevant number of validators:
 
@@ -95,7 +100,7 @@ sh test_scripts/configure_node.sh -n 2 -p 0.0.0.0:6333 -o 9002 -t 9003 -r 6335 -
 This will run a reciever service for this validator on port `6335`. It will also specify the validators peer address to be `0.0.0.0:6333`. 
 The validator will now be looking out for public keys at the address `0.0.0.0:6336`.
 
-## Example workflow testing locally with 4 validators (Non-Distributed De-Centralized test - NDD)
+## **Example workflow testing locally with 4 validators (Non-Distributed De-Centralized test - NDD)**
 
 Using the same concepts as the previous example, to run 4 vaidators for local testing, first begin by copying the backend folder with the following command: 
 
@@ -127,7 +132,7 @@ Inside the `backend3` folder execute:
 sh test_scripts/configure_node.sh -n 4 -p 0.0.0.0:6335 -o 9006 -t 9007 -r 6339 -a 0.0.0.0:6336 -a 0.0.0.0:6337 -a 0.0.0.0:6338
 ```
 
-## Protobuf builder error
+## **Protobuf builder error**
 Running the validator after installing protobuf version 3.20 with pip should allow for you to validate without issues. We require a version of protobuf <= 3.2.x, as these versions are compatible with tensorflow.
 However, there may be a potential error when using older versions of protobuf. If you see en error similar to the one in this following article, follow the solutions laid out there to update your pip protobuf dependency in the python site-packages with the relevant `builder.py` file:
 https://stackoverflow.com/questions/71759248/importerror-cannot-import-name-builder-from-google-protobuf-internal
