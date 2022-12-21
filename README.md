@@ -9,10 +9,7 @@ https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-pyth
 
 In order to run a validator, the following prerequisites must be installed on your machine:
 
-* [Exonum specific dependecnies](https://exonum.com/doc/version/latest/get-started/install/):
-&nbsp; <br> - RocksDB 
-&nbsp; <br> - libsodium
-&nbsp; <br>  - Protocol Buffers
+* [Exonum specific dependecnies](https://exonum.com/doc/version/latest/get-started/install/)
 * Rust compiler
 * Python >= 3
 * Tensorflow
