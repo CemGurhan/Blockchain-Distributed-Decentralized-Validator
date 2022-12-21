@@ -17,7 +17,7 @@ In order to run a validator, the following prerequisites must be installed on yo
 * Babel
 * protobuf version 3.20 ([see here for a solution to a potential python protobuf error](#protobuf-builder-error))
 
-You must also populate your validator with test data. If running with mnist data sets, test data must be stored in `backend/tx-validator/src/models/MNIST28X28` or `backend/tx-validator/src/models/MNIST20X20` (depending on your data) as `data.csv`. 
+You must also populate your validator with test data. If running with mnist data sets, test data must be stored in `backend/tx-validator/src/models/MNIST28X28` or `backend/tx-validator/src/models/MNIST20X20` (depending on your data) as `data.csv`. Test data can be found here https://www.kaggle.com/oddrationale/mnist-in-csv.
 
 If you are on a linux machine, remember to use `bash` as opposed to `sh` when running the script commands seen in this document.
 
