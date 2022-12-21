@@ -129,7 +129,7 @@ sh test_scripts/configure_node.sh -n 4 -p 0.0.0.0:6335 -o 9006 -t 9007 -r 6339 -
 
 ## Protobuf builder error
 Running the validator after installing protobuf version 3.20 with pip should allow for you to validate without issues. We require a version of protobuf <= 3.2.x, as these versions are compatible with tensorflow.
-However, there may be a potential error for this older version of protobuf, as we require a version of protobuf <= 3.2.x to be compatible with tensorflow. If you see en error similar to the one in this following article, follow the solutions laid out there to update your pip protobuf dependency in the python site-packages with the relevant `builder.py` file:
+However, there may be a potential error for this older version of protobuf. If you see en error similar to the one in this following article, follow the solutions laid out there to update your pip protobuf dependency in the python site-packages with the relevant `builder.py` file:
 https://stackoverflow.com/questions/71759248/importerror-cannot-import-name-builder-from-google-protobuf-internal
 <br>Further help to find python site-packages if required:
 https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory <br>
