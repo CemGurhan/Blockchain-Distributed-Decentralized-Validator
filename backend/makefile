@@ -6,3 +6,6 @@ proto:
 	protoc -I=./src/proto  --python_out=./tx_validator/src ./src/proto/service.proto
 .PHONY:proto
 	
+
+	
+	
