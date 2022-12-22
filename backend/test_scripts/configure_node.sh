@@ -55,19 +55,12 @@ then
     echo "verifying all lightclient data has been sent to current validator"
     cd ../..
     sleep 5
-    # lightclients_on_network=0
     while ! [ -s ./test_data_io/lightclient_numbers/light_clients_on_network.txt ]
     do
-        lightclients_on_network=$(<./test_data_io/lightclient_numbers/light_clients_on_network.txt)
-        # light_clients_on_network=""$lightclients_on_network
-        echo "CAT: $lightclients_on_network"
-        # if [[ light_clients_on_network == ""  ]]
-        # then
-        #     echo "zerox"
-        #     light_clients_on_network=0
-        # fi
         sleep 1 # sleep to account for potential delay in file write in data reciever service
     done
+    lightclients_on_network=$(<./test_data_io/lightclient_numbers/light_clients_on_network.txt)
+    echo "ALL LIGHTCLIENTS ON NETWORK ARE: $lightclients_on_network"
     IFS=','
     lightclients_on_network_array=($lightclients_on_network) 
 
