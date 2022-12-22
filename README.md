@@ -41,6 +41,7 @@ The following flags may also be supplied:
 -s <sync_policy (defaults to "BAP")> 
 -f <scoring_flag (defaults to 1)> 
 -m <model_name (defauls to "MNIST28X28")>
+-d <is_non_iid (if any number other than zero is supplied, will run validation for non-iid data)>
 ```
 
 When testing locally, run the following script in the backend folder to produce n number of validators:

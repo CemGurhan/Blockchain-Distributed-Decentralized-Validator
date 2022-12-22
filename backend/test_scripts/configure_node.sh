@@ -9,8 +9,9 @@ modelName="MNIST28X28"
 validator_reciever_port=6335
 validator_public_port=9000
 validator_private_port=9001
+is_non_iid=0
 
-while getopts "n:p:o:t:r:e:a:s:f:m:" arg; do
+while getopts "n:p:o:t:r:e:a:s:f:m:d:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     p) validator_peer_address="$OPTARG" ;;
@@ -21,6 +22,7 @@ while getopts "n:p:o:t:r:e:a:s:f:m:" arg; do
     s) sync="$OPTARG" ;;
     f) scoring_flag=$(($OPTARG)) ;;
     m) modelName="$OPTARG" ;;
+    d) is_non_iid=$(($OPTARG)) ;;
     esac
 done
 
@@ -29,14 +31,10 @@ then
     ttab -w sh test_scripts/syncer_run.sh $duration
 fi
 
-# echo "PEER ADDRESSES: ${peer_reciever_addresses[@]}"
-# echo "PEER HOST PORTS: ${peer_hosts[@]}"
-# if [[ ${#peer_reciever_ports[@]} -ne ${#peer_hosts[@]} ]]
-# then
-#     for i in $(seq 0 $((${#peer_hosts[@]} - 1))); do
-#         peer_reciever_ports[$i]=6335
-#     done
-# fi
+if [[ is_non_iid -ne 0 ]]
+then
+
+fi
 
 exonum-ML generate-template \
 example/common.toml \
