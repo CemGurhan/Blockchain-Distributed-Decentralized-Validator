@@ -16,7 +16,7 @@ async fn post_data(path: web::Path<String>, req: HttpRequest, body: Bytes) -> Ht
 }
 
 #[get("/dataFilledConfirm/{lightclientNumber}")]
-async fn data_filled_confirm() -> HttpResponse {
+async fn data_filled_confirm(path: web::Path<String>) -> HttpResponse {
     let lightclient_number: i32  = path.into_inner().as_str().parse().unwrap();
     for i in 0..lightclient_number {
         let data_file = format!("../../test_data/data{}.csv",i);

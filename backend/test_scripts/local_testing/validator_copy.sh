@@ -3,6 +3,7 @@ rm -rf example
 mkdir example
 rm -rf target
 rm -rf pub_key_io/reciever/target
+rm -rf test_data_io/data_reciever/target
 cd ..
 
 echo "now creating $(($number_of_validators-1)) more validator(s) for local testing"
