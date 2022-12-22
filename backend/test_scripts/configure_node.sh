@@ -42,8 +42,12 @@ then
         touch data$i.csv
     done
     cd ..
-    cd ./test_data_io/data_reciever
-    cargo build --release
+    cd ./test_data_io/lightclient_numbers
+    rm -f light_clients_on_network.txt
+    touch light_clients_on_network.txt
+    cd ..
+    cd data_reciever
+    # cargo build --release
     ttab -w cargo run --release $data_reciever_service_port
     cd ../..
     sleep 5
