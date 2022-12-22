@@ -38,26 +38,37 @@ then
     rm -rf test_data
     mkdir test_data
     cd test_data
+
     for i in $(seq 0 $(($number_of_validators - 1))); do
         touch data$i.csv
     done
+
     cd ..
     cd ./test_data_io/lightclient_numbers
     rm -f light_clients_on_network.txt
     touch light_clients_on_network.txt
+
     cd ..
     cd data_reciever
-    # cargo build --release
     ttab -w cargo run --release $data_reciever_service_port
+
     cd ../..
     sleep 5
-    # curl the reciever to check if all LC data has been input , then continue. DO the same in LC
-    echo "calling data reciever service"
-    data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm)"
-    while [[ data_fill_check_header -eq 500 ]] || [[ data_fill_check_header -eq 000 ]]
+    lightclients_on_network=`cat ./test_data_io/lightclient_numbers/light_clients_on_network.txt`
+    IFS=','
+    lightclients_on_network_array=($lightclients_on_network) 
+    
+    # curl the reciever to check if all LC data has been input from each lightclient, then continue. 
+    for ((i=0;i<${#lightclients_on_network_array[@]};i++))
     do
-        data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm)"
+        echo "calling data reciever service to verify lightclient $((i+1))'s test data was sent successfully"
+        data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm/${lightclients_on_network_array[i]})"
+        while [[ data_fill_check_header -eq 500 ]] || [[ data_fill_check_header -eq 000 ]]
+        do
+            data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm/${lightclients_on_network_array[i]})"
+        done
     done
+    
     python reconstruct_test_set.py
     rm -f tx_validator/src/models/MNIST28X28/data.csv
     mv test_data.csv tx_validator/src/models/MNIST28X28/data.csv
