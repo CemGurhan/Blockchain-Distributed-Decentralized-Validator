@@ -1,6 +1,6 @@
 number_of_validators=$1
 
-sh test_scripts/validator_copy.sh $number_of_validators
+sh test_scripts/local_testing/validator_copy.sh $number_of_validators
 
 validator_peer_port=6332
 validator_public_port=9000
