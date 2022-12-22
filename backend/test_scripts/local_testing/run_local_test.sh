@@ -16,6 +16,7 @@ validator_private_port=9001
 validator_pubkey_reciever_service_port=$(($validator_peer_port+$number_of_validators))
 peer_pubkey_reciever_service_flag=""
 current_pubkey_reciever_service_port=$(($validator_peer_port+$number_of_validators))
+data_reciever_service_port=8080
 
 # create reciever address flag, and run configure_node.sh, for first validator 
 for i in $(seq 0 $(($number_of_validators - 2))); do
@@ -31,22 +32,23 @@ current_pubkey_reciever_service_port=$(($validator_pubkey_reciever_service_port+
 echo $peer_pubkey_reciever_service_flag
 if [[ is_non_iid -ne 0 ]]
 then
-    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -d $is_non_iid"
+    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -d $is_non_iid -v $data_reciever_service_port"
 else
-    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag"
+    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -v $data_reciever_service_port"
 fi
 
 cd ..
 
 for i in $(seq 1 $(($number_of_validators - 1))); do
     cd backend$i
-    # clear the reciever flags for the new validator
+    # clear the pubkeyreciever flags for the new validator
     peer_pubkey_reciever_service_flag=""
-    # previously we skipped adding the first validators peer port to the reciever flags. As we are no longer on the first validator, we add the first validators reciever port back into the reciever flag for the next validator
+    # previously we skipped adding the first validators peer port to the pubkey reciever flags. As we are no longer on the first validator, we add the first validators reciever port back into the pubkey reciever flag for the next validator
     peer_pubkey_reciever_service_flag+="-a 0.0.0.0:"
     peer_pubkey_reciever_service_flag+=$validator_pubkey_reciever_service_port
     peer_pubkey_reciever_service_flag+=" "
     validator_pubkey_reciever_service_port=$(($validator_pubkey_reciever_service_port+1))
+    # add pubkey reciever addresses for other validators to this validators configure_node pubkey reciever flag
     for j in $(seq 0 $(($number_of_validators-2))); do
             # do not add reciever port to peer reciever flags if the reciever port (validator_pubkey_reciever_service_port) is the same as the current validators reciever port (current_pubkey_reciever_service_port)
             if [[ $validator_pubkey_reciever_service_port -eq $current_pubkey_reciever_service_port ]]
@@ -62,11 +64,12 @@ for i in $(seq 1 $(($number_of_validators - 1))); do
     echo $peer_pubkey_reciever_service_flag
     validator_public_port=$(($validator_public_port+$((i+1))))
     validator_private_port=$(($validator_private_port+$((i+1))))
+    data_reciever_service_port=$(($data_reciever_service_port+$i))
     if [[ is_non_iid -ne 0 ]]
     then
-        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -d $is_non_iid"
+        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -d $is_non_iid -v $data_reciever_service_port"
     else
-        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag"
+        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_pubkey_reciever_service_port $peer_pubkey_reciever_service_flag -v $data_reciever_service_port"
     fi
     validator_pubkey_reciever_service_port=$(($validator_peer_port+$number_of_validators))
     current_pubkey_reciever_service_port=$(($current_pubkey_reciever_service_port+1))
