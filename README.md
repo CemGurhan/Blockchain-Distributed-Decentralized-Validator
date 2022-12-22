@@ -41,14 +41,21 @@ The following flags may also be supplied:
 -s <sync_policy (defaults to "BAP")> 
 -f <scoring_flag (defaults to 1)> 
 -m <model_name (defauls to "MNIST28X28")>
--d <is_non_iid (if any number other than zero is supplied, will run validation for non-iid data)>
+-d <is_non_iid (if any number other than zero is supplied, will run validation for non-IID data)>
 ```
 
 When testing locally, run the following script in the backend folder to produce n number of validators:
 
 ```
-sh test_scripts/run_local_test.sh <number_of_validators (number of validators on mock network for local testing)>  
+sh test_scripts/run_local_test.sh  -n <number_of_validators (number of validators on mock network for local testing)>  
 ```
+
+When testing a non-IID scenario locally, add the -t flag with any value other than zero to produce n number of validators for local non-IID testing:
+
+```
+sh test_scripts/run_local_test.sh -n <number_of_validators> -t <is_non_iid (run non-IID test if any value other than zero is provided)>
+```
+
 
 For more fine tuned control when running local tests, see [here](#example-workflow-testing-locally-with-2-validators-non-distributed-de-centralized-test---ndd) for a set up example with 2 validators, or [here](#example-workflow-testing-locally-with-4-validators-non-distributed-de-centralized-test---ndd) for a set up example with 4 validators.
 

@@ -1,4 +1,12 @@
-number_of_validators=$1
+number_of_validators=1
+is_non_iid=0
+
+while getopts "n:t:" arg; do
+    case $arg in
+    n) number_of_validators=$(($OPTARG)) ;;
+    t) validator_private_port=$(($OPTARG)) ;;
+    esac
+done
 
 sh test_scripts/local_testing/validator_copy.sh $number_of_validators
 
@@ -21,7 +29,12 @@ validator_reciever_port=$(($validator_peer_port+$number_of_validators))
 # change current reciever port to next validators reciever port 
 current_reciever_port=$(($validator_reciever_port+1))
 echo $peer_reciever_flag
-ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_reciever_port $peer_reciever_flag"
+if [[ is_non_iid -ne 0 ]]
+then
+    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_reciever_port $peer_reciever_flag -d $is_non_iid"
+else
+    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$validator_peer_port -o $validator_public_port -t $validator_private_port -r $validator_reciever_port $peer_reciever_flag"
+fi
 
 cd ..
 
@@ -49,7 +62,12 @@ for i in $(seq 1 $(($number_of_validators - 1))); do
     echo $peer_reciever_flag
     validator_public_port=$(($validator_public_port+$((i+1))))
     validator_private_port=$(($validator_private_port+$((i+1))))
-    ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_reciever_port $peer_reciever_flag"
+    if [[ is_non_iid -ne 0 ]]
+    then
+        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_reciever_port $peer_reciever_flag -d $is_non_iid"
+    else
+        ttab -w eval "sh test_scripts/configure_node.sh -n $number_of_validators -p 0.0.0.0:$(($validator_peer_port+$i)) -o $validator_public_port -t $validator_private_port -r $current_reciever_port $peer_reciever_flag"
+    fi
     validator_reciever_port=$(($validator_peer_port+$number_of_validators))
     current_reciever_port=$(($current_reciever_port+1))
     cd ..
