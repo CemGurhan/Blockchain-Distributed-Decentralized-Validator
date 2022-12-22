@@ -42,6 +42,7 @@ The following flags may also be supplied:
 -f <scoring_flag (defaults to 1)> 
 -m <model_name (defauls to "MNIST28X28")>
 -d <is_non_iid (if any number other than zero is supplied, will run validation for non-IID data)>
+-v <data_reciever_service_port (port data reciever satrts on. Defaults to 8080.)>
 ```
 
 When testing locally, run the following script in the backend folder to produce n number of validators:

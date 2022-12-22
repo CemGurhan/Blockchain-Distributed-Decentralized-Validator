@@ -10,8 +10,9 @@ validator_reciever_port=6335
 validator_public_port=9000
 validator_private_port=9001
 is_non_iid=0
+data_reciever_service_port=8080
 
-while getopts "n:p:o:t:r:e:a:s:f:m:d:" arg; do
+while getopts "n:p:o:t:r:e:a:s:f:m:d:v:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
     p) validator_peer_address="$OPTARG" ;;
@@ -23,6 +24,7 @@ while getopts "n:p:o:t:r:e:a:s:f:m:d:" arg; do
     f) scoring_flag=$(($OPTARG)) ;;
     m) modelName="$OPTARG" ;;
     d) is_non_iid=$(($OPTARG)) ;;
+    v) data_reciever_service_port=$(($OPTARG)) ;;
     esac
 done
 
@@ -55,7 +57,6 @@ then
     python reconstruct_test_set.py
     rm -f tx_validator/src/models/MNIST28X28/data.csv
     mv test_data.csv tx_validator/src/models/MNIST28X28/data.csv
-
 fi
 
 exonum-ML generate-template \
