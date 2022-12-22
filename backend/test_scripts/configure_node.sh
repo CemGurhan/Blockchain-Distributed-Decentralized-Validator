@@ -60,7 +60,6 @@ then
         sleep 1 # sleep to account for potential delay in file write in data reciever service
     done
     lightclients_on_network=$(<./test_data_io/lightclient_numbers/light_clients_on_network.txt)
-    echo "ALL LIGHTCLIENTS ON NETWORK ARE: $lightclients_on_network"
     IFS=','
     lightclients_on_network_array=($lightclients_on_network) 
 
@@ -69,7 +68,7 @@ then
     do
         echo "calling data reciever service to verify lightclient $((i+1))'s test data was sent successfully"
         data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm/${lightclients_on_network_array[i]})"
-        while [[ data_fill_check_header -eq 500 ]] || [[ data_fill_check_header -eq 000 ]]
+        while [[ data_fill_check_header -eq 500 ]] || [[ data_fill_check_header -eq 000 ]] # change to check if eq to 200
         do
             data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm/${lightclients_on_network_array[i]})"
         done
