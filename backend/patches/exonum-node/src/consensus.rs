@@ -902,17 +902,16 @@ impl NodeHandler {
             let min_score = fetch_min_score();
             
             let gradients_file = format!("gradients{}",val_id);
-            let binary_file = std::fs::File::create(&gradients_file);
-            let mut f = match binary_file {
+            let gradients_binary_file = std::fs::File::create(&gradients_file);
+            let mut gradients_binary_file_final = match gradients_binary_file {
                 Ok(file) => file,
                 Err(error) => panic!("Error creating file: {:?}", error),
-                
             };
 
             let file1_write_start = SystemTime::now();
             let model_weights_serialized = &msg.payload().arguments;
             let model_weights_serialized_u8: &[u8] = model_weights_serialized;
-            let file_write_repsonse = f.write_all(model_weights_serialized_u8);
+            let file_write_repsonse = gradients_binary_file_final.write_all(model_weights_serialized_u8);
             match file_write_repsonse {
                 Ok(file) => file,
                 Err(error) => panic!("Error writing to file: {:?}", error),
