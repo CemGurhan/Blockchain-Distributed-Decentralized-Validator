@@ -92,7 +92,7 @@ then
         pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
         pub_key_response="$(curl --connect-timeout 5 "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
 
-            while [[ pub_key_response_header -eq 000  ]] # set to -ne 200 
+            while [[ pub_key_response_header -ne 200  ]] 
             do
                 pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
                 pub_key_response="$(curl --connect-timeout 5 "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
