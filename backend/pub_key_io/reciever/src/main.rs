@@ -14,7 +14,7 @@ async fn main() -> std::io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
     let port = &args[1];
 
-    println!("running reciever on port: {}", port);
+    println!("running pubkey_reciever at 0.0.0.0:{}", port);
     
     HttpServer::new(|| {
         App::new()

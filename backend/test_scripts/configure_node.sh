@@ -44,7 +44,7 @@ then
     cd ..
     cd ./test_data_io/data_reciever
     cargo build --release
-    ttab -w cargo run --release
+    ttab -w cargo run --release $data_reciever_service_port
     cd ../..
     sleep 5
     # curl the reciever to check if all LC data has been input , then continue. DO the same in LC

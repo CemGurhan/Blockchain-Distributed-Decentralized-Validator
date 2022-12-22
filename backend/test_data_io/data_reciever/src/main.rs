@@ -30,13 +30,16 @@ async fn data_filled_confirm() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("starting data_reciever at 0.0.0.0:8000");
+    let args: Vec<String> = std::env::args().collect();
+    let port = &args[1];
+
+    println!("running data_reciever at 0.0.0.0:{}", port);
     HttpServer::new(|| {
         App::new()
             .service(post_data)
             .service(data_filled_confirm)
     })
-    .bind(("0.0.0.0", 8000))?
+    .bind(("0.0.0.0", port.parse::<u16>().unwrap()))?
     .run()
     .await
 }
