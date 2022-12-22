@@ -131,7 +131,6 @@ else
     cd example
 fi
 
-echo "HERE WE ARE $PWD"
 
 node_list=($(seq 1 $number_of_validators))
 
@@ -144,7 +143,7 @@ exonum-ML finalize \
   1/sec.toml 1/node.toml \
   --public-configs "${node_list[@]}"
 
-echo "${node_list[@]}"
+echo "node public key store contains: ${node_list[@]}"
 
 cd ..
 cargo install --path .
