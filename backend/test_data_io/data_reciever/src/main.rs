@@ -15,9 +15,10 @@ async fn post_data(path: web::Path<String>, req: HttpRequest, body: Bytes) -> Ht
     HttpResponse::Ok().body(http_response_message)
 }
 
-#[get("/dataFilledConfirm")]
+#[get("/dataFilledConfirm/{lightclientNumber}")]
 async fn data_filled_confirm() -> HttpResponse {
-    for i in 0..10 {
+    let lightclient_number: i32  = path.into_inner().as_str().parse().unwrap();
+    for i in 0..lightclient_number {
         let data_file = format!("../../test_data/data{}.csv",i);
         let data = fs::read(data_file).expect("Unable to read file");
         if data.is_empty() {
