@@ -80,6 +80,8 @@ then
     mv test_data.csv tx_validator/src/models/MNIST28X28/data.csv
 fi
 
+unset IFS
+
 exonum-ML generate-template \
 example/common.toml \
 --validators-count $number_of_validators
