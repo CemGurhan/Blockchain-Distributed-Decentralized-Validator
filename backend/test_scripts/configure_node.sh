@@ -52,12 +52,18 @@ then
     cd data_reciever
     ttab -w cargo run --release $data_reciever_service_port
 
+    echo "verifying all lightclient data has been sent to current validator"
     cd ../..
     sleep 5
     lightclients_on_network=`cat ./test_data_io/lightclient_numbers/light_clients_on_network.txt`
+    while [[ light_clients_on_network -eq "" ]]
+    do
+        lightclients_on_network=`cat ./test_data_io/lightclient_numbers/light_clients_on_network.txt`
+        sleep 1 # sleep to account for potetial delay in file write in data reciever service
+    done
     IFS=','
     lightclients_on_network_array=($lightclients_on_network) 
-    
+
     # curl the reciever to check if all LC data has been input from each lightclient, then continue. 
     for ((i=0;i<${#lightclients_on_network_array[@]};i++))
     do
@@ -68,7 +74,7 @@ then
             data_fill_check_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" 0.0.0.0:$data_reciever_service_port/dataFilledConfirm/${lightclients_on_network_array[i]})"
         done
     done
-    
+
     python reconstruct_test_set.py
     rm -f tx_validator/src/models/MNIST28X28/data.csv
     mv test_data.csv tx_validator/src/models/MNIST28X28/data.csv
