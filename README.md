@@ -47,13 +47,13 @@ The following flags may also be supplied:
 When testing locally, run the following script in the backend folder to produce n number of validators:
 
 ```
-sh test_scripts/run_local_test.sh  -n <number_of_validators (number of validators on mock network for local testing)>  
+sh test_scripts/local_testing/run_local_test.sh  -n <number_of_validators (number of validators on mock network for local testing)>  
 ```
 
 When testing a non-IID scenario locally, add the -t flag with any value other than zero to produce n number of validators for local non-IID testing:
 
 ```
-sh test_scripts/run_local_test.sh -n <number_of_validators> -t <is_non_iid (run non-IID test if any value other than zero is provided)>
+sh test_scripts/local_testing/run_local_test.sh -n <number_of_validators> -t <is_non_iid (run non-IID test if any value other than zero is provided)>
 ```
 
 
