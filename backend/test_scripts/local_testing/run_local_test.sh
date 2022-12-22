@@ -4,7 +4,7 @@ is_non_iid=0
 while getopts "n:t:" arg; do
     case $arg in
     n) number_of_validators=$(($OPTARG)) ;;
-    t) validator_private_port=$(($OPTARG)) ;;
+    t) is_non_iid=$(($OPTARG)) ;;
     esac
 done
 
