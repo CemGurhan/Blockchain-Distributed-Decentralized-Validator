@@ -36,8 +36,8 @@ The following flags may also be supplied:
 -p <validator_peer_address (defaults to "0.0.0.0:6332")>
 -o <validator_port (public port the validator runs on - defaults to 9000)>
 -t <validator_private_port (private port the validator runs on - defaults to 9001)>
--r <your_pubkey_reciever_port (defaults to 6335)> 
--a <peer_reciever_addresses (addresses that peer reciever services are running on)>
+-r <your_validator_pubkey_reciever_service_port (defaults to 6335)> 
+-a <peer_pubkey_reciever_service_addresses (addresses that peer reciever services are running on)>
 -s <sync_policy (defaults to "BAP")> 
 -f <scoring_flag (defaults to 1)> 
 -m <model_name (defauls to "MNIST28X28")>

@@ -6,7 +6,7 @@ number_of_validators=1
 sync="BAP"
 scoring_flag=1
 modelName="MNIST28X28"
-validator_reciever_port=6335
+validator_pubkey_reciever_service_port=6335
 validator_public_port=9000
 validator_private_port=9001
 is_non_iid=0
@@ -18,8 +18,8 @@ while getopts "n:p:o:t:r:e:a:s:f:m:d:v:" arg; do
     p) validator_peer_address="$OPTARG" ;;
     o) validator_public_port=$(($OPTARG)) ;;
     t) validator_private_port=$(($OPTARG)) ;;
-    r) validator_reciever_port=$(($OPTARG)) ;;
-    a) peer_reciever_addresses+=("$OPTARG");;
+    r) validator_pubkey_reciever_service_port=$(($OPTARG)) ;;
+    a) peer_pubkey_reciever_service_addresses+=("$OPTARG");;
     s) sync="$OPTARG" ;;
     f) scoring_flag=$(($OPTARG)) ;;
     m) modelName="$OPTARG" ;;
@@ -78,24 +78,24 @@ done
 
 cd ..
 
-ttab -w sh test_scripts/run_reciever_daemon.sh $validator_reciever_port
+ttab -w sh test_scripts/run_reciever_daemon.sh $validator_pubkey_reciever_service_port
 sleep 2
 
-echo "All peer addresses are: '${peer_reciever_addresses[@]}'"
+echo "All peer addresses are: '${peer_pubkey_reciever_service_addresses[@]}'"
 
 # set pub_key_response_header to be 000 here to get rid of two while loops
 
 
 if [[ $number_of_validators != 1 ]]
 then
-    for i in $(seq 0 $((${#peer_reciever_addresses[@]} - 1))); do 
-        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_reciever_addresses[$i]}"/getPubKey)"
-        pub_key_response="$(curl --connect-timeout 5 "${peer_reciever_addresses[$i]}"/getPubKey)"
+    for i in $(seq 0 $((${#peer_pubkey_reciever_service_addresses[@]} - 1))); do 
+        pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
+        pub_key_response="$(curl --connect-timeout 5 "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
 
             while [[ pub_key_response_header -eq 000  ]] # set to -ne 200 
             do
-                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_reciever_addresses[$i]}"/getPubKey)"
-                pub_key_response="$(curl --connect-timeout 5 "${peer_reciever_addresses[$i]}"/getPubKey)"
+                pub_key_response_header="$(curl --connect-timeout 5 -o /dev/null -s -w "%{http_code}\n" "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
+                pub_key_response="$(curl --connect-timeout 5 "${peer_pubkey_reciever_service_addresses[$i]}"/getPubKey)"
             done
 
         echo "Ok"
