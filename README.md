@@ -34,7 +34,7 @@ The following flags may also be supplied:
 ```
 -n <number_of_validators_on_network (defaults to 1)> 
 -p <validator_peer_address (defaults to "0.0.0.0:6332")>
--o <validator_port (public port the validator runs on - defaults to 9000)>
+-o <validator_public_port (public port the validator runs on - defaults to 9000)>
 -t <validator_private_port (private port the validator runs on - defaults to 9001)>
 -r <your_validator_pubkey_reciever_service_port (defaults to 6335)> 
 -a <peer_pubkey_reciever_service_addresses (addresses that peer reciever services are running on)>
@@ -151,10 +151,10 @@ https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-pyth
 for non-IID
 
 ```
-sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6332 -r 6335 -a 100.99.117.84:6336 -v 8080 -d 1 
+sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6332 -r 6335 -a 100.99.117.84:6336 -v 8080 -d 1 -o 9000 -t 9001
 ```
 
 ```
-sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6333 -r 6336 -a 100.99.117.84:6335 -v 8081 -d 1 
+sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6333 -r 6336 -a 100.99.117.84:6335 -v 8081 -d 1 -o 9002 -t 9003
 ```
 
