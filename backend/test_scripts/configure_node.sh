@@ -54,7 +54,7 @@ then
 
     echo "verifying all lightclient data has been sent to current validator"
     cd ../..
-    sleep 5
+    sleep 20
     while ! [ -s ./test_data_io/lightclient_numbers/light_clients_on_network.txt ]
     do
         sleep 1 # sleep to account for potential delay in file write in data reciever service

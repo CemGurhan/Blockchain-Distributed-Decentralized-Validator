@@ -148,3 +148,13 @@ https://stackoverflow.com/questions/71759248/importerror-cannot-import-name-buil
 <br>Further help to find python site-packages if required:
 https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory <br>
 
+for non-IID
+
+```
+sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6332 -r 6335 -a 100.99.117.84:6336 -v 8080 -d 1 
+```
+
+```
+sh test_scripts/configure_node.sh -n 2 -p 100.99.117.84:6333 -r 6336 -a 100.99.117.84:6335 -v 8081 -d 1 
+```
+
