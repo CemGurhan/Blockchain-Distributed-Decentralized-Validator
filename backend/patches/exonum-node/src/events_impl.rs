@@ -38,7 +38,8 @@ impl EventHandler for NodeHandler {
                 EventOutcome::Ok
             }
             Event::Internal(internal) => {
-                // println!("HELLO FROM handle_event() in events_impl.rs INTERNAL EVENT OCCURED");
+                // internal.0 is the internal events message contents
+                // println!("INTERNAL EVENT OCCURED: {:?}", internal.0); 
                 self.handle_internal_event(internal);
                 // println!("HELLO FROM handle_event() in events_impl.rs INTERNAL EVENT OCCURED");
                 EventOutcome::Ok
