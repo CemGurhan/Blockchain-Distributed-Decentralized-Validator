@@ -181,8 +181,10 @@ impl<H: EventHandler + 'static + Send> HandlerPart<H> {
         );
 
         println!("HELLO FROM exonum-node/src/events/mod.rs line 180 run()!!!!!!");
+       
 
         while let Some(event) = aggregator.next().await {
+            // println!("NEW TPE OF Event Recieved: {:?}", event);
             // println!("HELLO FROM mod.rs line 180 run()!!!!!! time to run our handle_event()");
             if handler.handle_event(event) == EventOutcome::Terminated {
                 println!("HELLO FROM mod.rs line 180 run()!!!!!! BREAK event handler");

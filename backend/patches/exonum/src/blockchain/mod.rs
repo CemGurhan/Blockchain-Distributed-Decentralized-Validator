@@ -94,7 +94,7 @@ impl TransactionCache for () {
 /// Cache backed up by a B-tree map.
 impl TransactionCache for BTreeMap<Hash, Verified<AnyTx>> {
     fn get_transaction(&self, hash: Hash) -> Option<Verified<AnyTx>> {
-        println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 97");
+        // println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 97"); COMMENTEDLOG
         self.get(&hash).cloned()
     }
 
@@ -144,7 +144,7 @@ where
     T: RawAccess,
 {
     fn get_transaction(&self, hash: Hash) -> Option<Verified<AnyTx>> {
-        println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 147");
+        // println!("HELLO FROM get_transaction() exonum/src/blockchain mod.rs line 147"); COMMENTEDLOG
         self.cache
             .get_transaction(hash)
             .or_else(|| self.transactions.get(&hash))

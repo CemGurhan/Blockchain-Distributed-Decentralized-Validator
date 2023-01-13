@@ -110,7 +110,7 @@ impl NodeHandler {
         // TODO: drop connection if checks have failed. (ECR-1837)
         let address = message.payload().host.clone();
         if address == self.state.our_connect_message().payload().host {
-            println!("Recieved Connection Message 1 in handle_connect exonum_node basics.rs");
+            // println!("Recieved Connection Message 1 in handle_connect exonum_node basics.rs COMMENTEDLOG");
             trace!("Received Connect with same address as our external_address.");
             return;
         }

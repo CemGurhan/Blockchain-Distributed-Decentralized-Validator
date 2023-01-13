@@ -167,11 +167,11 @@ impl PublicApi {
         state: ServiceApiState,
         query: (),
     ) -> api::Result<i32>{
-        println!("TRYING TO GET LATEST MODEL INDEX IN API.RS");
+        // println!("TRYING TO GET LATEST MODEL INDEX IN API.RS"); COMMENTEDLOG
         let model_schema = SchemaImpl::new(state.service_data());
         let versions_num = model_schema.public.models.keys().count() as i32;
         let latest = versions_num - 1;
-        println!("LATEST MODEL INDEX FROM API.RS {}", latest);
+        // println!("LATEST MODEL INDEX FROM API.RS {}", latest); COMMENTED LOG
         Ok(latest)
     }
 

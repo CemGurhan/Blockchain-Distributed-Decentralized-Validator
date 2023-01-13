@@ -116,6 +116,7 @@ impl SandboxInner {
     }
 
     pub fn handle_event<E: Into<Event>>(&mut self, e: E) {
+        println!("Handle event in sandbox inner 1");
         self.handler.handle_event(e.into());
         self.process_events();
     }
@@ -142,16 +143,18 @@ impl SandboxInner {
                 InternalRequest::Timeout(t) => self.timers.push(t),
 
                 InternalRequest::JumpToRound(height, round) => {
+                    println!("Handle event in sandbox inner 2");
                     self.handler
                         .handle_event(InternalEvent::jump_to_round(height, round).into());
                 }
 
                 InternalRequest::VerifyMessage(raw) => {
+                    println!("PROCESSING internal event with raw message: {}", raw);
                     let msg = SignedMessage::from_bytes(raw.into())
                         .and_then(SignedMessage::into_verified::<ExonumMessage>)
                         .map(Message::from)
                         .unwrap();
-
+                        println!("Handle event in sandbox inner 3");
                     self.handler
                         .handle_event(InternalEvent::message_verified(msg).into());
                 }
@@ -161,9 +164,11 @@ impl SandboxInner {
 
     fn process_api_requests(&mut self) {
         while let Some(api) = Self::next_event(&mut self.api_requests_rx) {
+            println!("Handle event in sandbox inner 5");
             self.handler.handle_event(api.into());
         }
         while let Some(tx) = Self::next_event(&mut self.transactions_rx) {
+            println!("Handle event in sandbox inner 6");
             self.handler.handle_event(tx.into());
         }
     }
@@ -529,6 +534,7 @@ impl Sandbox {
     pub fn recv<T: TryFrom<SignedMessage>>(&self, msg: &Verified<T>) {
         self.check_unexpected_message();
         let event = NetworkEvent::MessageReceived(msg.as_raw().to_bytes());
+        println!("Handle event in sandbox inner 7");
         self.inner.borrow_mut().handle_event(event);
     }
 
@@ -682,6 +688,7 @@ impl Sandbox {
                     break;
                 }
             };
+            println!("Handle event in sandbox inner 8");
             self.inner.borrow_mut().handle_event(timeout);
         }
     }

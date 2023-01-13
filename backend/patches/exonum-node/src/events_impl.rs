@@ -34,7 +34,7 @@ impl EventHandler for NodeHandler {
             Event::Transaction(tx) => {
                 println!("HELLO FROM handle_event() in events_impl.rs TRANSACTION EVENT OCCURED");
                 self.handle_incoming_tx(tx);
-                println!("FINISHED EVENT MATCH handle_event() events_impl.rs line 37");
+                // println!("FINISHED EVENT MATCH handle_event() events_impl.rs line 37"); COMMENTEDLOG
                 EventOutcome::Ok
             }
             Event::Internal(internal) => {

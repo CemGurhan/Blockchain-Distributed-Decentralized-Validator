@@ -136,7 +136,7 @@ where
     // Register a trainer's identity
     pub fn register_trainer(&mut self, trainer_addr: &Address) {
         // Insert new score only if trainer wasn't registered
-        println!("REGISTERING TRAINER register_trainer schemar.rs line 138");
+        // println!("REGISTERING TRAINER register_trainer schemar.rs line 138"); COMMENTEDLOG
         if self.trainers_scores.contains(trainer_addr) == false {
             if DEBUG {
                 println!("Registering {:?}...", trainer_addr);
@@ -292,7 +292,7 @@ where
                 new_model.weights[new_model.weights.len() - 1]
             );
         }
-        println!("Printing model_meta from schema.rs update_model()");
+        // println!("Printing model_meta from schema.rs update_model()"); COMMENTEDLOG
         SchemaUtils::print_model_meta(&new_model);
         self.public.models.put(&new_version_hash, new_model);
         self.public.latest_version_addr.set(new_version_hash);

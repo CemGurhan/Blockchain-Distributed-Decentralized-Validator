@@ -929,7 +929,7 @@ impl NodeHandler {
                         .arg(latest_index_unwrapped)
                         .output()
                         .expect("failed to execute process");
-                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
+                // println!("ERROR: {:#?}", String::from_utf8(output.stderr)); COMMENTEDLOG
                 String::from_utf8_lossy(&output.stdout).to_string()
             } else {
                 let output = Command::new("python")
@@ -941,7 +941,7 @@ impl NodeHandler {
                     .arg(latest_index_unwrapped)
                     .output()
                     .expect("failed to execute process");
-                println!("ERROR: {:#?}", String::from_utf8(output.stderr));
+                // println!("ERROR: {:#?}", String::from_utf8(output.stderr)); COMMENTEDLOG
                 String::from_utf8_lossy(&output.stdout).to_string()
             };
             let validating_py_end = SystemTime::now();
@@ -987,7 +987,7 @@ impl NodeHandler {
                         .merge(fork.into_patch())
                         .expect("Cannot add transaction to persistent pool");
                 } else {
-                    println!("CACHING TRANSACTION TO POOL consensus.rs line 946");
+                    // println!("CACHING TRANSACTION TO POOL consensus.rs line 946"); COMMENTEDLOG
                     self.state.tx_cache_mut().insert(hash, msg);
                 }
                 outcome = Ok(());
@@ -1032,7 +1032,7 @@ impl NodeHandler {
             self.remove_request(&RequestData::BlockTransactions);
             self.handle_full_block();
         }
-        println!("VALIDATING DONE line 961 consesus.rs PT 2!!!");
+        // println!("VALIDATING DONE line 961 consesus.rs PT 2!!!"); COMMENTEDLOG
         outcome
     }
 
@@ -1070,9 +1070,9 @@ impl NodeHandler {
 
         match self.handle_tx(msg.clone()) {
             Ok(()) => {
-                println!("SENDING__ OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43");
+                // println!("SENDING__ OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43"); COMMENTEDLOG
                 self.broadcast(msg);
-                println!("SENT OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43");
+                // println!("SENT OUTCOME OUT FROM handle_incoming_tx() consensus.rs line 43"); COMMENTEDLOG
             }
             Err(e) => log::warn!(
                 "Failed to process transaction {:?} received via `ApiSender`: {}",

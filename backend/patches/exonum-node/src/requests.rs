@@ -87,7 +87,7 @@ impl NodeHandler {
 
     /// Handles `PoolTransactionsRequest` message. For details see the message documentation.
     pub(crate) fn handle_request_pool_txs(&mut self, msg: &Verified<PoolTransactionsRequest>) {
-        println!("HELLO FROM handle_request_pool_txs() exonum_node/src requests.rs line 89");
+        // println!("HELLO FROM handle_request_pool_txs() exonum_node/src requests.rs line 89"); COMMENTEDLOG
         trace!("HANDLE POOL TRANSACTIONS REQUEST");
         let snapshot = self.blockchain.snapshot();
         let schema = Schema::new(&snapshot);
@@ -99,7 +99,7 @@ impl NodeHandler {
     }
 
     fn send_transactions_by_hash(&mut self, author: PublicKey, hashes: &[Hash]) {
-        println!("HELLO FROM send_transactions_by_hash() exonum_node/src requests.rs line 100");
+        // println!("HELLO FROM send_transactions_by_hash() exonum_node/src requests.rs line 100"); COMMENTEDLOG
         let snapshot = self.blockchain.snapshot();
         let mut txs = Vec::new();
         let mut txs_size = 0;
