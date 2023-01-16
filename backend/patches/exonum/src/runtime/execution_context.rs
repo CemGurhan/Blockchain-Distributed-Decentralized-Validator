@@ -323,7 +323,7 @@ impl ExecutionContextUnstable for ExecutionContext<'_> {
             .dispatcher
             .runtime_for_service(instance_id)
             .ok_or(CoreError::IncorrectRuntime)?;
-
+        println!("EXECUTING METHOD WITH ID: {}", method_id);
         let context = self.child_context(interface_name, descriptor, fallthrough_auth);
         runtime
             .execute(context, method_id, arguments)

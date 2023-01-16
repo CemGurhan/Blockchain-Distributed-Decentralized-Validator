@@ -179,6 +179,7 @@ impl NodeHandler {
 
     /// Handles the `Propose` message. For details see the message documentation.
     fn handle_propose(&mut self, from: PublicKey, msg: &Verified<Propose>) {
+        // println!("handling a message proposal"); COMMENTEDLOG
         debug_assert_eq!(
             Some(from),
             self.state.consensus_public_key_of(msg.payload().validator)
@@ -515,7 +516,7 @@ impl NodeHandler {
     /// Handles the `Prevote` message. For details see the message documentation.
     fn handle_prevote(&mut self, from: PublicKey, msg: &Verified<Prevote>) {
         trace!("Handle prevote");
-
+        // println!("handling a prevote"); COMMENTEDLOG
         debug_assert_eq!(
             Some(from),
             self.state.consensus_public_key_of(msg.payload().validator)
@@ -684,7 +685,7 @@ impl NodeHandler {
     /// Handles the `Precommit` message. For details see the message documentation.
     fn handle_precommit(&mut self, from: PublicKey, msg: &Verified<Precommit>) {
         trace!("Handle precommit");
-
+        // println!("handling a precommit"); COMMENTEDLOG
         debug_assert_eq!(
             Some(from),
             self.state.consensus_public_key_of(msg.payload().validator)
@@ -987,7 +988,7 @@ impl NodeHandler {
                         .merge(fork.into_patch())
                         .expect("Cannot add transaction to persistent pool");
                 } else {
-                    // println!("CACHING TRANSACTION TO POOL consensus.rs line 946"); COMMENTEDLOG
+                    println!("CACHING TRANSACTION TO POOL consensus.rs line 946"); 
                     self.state.tx_cache_mut().insert(hash, msg);
                 }
                 outcome = Ok(());
@@ -1002,6 +1003,7 @@ impl NodeHandler {
         }
 
         if self.state.is_leader() && self.state.round() != Round::zero() {
+            println!("adding a proposal timeout as the lead node");
             self.maybe_add_propose_timeout();
         }
         // We can collect the transactions in three possible scenarios:
@@ -1018,6 +1020,7 @@ impl NodeHandler {
             // If a new height was achieved, no more proposals for this height
             // should be processed. However, we still have to remove requests.
             if !height_bumped {
+                println!("voting for a new block");
                 height_bumped = self.handle_full_propose(hash, round) == RoundAction::NewEpoch;
             }
         }
@@ -1029,6 +1032,7 @@ impl NodeHandler {
         let action = self.state.remove_unknown_transaction(hash);
         // Go to handle full block if we've got the last necessary transaction.
         if action == RoundAction::NewEpoch {
+            println!("handling full block");
             self.remove_request(&RequestData::BlockTransactions);
             self.handle_full_block();
         }

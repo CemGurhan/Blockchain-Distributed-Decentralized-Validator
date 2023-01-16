@@ -77,10 +77,8 @@ impl NodeHandler {
     }
 
     fn handle_api_event(&mut self, event: ExternalMessage) -> EventOutcome {
-        println!("LOG FROM handle_api_event event_impl.rs line 73 !!!! o");
         match event {
             ExternalMessage::PeerAdd(info) => {
-                println!("LOG FROM handle_api_event event_impl.rs line 73 !!!! adding PEER!!???");
                 info!("Send Connect message to {}", info);
                 self.state.add_peer_to_connect_list(info.clone());
                 self.connect(info.public_key);

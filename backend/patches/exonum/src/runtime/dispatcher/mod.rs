@@ -555,6 +555,7 @@ impl Dispatcher {
         // Currently the only check is that destination service exists, but later
         // functionality of this method can be extended.
         let call_info = &tx.as_ref().call_info;
+        // println!("SERVICE ID: {}, METHOD ID: {}", call_info.instance_id, call_info.method_id);
         let instance = Schema::new(snapshot)
             .get_instance(call_info.instance_id)
             .ok_or_else(|| {
@@ -629,7 +630,7 @@ impl Dispatcher {
             tx.author(),
             tx_id,
         );
-
+        println!("EXECUTING IN DISPATCHER METHOD WITH ID: {}", call_info.method_id);
         let mut res = runtime.execute(context, call_info.method_id, &tx.as_ref().arguments);
         if should_rollback && res.is_ok() {
             res = Err(CoreError::IncorrectCall.into());

@@ -66,10 +66,11 @@ impl MachineLearningInterface<ExecutionContext<'_>> for MachineLearningService {
     type Output = Result<(), ExecutionError>;
 
     fn share_updates(&self, context: ExecutionContext<'_>, arg: ShareUpdates) -> Self::Output {
+        println!("HELLO FROM transactions.rs share_updates() PT 1!!!"); 
         let (from, tx_hash) = extract_info(&context)?;
         let mut schema = SchemaImpl::new(context.service_data());
 
-        // println!("HELLO FROM transactions.rs share_updates() PT 1!!!"); COMMENTEDLOG
+        
 
         schema.register_trainer(&from);
         schema.cache_update(&from, &arg.gradients);

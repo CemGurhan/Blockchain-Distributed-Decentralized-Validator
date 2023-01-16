@@ -202,6 +202,7 @@ where
             // Updating the most recent model using schema
             self.update_model();
         }
+        println!("NO PENDING TRANSACTIONS");
     }
 
     pub fn pending_transactions_exist(&mut self) -> bool {
