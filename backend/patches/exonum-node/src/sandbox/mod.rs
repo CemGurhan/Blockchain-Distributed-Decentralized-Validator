@@ -756,6 +756,7 @@ impl Sandbox {
         }
         blockchain.merge(fork.into_patch()).unwrap();
 
+        println!("computing block hashes");
         let block_data = BlockParams::new(ValidatorId(0), Height(0), &hashes);
         let patch = blockchain.create_patch(block_data, &());
 

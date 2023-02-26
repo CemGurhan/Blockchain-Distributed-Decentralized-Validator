@@ -315,6 +315,7 @@ impl NodeHandler {
     /// If the node knows all transactions right away, it executes and commits the block.
     /// (The execution stage may be skipped if the block was executed earlier.)
     pub(crate) fn handle_block(&mut self, msg: Verified<BlockResponse>) {
+        // println!("handling block now");
         let precommits = match self.validate_block_response(&msg) {
             Ok(precommits) => precommits,
             Err(e) => {
@@ -444,6 +445,7 @@ impl NodeHandler {
         // this block right now.
         if let Some((round, block_hash)) = self.state.take_confirmed_propose(&hash) {
             // Execute block and get state hash
+            // println!("Executing full block in handle_full_propose");
             let our_block_hash = self.execute(&hash);
 
             assert_eq!(
@@ -623,6 +625,7 @@ impl NodeHandler {
         }
 
         // Execute block and verify that the block hash matches expected one.
+        // println!("Executing full block in handle_majority_precommits");
         let our_block_hash = self.execute(propose_hash);
         assert_eq!(
             &our_block_hash, block_hash,
@@ -667,6 +670,7 @@ impl NodeHandler {
                 // Execute block and send precommit.
                 if self.state.is_validator() && !self.state.have_incompatible_prevotes() {
                     // Execute block and get state hash.
+                    // println!("Executing full block in lock");
                     let block_hash = self.execute(&propose_hash);
                     self.check_propose_and_broadcast_precommit(round, propose_hash, block_hash);
                     // Commit the block if it's approved by the majority of validators.
@@ -988,7 +992,7 @@ impl NodeHandler {
                         .merge(fork.into_patch())
                         .expect("Cannot add transaction to persistent pool");
                 } else {
-                    println!("CACHING TRANSACTION TO POOL consensus.rs line 946"); 
+                    println!("CACHING TRANSACTION TO POOL with hash(es): {}", hash); 
                     self.state.tx_cache_mut().insert(hash, msg);
                 }
                 outcome = Ok(());
@@ -1289,6 +1293,7 @@ impl NodeHandler {
         epoch: Height,
         contents: BlockContents<'_>,
     ) -> BlockPatch {
+        // println!("creating a new block");
         let block_params = BlockParams::with_contents(contents, proposer_id, epoch);
         self.blockchain
             .create_patch(block_params, self.state.tx_cache())
@@ -1310,6 +1315,7 @@ impl NodeHandler {
             BlockKind::Skip => BlockContents::Skip,
             _ => unreachable!("No other block kinds are supported"),
         };
+        // println!("creating block via execute()"); COMMENTEDLOG
         let patch = self.create_block(propose.validator, propose.epoch, block_contents);
         let block_hash = patch.block_hash();
         self.state.add_block(

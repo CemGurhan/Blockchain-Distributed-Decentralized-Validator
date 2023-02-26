@@ -553,8 +553,10 @@ impl BlockchainMut {
     where
         C: TransactionCache + ?Sized,
     {
+        
         match block_params.contents {
             BlockContents::Transactions(tx_hashes) => {
+                // println!("creating inner patch with transactions: {:?}", tx_hashes); COMMENTEDLOG
                 self.create_patch_inner(self.fork(), &block_params, tx_hashes, tx_cache)
             }
             BlockContents::Skip => self.create_skip_patch(&block_params),
@@ -615,6 +617,7 @@ impl BlockchainMut {
 
         // Save & execute transactions.
         for (index, hash) in (0..).zip(tx_hashes) {
+            println!("executing transaction(s) with hash(es): {:?}", tx_hashes);
             self.execute_transaction(*hash, height, index, &mut fork, tx_cache);
         }
 
@@ -692,7 +695,7 @@ impl BlockchainMut {
             .get_transaction(tx_hash)
             .unwrap_or_else(|| panic!("BUG: Cannot find transaction {:?} in database", tx_hash));
         fork.flush();
-
+        println!("executing transaction in execute_transaction()");
         let tx_result = self.dispatcher.execute(fork, tx_hash, index, &transaction);
         let mut schema = Schema::new(&*fork);
 
