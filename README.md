@@ -45,7 +45,7 @@ The following flags may also be supplied:
 -v <data_reciever_service_port (port data reciever satrts on. Defaults to 8080.)>
 ```
 
-To run test locally with n validators, run the following script in the backend folder:
+To run an IID scenario locally with n validators, run the following script in the backend folder:
 
 ```
 sh test_scripts/local_testing/run_local_test.sh  -n <number_of_validators (number of validators on mock network for local testing)>  
