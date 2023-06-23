@@ -88,7 +88,7 @@ The validator will now be looking out for public keys at the address `100.99.117
 For ease of local testing, run the following script to copy the backend folder into the relevant number of validators:
 
 ```
-sh test_scripts/validator_copy.sh 2
+sh test_scripts/local_testing/validator_copy.sh 2
 ```
 
 To then run validators locally for testing, cd into the `backend` folder and run the following command:
@@ -114,7 +114,7 @@ The validator will now be looking out for public keys at the address `0.0.0.0:63
 Using the same concepts as the previous example, to run 4 vaidators for local testing, first begin by copying the backend folder with the following command: 
 
 ```
-sh test_scripts/validator_copy.sh 4
+sh test_scripts/local_testing/validator_copy.sh 4
 ```
 
 Next, inside the `backend` folder, execute the following command:
